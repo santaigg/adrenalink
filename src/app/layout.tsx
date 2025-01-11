@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mohave } from "next/font/google";
 import { createTheme, MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import Navbar from "./components/navigation/navbar";
 import "@mantine/core/styles.css";
 import "./global.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       </head>
       <body className={`${mohave.variable} antialiased bg-surface-base`}>
         <MantineProvider defaultColorScheme="dark" theme={mantineTheme}>
+          <Navbar />
           {children}
         </MantineProvider>
       </body>
