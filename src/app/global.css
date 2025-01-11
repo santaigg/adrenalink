@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface-dark: 230 25% 5%;
+    --surface-base: 230 10% 12%;
+    --surface-light: 230 4% 30%;
+  }
+}
