@@ -6,7 +6,7 @@ export default function BackgroundImage({ image }: { image: StaticImageData }) {
     <Image
       src={image}
       alt="Background Image."
-      className="absolute top-0 -z-50 size-full object-cover opacity-60 blur-lg mix-blend-color-dodge saturate-0 brightness-75 pointer-events-none"
+      className="absolute top-0 -z-50 size-full object-cover opacity-70 blur-lg mix-blend-color-dodge saturate-0 brightness-75 pointer-events-none"
     />
   );
 }
