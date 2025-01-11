@@ -1,35 +1,21 @@
 "use client";
-import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { AppShell, Group } from "@mantine/core";
+import { useHeadroom } from "@mantine/hooks";
+import { CornerLocation } from "../cosmetic/Extrusion";
+import Logo from "./Logo";
+import Extrusion from "../cosmetic/Extrusion";
 
 export default function Navbar() {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const pinned = useHeadroom({ fixedAt: 120 });
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: "sm",
-        collapsed: { mobile: !mobileOpened, desktop: desktopOpened },
-      }}
-      padding="md"
-    >
+    <AppShell header={{ height: 50, collapsed: !pinned, offset: false }}>
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-          <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
+        <Group className="h-full px-4 bg-surface-dark">
+          <Logo />
         </Group>
+        <Extrusion className="border-surface-dark min-w-40" cornerLocation={CornerLocation.BottomRight} />
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        Navbar
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt="sm" animate={false} />
-          ))}
-      </AppShell.Navbar>
     </AppShell>
   );
 }

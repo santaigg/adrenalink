@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Mohave } from "next/font/google";
 import { createTheme, MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import Navbar from "./components/navigation/navbar";
+import Navbar from "./components/navigation/Navbar";
 import "@mantine/core/styles.css";
 import "./global.css";
 
@@ -9,6 +9,8 @@ const mantineTheme = createTheme({
   colors: {
     santai: ["#f9ffe2", "#f4ffcd", "#e8fe9c", "#dcfd67", "#d2fc3b", "#cbfb20", "#c8fb0d", "#afdf00", "#9bc700", "#83ab00"],
   },
+  autoContrast: true,
+  primaryColor: "santai",
   fontFamily: "Mohave, serif",
 });
 
