@@ -4,19 +4,21 @@ import { useDisclosure } from "@mantine/hooks";
 import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
 import { CornerLocation } from "../cosmetic/Extrusion";
+import IconLink from "./IconLink";
+import DiscordIcon from "../../assets/icons/discord-icon.svg";
 
 const links = [
-  { link: "/about", label: "Leaderboard" },
+  { link: "/leaderboard", label: "Leaderboard" },
   { link: "/about", label: "About" },
-  // {
-  //   link: "",
-  //   label: "Contribute",
-  //   links: [
-  //     { link: "/faq", label: "FAQ" },
-  //     { link: "/demo", label: "Book a demo" },       // DROPDOWN NAVBAR ITEM
-  //     { link: "/forums", label: "Forums" },
-  //   ],
-  // },
+  {
+    link: "",
+    label: "Contribute",
+    links: [
+      { link: "/faq", label: "FAQ" },
+      { link: "/demo", label: "Book a demo" }, // DROPDOWN NAVBAR ITEM
+      { link: "/forums", label: "Forums" },
+    ],
+  },
 ];
 
 export default function Navbar() {
@@ -57,11 +59,12 @@ export default function Navbar() {
           <Logo />
           <Group gap={20} visibleFrom="sm">
             {items}
+            <IconLink icon={DiscordIcon} href="/" />
           </Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
         </Container>
       </div>
-      <Extrusion className="float-right min-w-[50%] border-surface-dark" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[25%] border-surface-dark" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }
