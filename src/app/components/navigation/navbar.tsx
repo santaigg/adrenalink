@@ -1,11 +1,10 @@
 "use client";
-import { Burger, Center, Container, Group, Menu } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
+import { Burger, Container, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Logo from "./Logo";
-import Extrusion from "../cosmetic/Extrusion";
 import { CornerLocation } from "../cosmetic/Extrusion";
 import { IconBrandDiscordFilled } from "@tabler/icons-react";
+import Logo from "./Logo";
+import Extrusion from "../cosmetic/Extrusion";
 
 const links = [
   { link: "/leaderboard", label: "Leaderboard" },
@@ -25,39 +24,21 @@ export default function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
 
   const items = links.map((link) => {
-    const menuItems = link.links?.map((item) => <Menu.Item key={item.link}>{item.label}</Menu.Item>);
-
-    if (menuItems) {
-      return (
-        <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
-          <Menu.Target>
-            <a href={link.link} onClick={(event) => event.preventDefault()}>
-              <Center>
-                <span className="">{link.label}</span>
-                <IconChevronDown size={14} stroke={1.5} />
-              </Center>
-            </a>
-          </Menu.Target>
-          <Menu.Dropdown>{menuItems}</Menu.Dropdown>
-        </Menu>
-      );
-    }
-
     return (
-      <a key={link.label} href={link.link} className="hover:text-santai" onClick={(event) => event.preventDefault()}>
+      <a key={link.label} href={link.link} className="hover:text-primary-5" onClick={(event) => event.preventDefault()}>
         {link.label}
       </a>
     );
   });
 
   return (
-    <header>
+    <header className="mb-8">
       <div className="p-4 bg-surface-9">
         <Container className="flex justify-between items-center">
           <Logo />
           <Group gap={25} visibleFrom="sm">
             {items}
-            <a className="hover:text-primary-9" target="_blank" rel="noopener noreferrer" href="https://discord.gg/EqBWSAnPkq">
+            <a className="hover:text-primary-5" target="_blank" rel="noopener noreferrer" href="https://discord.gg/EqBWSAnPkq">
               <IconBrandDiscordFilled />
             </a>
           </Group>

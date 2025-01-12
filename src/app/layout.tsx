@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import { santaiMantineTheme, santaiFont } from "./styles/theme";
+import { mantineTheme, santaiFont } from "./styles/theme";
 import Navbar from "./components/navigation/Navbar";
 import "@mantine/core/styles.css";
 import "./styles/global.css";
@@ -21,7 +21,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className={`${santaiFont.variable} antialiased bg-surface-9`}>
-        <MantineProvider withGlobalClasses defaultColorScheme="dark" theme={santaiMantineTheme}>
+        <MantineProvider withGlobalClasses defaultColorScheme="dark" theme={mantineTheme}>
           <Navbar />
           {children}
         </MantineProvider>
