@@ -20,7 +20,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={`${santaiFont.variable} antialiased bg-surface-9`}>
+      <body className={`${santaiFont.variable} antialiased bg-surface-8`}>
         <MantineProvider withGlobalClasses defaultColorScheme="dark" theme={mantineTheme}>
           <Navbar />
           {children}

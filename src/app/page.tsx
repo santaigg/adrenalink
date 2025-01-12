@@ -1,10 +1,8 @@
 "use client";
-import Image from "next/image";
 import BackgroundImage from "./components/cosmetic/BackgroundImage";
 import BackgroundImageData from "./assets/background-images/background-spectators.png";
 import { Searchbox } from "./components/input/Searchbox";
-import { Container, Grid, SimpleGrid, Skeleton } from "@mantine/core";
-import SearchboxCardBackgroundImage from "./assets/card-images/card-newgirl.png";
+import { Container, SimpleGrid } from "@mantine/core";
 
 const PRIMARY_COL_HEIGHT = "300px";
 
