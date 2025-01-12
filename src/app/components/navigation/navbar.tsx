@@ -9,16 +9,16 @@ import DiscordIcon from "../../assets/icons/discord-icon.svg";
 
 const links = [
   { link: "/leaderboard", label: "Leaderboard" },
-  { link: "/about", label: "About" },
-  {
-    link: "",
-    label: "Contribute",
-    links: [
-      { link: "/faq", label: "FAQ" },
-      { link: "/demo", label: "Book a demo" }, // DROPDOWN NAVBAR ITEM
-      { link: "/forums", label: "Forums" },
-    ],
-  },
+  // { link: "/about", label: "About" },
+  // {
+  //   link: "",
+  //   label: "Contribute",
+  //   links: [
+  //     { link: "/faq", label: "FAQ" },
+  //     { link: "/demo", label: "Book a demo" }, // DROPDOWN NAVBAR ITEM
+  //     { link: "/forums", label: "Forums" },
+  //   ],
+  // },
 ];
 
 export default function Navbar() {
@@ -57,7 +57,7 @@ export default function Navbar() {
       <div className="p-4 bg-surface-dark">
         <Container className="flex justify-between items-center">
           <Logo />
-          <Group gap={20} visibleFrom="sm">
+          <Group gap={25} visibleFrom="sm">
             {items}
             <IconLink icon={DiscordIcon} href="/" />
           </Group>
