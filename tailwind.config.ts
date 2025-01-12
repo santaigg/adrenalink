@@ -14,6 +14,8 @@ export default {
 					'base': "hsl(var(--surface-base) / <alpha-value>)",
 					'light': "hsl(var(--surface-light) / <alpha-value>)",
 				},
+
+        santai: "hsl(var(--santai) / <alpha-value>)"
       },
     },
   },

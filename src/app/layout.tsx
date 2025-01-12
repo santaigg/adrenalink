@@ -1,23 +1,9 @@
 import type { Metadata } from "next";
-import { Mohave } from "next/font/google";
-import { createTheme, MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import { santaiMantineTheme, santaiFont } from "./styles/theme";
 import Navbar from "./components/navigation/Navbar";
 import "@mantine/core/styles.css";
-import "./global.css";
-
-const mantineTheme = createTheme({
-  colors: {
-    santai: ["#f9ffe2", "#f4ffcd", "#e8fe9c", "#dcfd67", "#d2fc3b", "#cbfb20", "#c8fb0d", "#afdf00", "#9bc700", "#83ab00"],
-  },
-  autoContrast: true,
-  primaryColor: "santai",
-  fontFamily: "Mohave, serif",
-});
-
-const mohave = Mohave({
-  variable: "--font-mohave",
-  subsets: ["latin"],
-});
+import "./styles/global.css";
 
 export const metadata: Metadata = {
   title: "Santai.GG",
@@ -34,8 +20,8 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={`${mohave.variable} antialiased bg-surface-base`}>
-        <MantineProvider defaultColorScheme="dark" theme={mantineTheme}>
+      <body className={`${santaiFont.variable} antialiased bg-surface-base`}>
+        <MantineProvider withGlobalClasses defaultColorScheme="dark" theme={santaiMantineTheme}>
           <Navbar />
           {children}
         </MantineProvider>
