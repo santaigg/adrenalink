@@ -11,6 +11,7 @@
   "dependencies": {
     "@mantine/core": "^7.15.3",
     "@mantine/hooks": "^7.15.3",
+    "@tabler/icons-react": "^3.28.1",
     "clsx": "^2.1.1",
     "next": "15.1.4",
     "react": "^19.0.0",
