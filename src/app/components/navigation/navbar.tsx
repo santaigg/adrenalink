@@ -1,11 +1,11 @@
 "use client";
 import { Burger, Center, Container, Group, Menu } from "@mantine/core";
+import { IconChevronDown } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
 import { CornerLocation } from "../cosmetic/Extrusion";
-import IconLink from "./IconLink";
-import DiscordIcon from "../../assets/icons/discord-icon.svg";
+import { IconBrandDiscordFilled } from "@tabler/icons-react";
 
 const links = [
   { link: "/leaderboard", label: "Leaderboard" },
@@ -34,9 +34,7 @@ export default function Navbar() {
             <a href={link.link} onClick={(event) => event.preventDefault()}>
               <Center>
                 <span className="">{link.label}</span>
-                <svg width="24px" height="24px" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                  <path d="M6 9L12 15L18 9" stroke="#c9c9c9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                </svg>
+                <IconChevronDown size={14} stroke={1.5} />
               </Center>
             </a>
           </Menu.Target>
@@ -54,17 +52,19 @@ export default function Navbar() {
 
   return (
     <header>
-      <div className="p-4 bg-surface-dark">
+      <div className="p-4 bg-surface-9">
         <Container className="flex justify-between items-center">
           <Logo />
           <Group gap={25} visibleFrom="sm">
             {items}
-            <IconLink icon={DiscordIcon} href="/" />
+            <a className="hover:text-primary-9" target="_blank" rel="noopener noreferrer" href="https://discord.gg/EqBWSAnPkq">
+              <IconBrandDiscordFilled />
+            </a>
           </Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
         </Container>
       </div>
-      <Extrusion className="float-right min-w-[25%] border-surface-dark" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[25%] border-surface-9" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }

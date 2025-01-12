@@ -4,10 +4,5 @@
 
 @layer base {
   :root {
-    --surface-dark: 230 20% 6%;
-    --surface-base: 230 10% 12%;
-    --surface-light: 230 5% 24%;
-
-    --santai: 73 97% 50%;
   }
 }
