@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <header className="mb-8">
-      <div className="p-4 bg-surface-9">
+      <div className="p-4 bg-surface-8">
         <Container className="flex justify-between items-center">
           <Logo />
           <Group gap={25} visibleFrom="sm">
@@ -45,7 +45,7 @@ export default function Navbar() {
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
         </Container>
       </div>
-      <Extrusion className="float-right min-w-[20%] border-surface-9" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[20%] border-surface-8" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }

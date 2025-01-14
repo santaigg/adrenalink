@@ -19,7 +19,7 @@ export function Searchbox({ props, className, focusTrap = false }: { props?: Tex
           onBlur={toggle}
           radius="0"
           size="md"
-          placeholder="Username or Steam64..."
+          placeholder="Search players by username or Steam64..."
           leftSection={<IconSearch size={18} stroke={1.5} />}
           rightSection={
             <ActionIcon size={30} radius="0" color={theme.primaryColor}>

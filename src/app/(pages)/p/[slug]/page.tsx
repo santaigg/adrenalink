@@ -1,6 +1,5 @@
-"use client";
-import BackgroundImage from "../../components/cosmetic/BackgroundImage";
-import BackgroundImageData from "./assets/background-images/background-spectators.png";
+import BackgroundImage from "../../../components/cosmetic/BackgroundImage";
+import BackgroundImageData from "../../../assets/background-images/background-spectators.png";
 import { Container, SimpleGrid } from "@mantine/core";
 
 const PRIMARY_COL_HEIGHT = "300px";
