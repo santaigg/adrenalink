@@ -45,7 +45,7 @@ export default function Navbar() {
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
         </Container>
       </div>
-      <Extrusion className="float-right min-w-[25%] border-surface-9" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[20%] border-surface-9" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }
