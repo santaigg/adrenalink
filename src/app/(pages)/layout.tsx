@@ -26,9 +26,7 @@ export default function RootLayout({
           <Navbar />
           <div className="flex flex-col">
             {children}
-            <div className="mt-auto float-end">
-              <Footer />
-            </div>
+            <Footer />
           </div>
         </MantineProvider>
       </body>
