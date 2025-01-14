@@ -15,7 +15,11 @@ export default function Home() {
 
       <Container my="md">
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <Searchbox />
+          <div>
+            <h1>Player Search</h1>
+            <p>Search Spectre Divide players to view their stats and match history.</p>
+            <Searchbox focusTrap className="my-4" />
+          </div>
         </SimpleGrid>
       </Container>
     </main>
