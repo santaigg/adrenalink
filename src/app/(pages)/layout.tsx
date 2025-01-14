@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import { mantineTheme, santaiFont } from "./styles/theme";
-import Navbar from "./components/navigation/Navbar";
+import { mantineTheme, santaiFont } from "../styles/theme";
+import Navbar from "../components/navigation/Navbar";
 import "@mantine/core/styles.css";
-import "./styles/global.css";
+import "../styles/global.css";
 
 export const metadata: Metadata = {
   title: "Santai.GG",

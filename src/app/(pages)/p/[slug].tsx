@@ -1,7 +1,6 @@
 "use client";
-import BackgroundImage from "./components/cosmetic/BackgroundImage";
+import BackgroundImage from "../../components/cosmetic/BackgroundImage";
 import BackgroundImageData from "./assets/background-images/background-spectators.png";
-import { Searchbox } from "./components/input/Searchbox";
 import { Container, SimpleGrid } from "@mantine/core";
 
 const PRIMARY_COL_HEIGHT = "300px";
@@ -14,13 +13,7 @@ export default function Home() {
       <BackgroundImage image={BackgroundImageData} />
 
       <Container my="md">
-        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <div>
-            <h1>Player Search</h1>
-            <p>Search Spectre Divide players to view their stats and match history.</p>
-            <Searchbox focusTrap className="my-4" />
-          </div>
-        </SimpleGrid>
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md"></SimpleGrid>
       </Container>
     </main>
   );
