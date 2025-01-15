@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mantine/core": "^7.15.3",
-    "@mantine/hooks": "^7.15.3",
     "@radix-ui/react-slot": "^1.1.1",
     "@tabler/icons-react": "^3.28.1",
     "class-variance-authority": "^0.7.1",
