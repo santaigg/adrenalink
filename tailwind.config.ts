@@ -10,7 +10,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        bottom: {
+          DEFAULT: "hsl(var(--bottom) / <alpha-value>)",
+          foreground: "hsl(var(--bottom-foreground) / <alpha-value>)",
+        },
+        island: {
+          DEFAULT: "hsl(var(--island) / <alpha-value>)",
+          foreground: "hsl(var(--island-foreground) / <alpha-value>)",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
+        },
+        input: {
+          DEFAULT: "hsl(var(--input) / <alpha-value>)",
+          foreground: "hsl(var(--input-foreground) / <alpha-value>)",
+        },
+        border: "hsl(var(--border) / <alpha-value>)",
       },
+      borderRadius: {
+        bottom: "var(--radius) - 2px",
+        island: "var(--radius) - 1px",
+        popover: "var(--radius)",
+      }
     },
   },
   plugins: [],
