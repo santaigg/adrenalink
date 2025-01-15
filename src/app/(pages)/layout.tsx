@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import { mantineTheme, santaiFont } from "./styles/theme";
-import Navbar from "./components/navigation/Navbar";
+import { mantineTheme, santaiFont } from "../styles/theme";
+import Navbar from "../components/navigation/Navbar";
+import Footer from "../components/navigation/Footer";
 import "@mantine/core/styles.css";
-import "./styles/global.css";
+import "../styles/global.css";
 
 export const metadata: Metadata = {
   title: "Santai.GG",
@@ -23,7 +24,10 @@ export default function RootLayout({
       <body className={`${santaiFont.variable} antialiased bg-surface-8`}>
         <MantineProvider withGlobalClasses defaultColorScheme="dark" theme={mantineTheme}>
           <Navbar />
-          {children}
+          <div className="flex flex-col">
+            {children}
+            <Footer />
+          </div>
         </MantineProvider>
       </body>
     </html>
