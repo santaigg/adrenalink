@@ -25,7 +25,7 @@ export default function Navbar() {
 
   const items = links.map((link) => {
     return (
-      <a key={link.label} href={link.link} className="hover:text-primary-5" onClick={(event) => event.preventDefault()}>
+      <a key={link.label} href={link.link} className="hover:text-primary-5">
         {link.label}
       </a>
     );
