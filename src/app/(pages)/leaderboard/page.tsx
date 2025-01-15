@@ -5,8 +5,6 @@ import BackgroundImage from "../../components/cosmetic/BackgroundImage";
 import BackgroundImageData from "../../assets/background-images/background-spectators.png";
 import soloRank from "../../assets/ranks/rank-solo.svg";
 import Image from "next/image";
-// MANTINE
-import { Container, SimpleGrid, Pagination, Select } from "@mantine/core";
 // LEADERBOARD
 import PlayerLeaderboardTable from "../../components/tables/PlayerLeaderboardTable";
 import { fetchLeaderboard } from "../../utils/fetch/fetchLeaderboard";
@@ -58,11 +56,7 @@ export default function Leaderboard() {
             <h2 className="text-3xl font-light">PLAYERS</h2>
             <h1 className="text-5xl">TOP 1000</h1>
           </div>
-          <Image
-            src={soloRank}
-            alt="Spectre Divide solo rank icon."
-            className="w-24"
-          />
+          <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
         </div>
         {/* FILTERS START */}
         <div className="w-full flex my-8 gap-x-2 items-center">
@@ -70,24 +64,14 @@ export default function Leaderboard() {
             <Input />
           </div>
           <div className="w-48">
-            <SeasonSelector
-              defaultValue={DEFAULT_SEASON_VALUE}
-              onChange={setSeason}
-            />
+            <SeasonSelector defaultValue={DEFAULT_SEASON_VALUE} onChange={setSeason} />
           </div>
           <div className="">
-          <Pagination
-            total={leaderboard.length / 50}
-            value={page}
-            onChange={setPage}
-            withControls={false}
-          />
+            <Pagination total={leaderboard.length / 50} value={page} onChange={setPage} withControls={false} />
           </div>
         </div>
 
-        <div className="flex justify-end items-end pb-4 sm:pb-0">
-
-        </div>
+        <div className="flex justify-end items-end pb-4 sm:pb-0"></div>
         {/* TABLE START */}
         <PlayerLeaderboardTable playerRows={leaderboard} page={page} />
       </Container>

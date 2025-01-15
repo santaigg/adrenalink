@@ -1,34 +1,19 @@
-"use client";
-import { IconArrowRight, IconSearch } from "@tabler/icons-react";
-import { ActionIcon, FocusTrap, TextInput, TextInputProps, useMantineTheme } from "@mantine/core";
-import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
-import { useDisclosure } from "@mantine/hooks";
-import { cn } from "@/app/utils/cn";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
-export function Searchbox({ props, className, focusTrap = false }: { props?: TextInputProps; className?: string; focusTrap: boolean }) {
-  const theme = useMantineTheme();
-
-  const [focused, { toggle }] = useDisclosure();
-
+const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({ className, type, ...props }, ref) => {
   return (
-    <div className={className}>
-      <Extrusion className={cn("min-w-24", focused ? "border-primary-5" : "border-surface-4")} cornerLocation={CornerLocation.TopRight} />
-      <FocusTrap active={focusTrap}>
-        <TextInput
-          onFocus={toggle}
-          onBlur={toggle}
-          radius="0"
-          size="md"
-          placeholder="Search players by username or Steam64..."
-          leftSection={<IconSearch size={18} stroke={1.5} />}
-          rightSection={
-            <ActionIcon size={30} radius="0" color={theme.primaryColor}>
-              <IconArrowRight size={18} stroke={1.5} />
-            </ActionIcon>
-          }
-          {...props}
-        />
-      </FocusTrap>
-    </div>
+    <input
+      type={type}
+      className={cn(
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
   );
-}
+});
+Searchbox.displayName = "Searchbox";
+
+export { Searchbox };
