@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "../styles/global.css";
+import "../styles/global-variables.css";
+import "../styles/global-style.css";
 import { Mohave } from "next/font/google";
 import Footer from "../components/navigation/Footer";
 import Navbar from "../components/navigation/Navbar";

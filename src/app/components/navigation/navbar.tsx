@@ -28,7 +28,9 @@ export default function Navbar() {
 
   return (
     <header className="mb-8">
-      <div className="p-4 bg-surface-8"></div>
+      <div className="p-4 bg-surface-1">
+        <Logo />
+      </div>
       <Extrusion className="float-right min-w-[20%] border-surface-8" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
