@@ -17,7 +17,7 @@ export default function Home() {
           <div>
             <h1>Player Search</h1>
             <p>Search Spectre Divide players to view their stats and match history.</p>
-            <Searchbox focusTrap className="my-4" />
+            <Searchbox />
           </div>
         </SimpleGrid>
       </Container>
