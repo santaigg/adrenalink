@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/global.css";
+import { Mohave } from "next/font/google";
 import Footer from "../components/navigation/Footer";
 import Navbar from "../components/navigation/Navbar";
 
@@ -19,13 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="en">
       <body className={`${santaiFont.variable} antialiased bg-surface-8`}>
         <Navbar />
-        <div className="flex flex-col">
-          {children}
-          <Footer />
-        </div>
+        {children}
+        <Footer />
       </body>
     </html>
   );
