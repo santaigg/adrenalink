@@ -20,7 +20,7 @@ const data = [
 export default function Footer() {
   const groups = data.map((group) => {
     const links = group.links.map((link, index) => (
-      <p className="hover:text-primary-5" onClick={(event) => event.preventDefault()}>
+      <p key={index} className="hover:text-primary-5" onClick={(event) => event.preventDefault()}>
         {link.label}
       </p>
     ));
@@ -56,7 +56,7 @@ export default function Footer() {
                 </ActionIcon>
               </Group>
               <Text c="dimmed" size="sm">
-                © 2020 mantine.dev. All rights reserved.
+                © 2020 mantine.dev. All rights reserved. {/* may need to change this line */}
               </Text>
             </Container>
           </div>
