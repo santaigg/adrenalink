@@ -37,7 +37,7 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
       return (
         <TableRow
           key={playerRow.playerId}
-          className="hover:bg-surface-7 hover:text-primary-5 hover:cursor-pointer bg-surface-8 border-b-surface-7"
+          className="cursor-pointer hover:bg-muted/25 text-slate-200 border-surface-2 bg-surface-1"
         >
           <TableCell>
             <p className="text-lg">{playerRow.placement}</p>
@@ -59,11 +59,11 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
   return (
     <>
       <Extrusion
-        className={cn("min-w-24 border-surface-5")}
+        className={cn("min-w-24 border-surface-2")}
         cornerLocation={CornerLocation.TopRight}
       />
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-surface-2">
           <TableRow>
             <TableHead>
               <h1 className="text-xl sm:text-2xl font-normal">#</h1>
