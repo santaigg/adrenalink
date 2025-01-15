@@ -18,10 +18,6 @@ export default {
           DEFAULT: "hsl(var(--island) / <alpha-value>)",
           foreground: "hsl(var(--island-foreground) / <alpha-value>)",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
-          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
-        },
         accent: {
           DEFAULT: "hsl(var(--accent) / <alpha-value>)",
           foreground: "hsl(var(--accent-foreground) / <alpha-value>)",

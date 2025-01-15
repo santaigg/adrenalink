@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${santaiFont.variable} antialiased bg-surface-8`}>
+      <body className={`${santaiFont.variable} antialiased bg-bottom text-bottom-foreground`}>
         <Navbar />
         {children}
         <Footer />

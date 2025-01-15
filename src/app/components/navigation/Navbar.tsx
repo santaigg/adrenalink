@@ -28,10 +28,10 @@ export default function Navbar() {
 
   return (
     <header className="mb-8">
-      <div className="p-4 bg-surface-1">
+      <div className="p-4 bg-island text-island-foreground">
         <Logo />
       </div>
-      <Extrusion className="float-right min-w-[20%] border-surface-8" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[20%] border-island" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }

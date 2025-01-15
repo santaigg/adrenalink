@@ -4,14 +4,11 @@
 
 @layer base {
   :root {
-    --bottom: 215 20% 10%;
+    --bottom: 215 20% 6%;
     --bottom-foreground: 215 6% 90%;
 
-    --island: 215 10% 20%;
+    --island: 215 15% 12%;
     --island-foreground: 215 3% 95%;
-
-    --popover: 215 5% 60%;
-    --popover-foreground: 215 0% 0%;
 
     --accent: 73 97 50%;
     --accent-foreground: 0 0 0%;
