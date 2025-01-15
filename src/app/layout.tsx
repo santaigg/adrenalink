@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { mantineTheme, santaiFont } from "./styles/theme";
-import Navbar from "./components/navigation/Navbar";
+import Navbar from "./components/navigation/navbar";
 import "@mantine/core/styles.css";
 import "./styles/global.css";
 
