@@ -3,7 +3,7 @@ import { Burger, Container, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CornerLocation } from "../cosmetic/Extrusion";
 import { IconBrandDiscordFilled } from "@tabler/icons-react";
-import Logo from "./logo";
+import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
 
 const links = [
