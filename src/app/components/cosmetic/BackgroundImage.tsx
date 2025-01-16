@@ -7,7 +7,7 @@ export default function BackgroundImage({ image, className }: { image: StaticIma
     <Image
       src={image}
       alt="Background Image."
-      className={cn("absolute top-0 -z-50 size-full object-cover blur-md mix-blend-color-dodge saturate-[30%] brightness-[65%] pointer-events-none", className)}
+      className={cn("absolute top-0 -z-50 size-full object-cover blur-md mix-blend-color-dodge saturate-[30%] brightness-50 pointer-events-none", className)}
     />
   );
 }
