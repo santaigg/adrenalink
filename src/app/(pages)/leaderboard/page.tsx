@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 // IMAGES
 import BackgroundImage from "../../components/cosmetic/BackgroundImage";
-import BackgroundImageData from "../../assets/background-images/background-spectators.png";
+import BackgroundImageData from "../../assets/images/background/background-spectators.png";
 import soloRank from "../../assets/ranks/rank-solo.svg";
 import Image from "next/image";
 // LEADERBOARD
@@ -18,15 +18,11 @@ import { Input } from "@/app/components/input/Input";
 import { SeasonSelector } from "@/app/components/input/SeasonSelector";
 import { PlayerLeaderboardPagination } from "@/app/components/navigation/PlayerLeaderboardPagination";
 
-
-const PRIMARY_COL_HEIGHT = "300px";
-
 // UNFINISHED
 // Need to rework the pagination so that it only pulls needed entries, to reduce load time.
 // Need to check it doesnt break on mobile view, though it looks fine on my phone.
 
 export default function Leaderboard() {
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
   const DEFAULT_SEASON_VALUE = "Season 0";
 
   const [page, setPage] = useState<number>(1);
@@ -58,22 +54,16 @@ export default function Leaderboard() {
             <h2 className="text-3xl font-light">PLAYERS</h2>
             <h1 className="text-5xl">TOP 1000</h1>
           </div>
-          <Image
-            src={soloRank}
-            alt="Spectre Divide solo rank icon."
-            className="w-24"
-          />
+          <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
         </div>
         {/* FILTERS START */}
         <div className="w-full flex my-8 gap-x-2 items-center">
           <div className="w-96 mr-auto">
             <Input />
           </div>
-          <div className="w-48">
-            <SeasonSelector defaultValue={DEFAULT_SEASON_VALUE} onChange={setSeason} />
-          </div>
+          <div className="w-48">{/* <SeasonSelector defaultValue={DEFAULT_SEASON_VALUE} onChange={setSeason} /> */}</div>
           <div className="">
-            <PlayerLeaderboardPagination totalCount={leaderboard.length} pageSize={50} page={page} onChange={setPage}/>
+            <PlayerLeaderboardPagination totalCount={leaderboard.length} pageSize={50} page={page} onChange={setPage} />
           </div>
         </div>
 

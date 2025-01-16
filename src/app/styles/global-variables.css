@@ -17,7 +17,9 @@
     --muted-foreground: 240 4% 30%;
 
     --input: 240 16% 8%;
-    --input-foreground: 240 5% 50%;
+    --input-foreground: 240 5% 70%;
+
+    --warning: 40 100% 50%;
 
     --spacing: 1rem;
 
