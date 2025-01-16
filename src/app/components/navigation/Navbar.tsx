@@ -13,7 +13,10 @@ export default function Navbar() {
           <Logo />
           <div className="flex flex-row float-right gap-primary">
             <Link aria-disabled className="text-muted-foreground pointer-events-none" href={"/wiki"}>
-              Wiki
+              Wiki (WIP)
+            </Link>
+            <Link className="hover:text-accent" href={"/"}>
+              Home
             </Link>
             <Link className="hover:text-accent" href={"/leaderboard"}>
               Leaderboard
