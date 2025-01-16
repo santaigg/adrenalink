@@ -11,6 +11,8 @@ import {
   TableRow,
 } from "@/app/components/tables/Table";
 
+import { RankImage } from "../cosmetic/RankImageFromRank";
+
 interface PlayerRow {
   username: string;
   placement: number;
@@ -37,7 +39,7 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
       return (
         <TableRow
           key={playerRow.playerId}
-          className="cursor-pointer hover:bg-muted/25 text-slate-200 border-surface-2 bg-surface-1"
+          className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
         >
           <TableCell>
             <p className="text-lg">{playerRow.placement}</p>
@@ -49,7 +51,10 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
             <p className="text-lg">{playerRow.soloRank}</p>
           </TableCell>
           <TableCell>
-            <p className="text-lg">{playerRow.rating}</p>
+            <div className="flex items-center gap-x-4">
+              <RankImage rank={playerRow.soloRank} />
+              <p className="text-lg mt-0.5">{playerRow.rating}</p>
+            </div>
           </TableCell>
         </TableRow>
       );
@@ -59,23 +64,23 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
   return (
     <>
       <Extrusion
-        className={cn("min-w-24 border-surface-2")}
+        className={cn("min-w-36 border-secondary rounded-tl")}
         cornerLocation={CornerLocation.TopRight}
       />
-      <Table>
-        <TableHeader className="bg-surface-2">
-          <TableRow>
+      <Table className="rounded-tr overflow-hidden">
+        <TableHeader className="bg-secondary h-20">
+          <TableRow className="text-secondary-foreground border-b-[1px] border-muted">
             <TableHead>
-              <h1 className="text-xl sm:text-2xl font-normal">#</h1>
+              <h1 className="text-xl">#</h1>
             </TableHead>
             <TableHead>
-              <h1 className="text-xl sm:text-2xl font-normal">Username</h1>
+              <h1 className="text-xl">Username</h1>
             </TableHead>
             <TableHead>
-              <h1 className="text-xl sm:text-2xl font-normal">Rank</h1>
+              <h1 className="text-xl">Rank</h1>
             </TableHead>
             <TableHead>
-              <h1 className="text-xl sm:text-2xl font-normal">Rank Rating</h1>
+              <h1 className="text-xl">Rank Rating</h1>
             </TableHead>
           </TableRow>
         </TableHeader>

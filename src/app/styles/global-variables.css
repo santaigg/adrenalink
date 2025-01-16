@@ -16,6 +16,10 @@
     --muted: 240 4% 20%;
     --muted-foreground: 240 4% 30%;
 
+    --table: 230 13% 9%;
+    --table-secondary: 250 10% 11%;
+    --table-header: 228 5% 17%;
+
     --input: 240 16% 8%;
     --input-foreground: 240 5% 70%;
 

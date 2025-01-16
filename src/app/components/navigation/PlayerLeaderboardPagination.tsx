@@ -8,7 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/app/components/shadcn/Pagination";
+} from "@/app/components/navigation/Pagination";
+
+// Will 100% rework. Temporary solution.
 
 export interface PlayerLeaderboardPaginationProps {
   totalCount: number;
@@ -33,89 +35,289 @@ const PlayerLeaderboardPagination: React.FC<
     }
   };
 
-  return (
-    <Pagination>
-      <PaginationContent>
-        {/* Elipsis && First Page */}
-        {page > 2 && (
-          <>
-            <PaginationItem
-              onClick={(e) => {
-                e.preventDefault(); // Prevent the default link behavior
-                onChange(1);
-              }}
-            >
-              <PaginationLink href="#">{1}</PaginationLink>
-            </PaginationItem>
-
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          </>
-        )}
-
-        {/* Hide prev page on page 1 */}
-        {page > 1 && (
+  const renderPagination = () => {
+    // Start edge cases
+    if (page <= 4) {
+      return (
+        <>
+          {/* Current page */}
           <PaginationItem>
             <PaginationLink
               href="#"
+              className={`rounded-md ${
+                page == 1 ? "bg-accent text-primary font-extrabold" : ""
+              }`}
               onClick={(e) => {
-                e.preventDefault(); // Prevent the default link behavior
+                e.preventDefault();
+                onChange(1);
+              }}
+            >
+              {1}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == 2 ? "bg-accent text-primary font-extrabold" : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(2);
+              }}
+            >
+              {2}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == 3 ? "bg-accent text-primary font-extrabold" : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(3);
+              }}
+            >
+              {3}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == 4 ? "bg-accent text-primary font-extrabold" : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(4);
+              }}
+            >
+              {4}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == 5 ? "bg-accent text-primary font-extrabold" : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(5);
+              }}
+            >
+              {5}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Elipsis && Final Page */}
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem
+            onClick={(e) => {
+              e.preventDefault();
+              onChange(totalPages);
+            }}
+          >
+            <PaginationLink href="#" className="rounded-md">{totalPages}</PaginationLink>
+          </PaginationItem>
+        </>
+      );
+    }
+
+    // Base case
+    if (page > 4 && page < totalPages - 3) {
+      return (
+        <>
+          {/* Elipsis && First Page */}
+          <PaginationItem
+            onClick={(e) => {
+              e.preventDefault();
+              onChange(1);
+            }}
+          >
+            <PaginationLink href="#" className="rounded-md">
+              {1}
+            </PaginationLink>
+          </PaginationItem>
+
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+
+          {/* Hide prev page on page 1 */}
+          <PaginationItem>
+            <PaginationLink
+              className="rounded-md"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
                 handlePrevious();
               }}
             >
               {page - 1}
             </PaginationLink>
           </PaginationItem>
-        )}
 
-        {/* Current page */}
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            {page}
-          </PaginationLink>
-        </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md bg-accent text-primary font-extrabold`}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
 
-        {/* Next Page */}
-        {(page < totalPages - 2 || page == totalPages - 1) && (
+          {/* Next Page */}
           <PaginationItem
             onClick={(e) => {
-              e.preventDefault(); // Prevent the default link behavior
+              e.preventDefault();
               handleNext();
             }}
           >
-            <PaginationLink href="#">{page + 1}</PaginationLink>
+            <PaginationLink href="#" className="rounded-md">
+              {page + 1}
+            </PaginationLink>
           </PaginationItem>
-        )}
 
-        {/* Elipsis && Final Page */}
-        {page < totalPages - 1 && (
-          <>
-            {page == totalPages - 2 ? (
-              <PaginationItem
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent the default link behavior
-                  onChange(totalPages - 1);
-                }}
-              >
-                <PaginationLink href="#">{totalPages - 1}</PaginationLink>
-              </PaginationItem>
-            ) : (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-            <PaginationItem
+          {/* Elipsis && Final Page */}
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem
+            onClick={(e) => {
+              e.preventDefault();
+              onChange(totalPages);
+            }}
+          >
+            <PaginationLink href="#" className="rounded-md">
+              {totalPages}
+            </PaginationLink>
+          </PaginationItem>
+        </>
+      );
+    }
+
+    // End edge Cases
+    if (page >= totalPages - 3) {
+      return (
+        <>
+          {/* First page && Elepsis */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className="rounded-md"
               onClick={(e) => {
-                e.preventDefault(); // Prevent the default link behavior
+                e.preventDefault();
+                onChange(1);
+              }}
+            >
+              {1}
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == totalPages - 4
+                  ? "bg-accent text-primary font-extrabold"
+                  : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(totalPages - 4);
+              }}
+            >
+              {totalPages - 4}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == totalPages - 3
+                  ? "bg-accent text-primary font-extrabold"
+                  : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(totalPages - 3);
+              }}
+            >
+              {totalPages - 3}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == totalPages - 2
+                  ? "bg-accent text-primary font-extrabold"
+                  : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(totalPages - 2);
+              }}
+            >
+              {totalPages - 2}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Current page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == totalPages - 1
+                  ? "bg-accent text-primary font-extrabold"
+                  : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                onChange(totalPages - 1);
+              }}
+            >
+              {totalPages - 1}
+            </PaginationLink>
+          </PaginationItem>
+          {/* Final Page */}
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className={`rounded-md ${
+                page == totalPages
+                  ? "bg-accent text-primary font-extrabold"
+                  : ""
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
                 onChange(totalPages);
               }}
             >
-              <PaginationLink href="#">{totalPages}</PaginationLink>
-            </PaginationItem>
-          </>
-        )}
-      </PaginationContent>
+              {totalPages}
+            </PaginationLink>
+          </PaginationItem>
+        </>
+      );
+    }
+  };
+
+  return (
+    <Pagination className="h-full">
+      <PaginationContent>{renderPagination()}</PaginationContent>
     </Pagination>
   );
 };

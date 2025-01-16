@@ -21,6 +21,11 @@ export default {
           DEFAULT: "hsl(var(--accent) / <alpha-value>)",
           foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
         },
+        table: {
+          DEFAULT: "hsl(var(--table) / <alpha-value>)",
+          secondary: "hsl(var(--table-secondary) / <alpha-value>)",
+          header: "hsl(var(--table-header) / <alpha-value>)",
+        },
         input: {
           DEFAULT: "hsl(var(--input) / <alpha-value>)",
           foreground: "hsl(var(--input-foreground) / <alpha-value>)",
