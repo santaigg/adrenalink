@@ -19,7 +19,9 @@ export default function Footer() {
   return (
     <footer>
       <Extrusion className="min-w-[20%] border-primary" cornerLocation={CornerLocation.TopRight} />
-      <div className="flex-col p-8 bg-white"></div>
+      <div className="flex-row p-8 bg-primary">
+        <Logo className="ml-auto" />
+      </div>
     </footer>
   );
 }
