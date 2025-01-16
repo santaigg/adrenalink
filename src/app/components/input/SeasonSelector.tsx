@@ -4,9 +4,8 @@ import * as React from "react";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { cn } from "@/app/utils/cn";
 
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { Button } from "@/app/components/shadcn/Button"
 import {
   Command,
   CommandEmpty,
@@ -14,12 +13,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/app/components/shadcn/Command"
+} from "@/app/components/shadcn/Command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/app/components/shadcn/Popover"
+} from "@/app/components/shadcn/Popover";
 
 const seasons = [
   {
@@ -30,30 +29,32 @@ const seasons = [
     value: "season1",
     label: "Season 1: Flashpoint",
   },
-]
+];
 
-export function SeasonSelector() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+const SeasonSelector = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input">
+>(({ className, type, ...props }, ref) => {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+        <div
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-52 px-4 py-2 inline-flex items-center gap-2 border whitespace-nowrap cursor-pointer justify-between bg-secondary h-9 rounded border-secondary hover:bg-secondary hover:border-accent text-base text-primary-foreground hover:text-accent font-normal [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         >
           {value
             ? seasons.find((season) => season.value === value)?.label
             : "Select Season..."}
           <ChevronsUpDown className="opacity-50" />
-        </Button>
+        </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search Seasons..." className="h-9" />
+      <PopoverContent className="w-52 p-0 border-muted-foreground">
+        <Command className="bg-secondary border-secondary">
+          {/* <CommandInput placeholder="Search Seasons..." className="h-9 !border-muted-foreground" /> */}
           <CommandList>
             <CommandEmpty>No season found.</CommandEmpty>
             <CommandGroup>
@@ -62,8 +63,8 @@ export function SeasonSelector() {
                   key={season.value}
                   value={season.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
+                    setValue(currentValue === value ? "" : currentValue);
+                    setOpen(false);
                   }}
                 >
                   {season.label}
@@ -80,5 +81,8 @@ export function SeasonSelector() {
         </Command>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+});
+SeasonSelector.displayName = "SeasonSelector";
+
+export { SeasonSelector };
