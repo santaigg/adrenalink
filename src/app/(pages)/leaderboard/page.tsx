@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 // IMAGES
 import BackgroundImage from "../../components/cosmetic/BackgroundImage";
-import BackgroundImageData from "../../assets/background-images/background-spectators.png";
+import BackgroundImageData from "../../assets/images/background/background-spectators.png";
 import soloRank from "../../assets/ranks/rank-solo.svg";
 import Image from "next/image";
 // LEADERBOARD
@@ -17,7 +17,7 @@ import { cn } from "../../utils/cn";
 import { Input } from "@/app/components/input/Input";
 import { SeasonSelector } from "@/app/components/input/SeasonSelector";
 import { PlayerLeaderboardPagination } from "@/app/components/navigation/PlayerLeaderboardPagination";
-
+import Constrict from "@/app/components/layout/Constrict";
 
 const PRIMARY_COL_HEIGHT = "300px";
 
@@ -51,12 +51,12 @@ export default function Leaderboard() {
     <main>
       <BackgroundImage image={BackgroundImageData} />
 
-      <div className="container px-2 mx-auto">
+      <Constrict className="flex flex-col">
         {/* TITLE START */}
         <div className="flex justify-start items-center mt-2">
           <div className="mr-8">
-            <h2 className="text-3xl font-light">PLAYERS</h2>
-            <h1 className="text-5xl">TOP 1000</h1>
+            <h2 className="text-3xl text-light-foreground">PLAYERS</h2>
+            <h1 className="text-5xl text-light-foreground">TOP 1000</h1>
           </div>
           <Image
             src={soloRank}
@@ -70,17 +70,25 @@ export default function Leaderboard() {
             <Input />
           </div>
           <div className="w-48">
-            <SeasonSelector defaultValue={DEFAULT_SEASON_VALUE} onChange={setSeason} />
+            <SeasonSelector
+            // defaultValue={DEFAULT_SEASON_VALUE}
+            // onChange={setSeason}
+            />
           </div>
           <div className="">
-            <PlayerLeaderboardPagination totalCount={leaderboard.length} pageSize={50} page={page} onChange={setPage}/>
+            <PlayerLeaderboardPagination
+              totalCount={leaderboard.length}
+              pageSize={50}
+              page={page}
+              onChange={setPage}
+            />
           </div>
         </div>
 
         <div className="flex justify-end items-end pb-4 sm:pb-0"></div>
         {/* TABLE START */}
         <PlayerLeaderboardTable playerRows={leaderboard} page={page} />
-      </div>
+      </Constrict>
     </main>
   );
 }
