@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main>
       <BackgroundImage image={BackgroundImageData} />
-      <Constrict className="mb-4">
+      <Constrict className="my-12">
         <NoticeBanner className="text-center" notice="Welcome to Santai.GG Season 1!" />
       </Constrict>
       <Constrict className="flex flex-row">

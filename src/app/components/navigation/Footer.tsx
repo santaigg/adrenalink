@@ -18,8 +18,8 @@ const data = [
 export default function Footer() {
   return (
     <footer>
-      {/* <Extrusion className="min-w-[20%] border-surface-8" cornerLocation={CornerLocation.TopRight} /> */}
-      <div className="flex-col p-8 bg-surface-8"></div>
+      <Extrusion className="min-w-[20%] border-primary" cornerLocation={CornerLocation.TopRight} />
+      <div className="flex-col p-8 bg-white"></div>
     </footer>
   );
 }
