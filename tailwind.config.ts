@@ -43,6 +43,10 @@ export default {
         primary: "calc(var(--spacing))",
         secondary: "calc(var(--spacing) * 0.6)",
       },
+      fontFamily: {
+        sans: ["var(--font-mohave)", "system-ui", "sans-serif"], // Define sans font
+      },
+    },
       screens: {
         constrict: "var(--constrict-threshold)"
       }

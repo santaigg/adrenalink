@@ -1,11 +1,9 @@
-"use client";
-import * as React from "react";
+"use client"
 
-import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
-import { cn } from "@/app/utils/cn";
-
+import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
+import { cn } from "@/app/utils/cn"
 import { Button } from "@/app/components/shadcn/Button"
 import {
   Command,
@@ -21,18 +19,30 @@ import {
   PopoverTrigger,
 } from "@/app/components/shadcn/Popover"
 
-const seasons = [
+const frameworks = [
   {
-    value: "season0",
-    label: "Season 0",
+    value: "next.js",
+    label: "Next.js",
   },
   {
-    value: "season1",
-    label: "Season 1: Flashpoint",
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
   },
 ]
 
-export function SeasonSelector() {
+export function ComboboxDemo() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -46,31 +56,31 @@ export function SeasonSelector() {
           className="w-[200px] justify-between"
         >
           {value
-            ? seasons.find((season) => season.value === value)?.label
-            : "Select Season..."}
+            ? frameworks.find((framework) => framework.value === value)?.label
+            : "Select framework..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search Seasons..." className="h-9" />
+          <CommandInput placeholder="Search framework..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No season found.</CommandEmpty>
+            <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
-              {seasons.map((season) => (
+              {frameworks.map((framework) => (
                 <CommandItem
-                  key={season.value}
-                  value={season.value}
+                  key={framework.value}
+                  value={framework.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                 >
-                  {season.label}
+                  {framework.label}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === season.value ? "opacity-100" : "opacity-0"
+                      value === framework.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
