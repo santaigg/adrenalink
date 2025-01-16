@@ -2,36 +2,26 @@
 import { CornerLocation } from "../cosmetic/Extrusion";
 import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
-
-const links = [
-  { link: "/leaderboard", label: "Leaderboard" },
-  // { link: "/about", label: "About" },
-  // {
-  //   link: "",
-  //   label: "Contribute",
-  //   links: [
-  //     { link: "/faq", label: "FAQ" },
-  //     { link: "/demo", label: "Book a demo" }, // DROPDOWN NAVBAR ITEM
-  //     { link: "/forums", label: "Forums" },
-  //   ],
-  // },
-];
+import Link from "next/link";
+import Constrict from "../layout/Constrict";
 
 export default function Navbar() {
-  const items = links.map((link) => {
-    return (
-      <a key={link.label} href={link.link} className="hover:text-primary-5">
-        {link.label}
-      </a>
-    );
-  });
-
   return (
-    <header className="mb-8">
-      <div className="p-4 bg-island text-island-foreground">
-        <Logo />
+    <header className="mb-primary">
+      <div className="bg-primary text-primary-foreground">
+        <Constrict className="flex flex-row justify-between p-2">
+          <Logo />
+          <div className="flex flex-row float-right gap-primary">
+            <Link aria-disabled className="text-muted-foreground" href={"/leaderboard"}>
+              Wiki
+            </Link>
+            <Link className="hover:text-accent" href={"/leaderboard"}>
+              Leaderboard
+            </Link>
+          </div>
+        </Constrict>
       </div>
-      <Extrusion className="float-right min-w-[20%] border-island" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion className="float-right min-w-[30%] border-primary" cornerLocation={CornerLocation.BottomLeft} />
     </header>
   );
 }

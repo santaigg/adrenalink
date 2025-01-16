@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-    darkMode: ["class"],
     content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,13 +9,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        bottom: {
-          DEFAULT: "hsl(var(--bottom) / <alpha-value>)",
-          foreground: "hsl(var(--bottom-foreground) / <alpha-value>)",
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
         },
-        island: {
-          DEFAULT: "hsl(var(--island) / <alpha-value>)",
-          foreground: "hsl(var(--island-foreground) / <alpha-value>)",
+        secondary: {
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
         },
         accent: {
           DEFAULT: "hsl(var(--accent) / <alpha-value>)",
@@ -26,14 +25,28 @@ export default {
           DEFAULT: "hsl(var(--input) / <alpha-value>)",
           foreground: "hsl(var(--input-foreground) / <alpha-value>)",
         },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
+        },
         border: "hsl(var(--border) / <alpha-value>)",
       },
-      borderRadius: {
-        bottom: "var(--radius) - 2px",
-        island: "var(--radius) - 1px",
-        popover: "var(--radius)",
+      gap: {
+        primary: "calc(var(--spacing))",
+        secondary: "calc(var(--spacing) * 0.6)",
+      },
+      padding: {
+        primary: "calc(var(--spacing))",
+        secondary: "calc(var(--spacing) * 0.6)",
+      },
+      margin: {
+        primary: "calc(var(--spacing))",
+        secondary: "calc(var(--spacing) * 0.6)",
+      },
+      screens: {
+        constrict: "var(--constrict-threshold)"
       }
-    },
+    }
   },
   plugins: [],
 } satisfies Config;

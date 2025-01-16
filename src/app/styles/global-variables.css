@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    --bottom: 215 20% 6%;
-    --bottom-foreground: 215 6% 90%;
+    --primary: 240 10% 10%;
+    --primary-foreground: 240 10 80%;
 
-    --island: 215 15% 12%;
-    --island-foreground: 215 3% 95%;
+    --secondary: 240 8% 12%;
+    --secondary-foreground: 240 3% 95%;
 
     --accent: 73 97 50%;
     --accent-foreground: 0 0 0%;
 
-    --muted: 215 4% 20%;
-    --muted-foreground: 215 4% 30%;
+    --muted: 240 4% 20%;
+    --muted-foreground: 240 4% 30%;
 
-    --border: 215 4% 97%;
+    --input: 240 16% 8%;
+    --input-foreground: 240 5% 50%;
 
-    --input: 215 15% 15%;
-    --input-foreground: 215 5% 50%;
+    --spacing: 1rem;
 
-    --radius: 3px;
+    --constrict-threshold: 1200px;
   }
 }
