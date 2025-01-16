@@ -46,11 +46,10 @@ export default {
       fontFamily: {
         sans: ["var(--font-mohave)", "system-ui", "sans-serif"], // Define sans font
       },
-    },
       screens: {
         constrict: "var(--constrict-threshold)"
       }
-    }
+    },
   },
   plugins: [],
 } satisfies Config;
