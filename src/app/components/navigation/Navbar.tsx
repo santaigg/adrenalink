@@ -12,7 +12,7 @@ export default function Navbar() {
         <Constrict className="flex flex-row justify-between p-2">
           <Logo />
           <div className="flex flex-row float-right gap-primary">
-            <Link aria-disabled className="text-muted-foreground" href={"/leaderboard"}>
+            <Link aria-disabled className="text-muted-foreground pointer-events-none" href={"/wiki"}>
               Wiki
             </Link>
             <Link className="hover:text-accent" href={"/leaderboard"}>

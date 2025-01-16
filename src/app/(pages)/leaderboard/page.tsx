@@ -27,7 +27,6 @@ const PRIMARY_COL_HEIGHT = "300px";
 // Need to check it doesnt break on mobile view, though it looks fine on my phone.
 
 export default function Leaderboard() {
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
   const DEFAULT_SEASON_VALUE = "Season 0";
 
   const [page, setPage] = useState<number>(5);
@@ -59,11 +58,7 @@ export default function Leaderboard() {
             <h2 className="text-3xl text-light-foreground">PLAYERS</h2>
             <h1 className="text-5xl text-light-foreground">TOP 1000</h1>
           </div>
-          <Image
-            src={soloRank}
-            alt="Spectre Divide solo rank icon."
-            className="w-24"
-          />
+          <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
         </div>
         {/* FILTERS START */}
         <div className="w-full flex mt-8 mb-16 gap-x-2 items-start">

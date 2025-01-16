@@ -22,10 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"antialiased font-sans bg-primary text-primary-foreground ${defaultFont.variable}"}>
+      <body className={"antialiased h-svh font-sans bg-primary text-primary-foreground ${defaultFont.variable}"}>
         <Navbar />
-        {children}
-        <Footer />
+        <div className="flex flex-col justify-between h-[93.86svh]">
+          <div>{children}</div>
+          <Footer />
+        </div>
       </body>
     </html>
   );
