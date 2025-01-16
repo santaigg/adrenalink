@@ -53,7 +53,7 @@ export default function Leaderboard() {
 
       <Constrict className="flex flex-col">
         {/* TITLE START */}
-        <div className="flex justify-start items-center">
+        <div className="flex justify-start items-center px-2 sm:px-0">
           <div className="mr-8">
             <h2 className="text-3xl text-primary-foreground">PLAYERS</h2>
             <h1 className="text-5xl text-secondary-foreground">TOP 1000</h1>
@@ -61,17 +61,17 @@ export default function Leaderboard() {
           <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
         </div>
         {/* FILTERS START */}
-        <div className="w-full flex mt-8 mb-16 gap-x-2 items-start">
-          <div className="w-96 mr-auto">
+        <div className="w-full flex flex-col-reverse items-center mt-8 sm:mb-16 gap-y-4 sm:px-0 sm:flex-row sm:gap-x-2 sm:items-start">
+          <div className="w-full sm:w-96 mr-auto">
             <SearchLeaderboard />
           </div>
-          <div className="w-52">
+          <div className="w-full sm:w-52">
             <SeasonSelector
             // defaultValue={DEFAULT_SEASON_VALUE}
             // onChange={setSeason}
             />
           </div>
-          <div className="">
+          <div className="hidden sm:block">
             <div className="bg-secondary border border-secondary rounded-t rounded-bl h-9">
               <PlayerLeaderboardPagination
                 totalCount={leaderboard.length}
@@ -79,7 +79,7 @@ export default function Leaderboard() {
                 page={page}
                 onChange={setPage}
               />
-            </div>{" "}
+            </div>
             <Extrusion
               className={cn("min-w-24 border-secondary rounded-br ml-auto")}
               cornerLocation={CornerLocation.BottomLeft}
@@ -90,7 +90,7 @@ export default function Leaderboard() {
         <div className="flex justify-end items-end pb-4 sm:pb-0"></div>
         {/* TABLE START */}
         <PlayerLeaderboardTable playerRows={leaderboard} page={page} />
-        <div className="bg-secondary w-full h-24 rounded-b flex justify-end items-center px-8">
+        <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8">
           <div className="bg-primary rounded-md border border-primary p-0.5">
             <PlayerLeaderboardPagination
               totalCount={leaderboard.length}

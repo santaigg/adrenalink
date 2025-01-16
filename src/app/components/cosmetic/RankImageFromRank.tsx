@@ -1,5 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 interface RankImageProps {
   rank: string;
@@ -7,18 +7,18 @@ interface RankImageProps {
 
 const RankImage: React.FC<RankImageProps> = ({ rank }) => {
   // Convert the rank string to match the image file naming convention
-//   const formattedRank = rank.replace(/\s+/g, '_').toLowerCase(); // Example: "Diamond 4" -> "diamond_4"
+  //   const formattedRank = rank.replace(/\s+/g, '_').toLowerCase(); // Example: "Diamond 4" -> "diamond_4"
   const rankImage = require(`@/app/assets/images/ranks/solo_ranks/${rank}.png`);
 
   return (
     <div>
-      <Image 
-        src={rankImage.default} 
-        alt={`${rank} rank`} 
-        className='h-8 w-8'
+      <Image
+        src={rankImage.default}
+        alt={`${rank} rank`}
+        className="h-8 w-8 shrink-0 min-w-8 min-h-8"
       />
     </div>
   );
 };
 
-export {RankImage};
+export { RankImage };
