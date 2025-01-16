@@ -29,7 +29,7 @@ const PRIMARY_COL_HEIGHT = "300px";
 export default function Leaderboard() {
   const DEFAULT_SEASON_VALUE = "Season 0";
 
-  const [page, setPage] = useState<number>(5);
+  const [page, setPage] = useState<number>(1);
   const [season, setSeason] = useState<string | null>(DEFAULT_SEASON_VALUE);
   const [leaderboard, setLeaderboard] = useState([]);
 
@@ -55,8 +55,8 @@ export default function Leaderboard() {
         {/* TITLE START */}
         <div className="flex justify-start items-center">
           <div className="mr-8">
-            <h2 className="text-3xl text-light-foreground">PLAYERS</h2>
-            <h1 className="text-5xl text-light-foreground">TOP 1000</h1>
+            <h2 className="text-3xl text-primary-foreground">PLAYERS</h2>
+            <h1 className="text-5xl text-secondary-foreground">TOP 1000</h1>
           </div>
           <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
         </div>

@@ -13,12 +13,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/app/components/shadcn/Command";
+} from "@/app/components/information/Command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/app/components/shadcn/Popover";
+} from "@/app/components/information/Popover";
 
 const seasons = [
   {

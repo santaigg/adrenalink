@@ -8,7 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/app/components/shadcn/Pagination";
+} from "@/app/components/navigation/Pagination";
+
+// Will 100% rework. Temporary solution.
 
 export interface PlayerLeaderboardPaginationProps {
   totalCount: number;
@@ -42,7 +44,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == 1 ? "bg-accent text-primary font-extrabold" : ""
               }`}
               onClick={(e) => {
@@ -50,14 +52,14 @@ const PlayerLeaderboardPagination: React.FC<
                 onChange(1);
               }}
             >
-              1
+              {1}
             </PaginationLink>
           </PaginationItem>
           {/* Current page */}
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == 2 ? "bg-accent text-primary font-extrabold" : ""
               }`}
               onClick={(e) => {
@@ -65,14 +67,14 @@ const PlayerLeaderboardPagination: React.FC<
                 onChange(2);
               }}
             >
-              2
+              {2}
             </PaginationLink>
           </PaginationItem>
           {/* Current page */}
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == 3 ? "bg-accent text-primary font-extrabold" : ""
               }`}
               onClick={(e) => {
@@ -80,14 +82,14 @@ const PlayerLeaderboardPagination: React.FC<
                 onChange(3);
               }}
             >
-              3
+              {3}
             </PaginationLink>
           </PaginationItem>
           {/* Current page */}
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == 4 ? "bg-accent text-primary font-extrabold" : ""
               }`}
               onClick={(e) => {
@@ -95,14 +97,14 @@ const PlayerLeaderboardPagination: React.FC<
                 onChange(4);
               }}
             >
-              4
+              {4}
             </PaginationLink>
           </PaginationItem>
           {/* Current page */}
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == 5 ? "bg-accent text-primary font-extrabold" : ""
               }`}
               onClick={(e) => {
@@ -110,7 +112,7 @@ const PlayerLeaderboardPagination: React.FC<
                 onChange(5);
               }}
             >
-              5
+              {5}
             </PaginationLink>
           </PaginationItem>
           {/* Elipsis && Final Page */}
@@ -123,7 +125,7 @@ const PlayerLeaderboardPagination: React.FC<
               onChange(totalPages);
             }}
           >
-            <PaginationLink href="#">{totalPages}</PaginationLink>
+            <PaginationLink href="#" className="rounded-md">{totalPages}</PaginationLink>
           </PaginationItem>
         </>
       );
@@ -140,7 +142,9 @@ const PlayerLeaderboardPagination: React.FC<
               onChange(1);
             }}
           >
-            <PaginationLink href="#">{1}</PaginationLink>
+            <PaginationLink href="#" className="rounded-md">
+              {1}
+            </PaginationLink>
           </PaginationItem>
 
           <PaginationItem>
@@ -150,6 +154,7 @@ const PlayerLeaderboardPagination: React.FC<
           {/* Hide prev page on page 1 */}
           <PaginationItem>
             <PaginationLink
+              className="rounded-md"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -164,8 +169,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              isActive
-              className="bg-accent text-primary font-extrabold"
+              className={`rounded-md bg-accent text-primary font-extrabold`}
             >
               {page}
             </PaginationLink>
@@ -178,7 +182,9 @@ const PlayerLeaderboardPagination: React.FC<
               handleNext();
             }}
           >
-            <PaginationLink href="#">{page + 1}</PaginationLink>
+            <PaginationLink href="#" className="rounded-md">
+              {page + 1}
+            </PaginationLink>
           </PaginationItem>
 
           {/* Elipsis && Final Page */}
@@ -191,7 +197,9 @@ const PlayerLeaderboardPagination: React.FC<
               onChange(totalPages);
             }}
           >
-            <PaginationLink href="#">{totalPages}</PaginationLink>
+            <PaginationLink href="#" className="rounded-md">
+              {totalPages}
+            </PaginationLink>
           </PaginationItem>
         </>
       );
@@ -205,6 +213,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
+              className="rounded-md"
               onClick={(e) => {
                 e.preventDefault();
                 onChange(1);
@@ -220,7 +229,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == totalPages - 4
                   ? "bg-accent text-primary font-extrabold"
                   : ""
@@ -237,7 +246,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == totalPages - 3
                   ? "bg-accent text-primary font-extrabold"
                   : ""
@@ -254,7 +263,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == totalPages - 2
                   ? "bg-accent text-primary font-extrabold"
                   : ""
@@ -271,7 +280,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == totalPages - 1
                   ? "bg-accent text-primary font-extrabold"
                   : ""
@@ -288,7 +297,7 @@ const PlayerLeaderboardPagination: React.FC<
           <PaginationItem>
             <PaginationLink
               href="#"
-              className={`${
+              className={`rounded-md ${
                 page == totalPages
                   ? "bg-accent text-primary font-extrabold"
                   : ""
