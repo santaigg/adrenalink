@@ -13,7 +13,7 @@ export default function Footer() {
         <Constrict className="flex flex-row justify-between">
           <div className="flex flex-col flex-1">
             <Logo />
-            <p className="my-2 text-sm">Made by LIMIT, Haft, Antiparty, and gomiooo.</p>
+            <p className="my-2 text-sm">Made by &nbsp; LIMIT, &nbsp; Haft, &nbsp; Antiparty, &nbsp; gomiooo.</p>
             <p className="w-1/2 text-xs text-muted-foreground">
               Santai.GG is not affiliated with Mountaintop Studios and all associated properties “Spectre Divide” are trademarks or registered trademarks of Mountaintop Studios.
             </p>

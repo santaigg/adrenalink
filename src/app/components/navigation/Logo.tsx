@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link href="/">
+    <Link href="/" className="w-fit">
       <svg
         viewBox="0 0 297 62"
         version="1.1"

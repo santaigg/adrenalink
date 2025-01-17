@@ -31,7 +31,7 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
           />
           <Extrusion className={cn("min-w-[20%] float-right", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
         </div>
-        <Button variant="default" className="h-11 ml-2 bg-accent">
+        <Button variant="default" className="h-11 ml-2">
           {"->"}
         </Button>
       </div>

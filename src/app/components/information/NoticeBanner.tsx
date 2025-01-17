@@ -6,7 +6,7 @@ export default function NoticeBanner({ className, notice }: { className?: string
     <div>
       <div className="flex flex-row">
         <div className="min-w-2 bg-accent opacity-90"></div>
-        <p className="w-max mx-4 text-warning text-lg font-black">{notice}</p>
+        <p className="w-max mx-4 text-accent text-lg font-black">{notice}</p>
         <div className="mr-4 min-w-2 bg-accent opacity-90"></div>
         <div className={cn("w-full opacity-90 p-2 bg-[repeating-linear-gradient(45deg,#c6fb04_0px,#c6fb04_20px,transparent_20px,transparent_35px)]", className)}></div>
         <div className="ml-4 min-w-2 bg-accent opacity-90"></div>

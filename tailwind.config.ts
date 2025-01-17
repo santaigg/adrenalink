@@ -34,7 +34,6 @@ export default {
           DEFAULT: "hsl(var(--muted) / <alpha-value>)",
           foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
         },
-        warning: "hsl(var(--warning) / <alpha-value>)",
         border: "hsl(var(--border) / <alpha-value>)",
       },
       gap: {
