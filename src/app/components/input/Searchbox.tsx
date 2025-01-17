@@ -21,7 +21,6 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
   return (
     <div>
       <div className="flex flex-row">
-        <Extrusion className={cn("w-min", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
         <div className="flex-1">
           <input
             onChange={(e) => setSearchValue(e.target.value)}
@@ -37,11 +36,9 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
           />
           <Extrusion className={cn("min-w-[20%] float-right", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
         </div>
-        {searchValue.length > 0 && (
-          <Button onClick={onSearchButtonClick} variant="default" className="h-11 ml-2">
-            {"->"}
-          </Button>
-        )}
+        <Button onClick={onSearchButtonClick} variant="loaded" className={cn("h-11 ml-2", searchValue.length > 0 ? "block" : "hidden")}>
+          {"->"}
+        </Button>
       </div>
     </div>
   );
