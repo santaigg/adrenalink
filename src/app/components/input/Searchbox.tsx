@@ -28,13 +28,17 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
             onFocus={toggleFocus}
             onBlur={toggleFocus}
             className={cn(
-              "h-9 w-full bg-input px-3 py-1 outline-none placeholder:text-input-foreground border border-input-foreground focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
+              searchValue.length > 0 ? "border-accent" : "border-input-foreground",
+              "h-9 w-full bg-input px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
               className
             )}
             ref={ref}
             {...props}
           />
-          <Extrusion className={cn("min-w-[20%] float-right", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
+          <Extrusion
+            className={cn("min-w-[20%] float-right", focus || searchValue.length > 0 ? "border-accent" : "border-input-foreground")}
+            cornerLocation={CornerLocation.BottomLeft}
+          />
         </div>
         <Button onClick={onSearchButtonClick} variant="loaded" className={cn("h-11 ml-2", searchValue.length > 0 ? "block" : "hidden")}>
           {"->"}
