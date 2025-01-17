@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="flex flex-col flex-1">
             <Logo />
             <p className="my-2 text-sm">
-              Made by &nbsp;
+              Made by &nbsp;&nbsp;
               <ExternalLink href="https://discord.gg/santaigg" title="LIMIT" /> &nbsp;&nbsp;
               <ExternalLink href="https://discord.gg/santaigg" title="Haft" /> &nbsp;&nbsp;
               <ExternalLink href="https://discord.gg/santaigg" title="Antiparty" /> &nbsp;&nbsp;
