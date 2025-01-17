@@ -17,7 +17,7 @@ export default function Home() {
         <div className="flex-1 w-full">
           <div className="p-secondary rounded-secondary text-primary-foreground">
             <div className="flex flex-row">
-              <h2 className="mb-1 text-white">Player Search</h2>
+              <h2 className="mb-1 text-primary-foreground">Player Search</h2>
               <Image src={SpectreLogoImage} alt="Spectre Divide wordmark." className="h-6 w-auto ml-auto mt-auto mb-2 brightness-75" />
             </div>
             <Searchbox placeholder="Username or Steam64..." />
