@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
 import Link from "next/link";
 import Constrict from "../layout/Constrict";
+import ExternalLink from "./ExternalLink";
 
 export default function Navbar() {
   return (
@@ -12,15 +13,13 @@ export default function Navbar() {
         <Constrict className="flex flex-row justify-between p-4">
           <Logo />
           <div className="flex flex-row float-right gap-primary">
-            {/* <Link aria-disabled className="text-muted-foreground pointer-events-none" href={"/wiki"}>
-              Wiki (WIP)
-            </Link> */}
             <Link className="hover:text-accent" href={"/"}>
               Home
             </Link>
             <Link className="hover:text-accent" href={"/leaderboard"}>
               Leaderboard
             </Link>
+            <ExternalLink href="https://discord.gg/santaigg" title="Discord" />
           </div>
         </Constrict>
       </div>

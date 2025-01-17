@@ -10,20 +10,17 @@ export default function Home() {
   return (
     <main>
       <BackgroundImage image={BackgroundImageData} />
-      <Constrict className="my-12">
+      <Constrict className="my-12 px-4">
         <NoticeBanner className="text-center" notice="Welcome to Santai.GG Season 1!" />
       </Constrict>
-      <Constrict className="flex flex-row">
-        <div className="flex-1 w-full">
-          <div className="p-secondary rounded-secondary text-primary-foreground">
-            <div className="flex flex-row">
-              <h2 className="mb-1 text-primary-foreground">Player Search</h2>
-              <Image src={SpectreLogoImage} alt="Spectre Divide wordmark." className="h-6 w-auto ml-auto mt-auto mb-2 brightness-75" />
-            </div>
-            <Searchbox placeholder="Username or Steam64..." />
+      <Constrict className="max-w-96">
+        <div className="p-secondary rounded-secondary text-primary-foreground">
+          <div className="flex flex-row">
+            <h2 className="mb-1 text-primary-foreground">Player Search</h2>
+            <Image src={SpectreLogoImage} alt="Spectre Divide wordmark." className="h-6 w-auto ml-auto mt-auto mb-2 brightness-75" />
           </div>
+          <Searchbox placeholder="Username or Steam64..." />
         </div>
-        <div className="flex-1"></div>
       </Constrict>
     </main>
   );
