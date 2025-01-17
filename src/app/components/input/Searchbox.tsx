@@ -8,6 +8,11 @@ import { Button } from "./Button";
 
 const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({ className, type, ...props }, ref) => {
   const [focus, setFocus] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  function onSearchButtonClick() {
+    console.log(searchValue);
+  }
 
   function toggleFocus() {
     setFocus(!focus);
@@ -16,9 +21,10 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
   return (
     <div>
       <div className="flex flex-row">
-        <Extrusion className={cn("w-min ", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
+        <Extrusion className={cn("w-min", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
         <div className="flex-1">
           <input
+            onChange={(e) => setSearchValue(e.target.value)}
             type={type}
             onFocus={toggleFocus}
             onBlur={toggleFocus}
@@ -31,9 +37,11 @@ const Searchbox = React.forwardRef<HTMLInputElement, React.ComponentProps<"input
           />
           <Extrusion className={cn("min-w-[20%] float-right", focus ? "border-accent" : "border-input-foreground")} cornerLocation={CornerLocation.BottomLeft} />
         </div>
-        <Button variant="default" className="h-11 ml-2">
-          {"->"}
-        </Button>
+        {searchValue.length > 0 && (
+          <Button onClick={onSearchButtonClick} variant="default" className="h-11 ml-2">
+            {"->"}
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ export default function Footer() {
               Santai.GG is not affiliated with Mountaintop Studios and all associated properties “Spectre Divide” are trademarks or registered trademarks of Mountaintop Studios.
             </p>
           </div>
-          <div className="flex flex-col justify-between text-primary-foreground pl-4 border-l border-primary-foreground">
+          <div className="flex flex-col text-right justify-between text-primary-foreground pr-4 border-r border-primary-foreground">
             <a className="hover:text-accent" href="https://discord.gg/santaigg">
               Join the Discord
             </a>
