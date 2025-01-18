@@ -51,7 +51,9 @@ export default function PlayerProfile() {
     <main className="min-h-screen">
       <BackgroundImage className="mix-bl" image={BackgroundImageData} />
       {loading ? (
-        <p>Loading player profile...</p>
+        <Constrict>
+          <p>Loading player profile...</p>
+        </Constrict>
       ) : playerProfile ? (
         <>
           <div className="w-full -mt-4 h-48 relative">
@@ -74,11 +76,11 @@ export default function PlayerProfile() {
               </div>
             </Constrict>
           </div>
-          <Constrict className="flex flex-col">
+          <Constrict className="flex flex-col text-primary-foreground">
             <div className="ml-36">
-              <h1>{playerProfile.name}</h1>
+              <h1 className="font-medium">{playerProfile.name}</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 mt-8 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-4 mt-8 gap-6">
               <div className="gap-y-4 flex-col flex">
                 {/* Current Rank */}
                 <CurrentRankCard stats={playerProfile.stats} />
@@ -92,7 +94,7 @@ export default function PlayerProfile() {
                 />{" "}
                 {/* fix */}
               </div>
-              <div className="md:col-span-3 flex flex-col gap-y-4">
+              <div className="sm:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
                 <OverviewCard
                   stats={playerProfile.stats}
@@ -103,7 +105,10 @@ export default function PlayerProfile() {
                     playerProfile.extended_stats?.last_20_matches_avg_stats
                   }
                 />
-                <MatchCard matches={playerProfile.matches} playerId={playerProfile.id} />
+                <MatchCard
+                  matches={playerProfile.matches}
+                  playerId={playerProfile.id}
+                />
               </div>
             </div>
             <div className="flex gap-x-2"></div>

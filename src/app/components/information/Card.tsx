@@ -440,11 +440,8 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
   ({ className, matches, playerId, ...props }, ref) => {
     return (
       <div className="flex flex-col gap-y-2">
-        <Card className="hidden">
-          <h2>Matches</h2>
-        </Card>
         {Object.entries(matches).map(([key, match]) => (
-          <div className="flex h-28 w-full gap-x-1">
+          <div key={match.id} className="flex h-28 w-full gap-x-1">
             <div
               className={`h-full w-2 ${
                 match.winner == match.player_team.team_index
