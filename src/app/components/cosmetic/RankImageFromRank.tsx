@@ -1,13 +1,12 @@
 import React from "react";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 
-interface RankImageProps {
+import { cn } from "@/app/utils/cn";
+interface RankImageProps extends Omit<ImageProps, "src" | "alt"> {
   rank: string;
 }
 
-const RankImage: React.FC<RankImageProps> = ({ rank }) => {
-  // Convert the rank string to match the image file naming convention
-  //   const formattedRank = rank.replace(/\s+/g, '_').toLowerCase(); // Example: "Diamond 4" -> "diamond_4"
+const RankImage: React.FC<RankImageProps> = ({ rank, className, ...props }) => {
   const rankImage = require(`@/app/assets/images/ranks/solo_ranks/${rank}.png`);
 
   return (
@@ -15,7 +14,8 @@ const RankImage: React.FC<RankImageProps> = ({ rank }) => {
       <Image
         src={rankImage.default}
         alt={`${rank} rank`}
-        className="h-8 w-8 shrink-0 min-w-8 min-h-8"
+        className={cn('h-8 w-8 shrink-0 min-w-8 min-h-8', className)}
+        {...props}
       />
     </div>
   );
