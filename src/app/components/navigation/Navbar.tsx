@@ -20,7 +20,7 @@ export default function Navbar() {
             <Link className="hover:text-accent" href={"/leaderboard"}>
               Leaderboard
             </Link>
-            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink href={item.link} title={item.title} />)}
+            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink key={null} href={item.link} title={item.title} />)}
           </div>
         </Constrict>
       </div>

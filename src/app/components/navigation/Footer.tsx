@@ -27,8 +27,8 @@ export default function Footer() {
             <p className="sm:w-1/2 text-center sm:text-left text-xs text-muted-foreground">{projectData.affiliateNotice}</p>
           </div>
           <div className="flex flex-col items-center sm:items-end justify-between text-primary-foreground mt-2 pl-4 sm:pr-4 sm:border-r border-primary-foreground">
-            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink href={item.link} title={item.title} />)}
-            {projectData.links.contribution.length > 0 && projectData.links.contribution.map((item) => <ExternalLink href={item.link} title={item.title} />)}
+            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink key={null} href={item.link} title={item.title} />)}
+            {projectData.links.contribution.length > 0 && projectData.links.contribution.map((item) => <ExternalLink key={null} href={item.link} title={item.title} />)}
           </div>
         </Constrict>
       </div>

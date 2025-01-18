@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 // IMAGES
 import BackgroundImage from "../../components/cosmetic/BackgroundImage";
-import BackgroundImageData from "../../assets/images/background/background-spectators.png";
+import BackgroundImageData from "../../assets/images/background/background-skullguy.png";
 import soloRank from "../../assets/images/ranks/solo_ranks/icon.svg";
 import Image from "next/image";
 // LEADERBOARD
@@ -73,17 +73,9 @@ export default function Leaderboard() {
           </div>
           <div className="hidden sm:block">
             <div className="bg-secondary border border-secondary rounded-t rounded-bl h-9">
-              <PlayerLeaderboardPagination
-                totalCount={leaderboard.length}
-                pageSize={50}
-                page={page}
-                onChange={setPage}
-              />
+              <PlayerLeaderboardPagination totalCount={leaderboard.length} pageSize={50} page={page} onChange={setPage} />
             </div>
-            <Extrusion
-              className={cn("min-w-24 border-secondary rounded-br ml-auto")}
-              cornerLocation={CornerLocation.BottomLeft}
-            />
+            <Extrusion className={cn("min-w-24 border-secondary rounded-br ml-auto")} cornerLocation={CornerLocation.BottomLeft} />
           </div>
         </div>
 
@@ -92,12 +84,7 @@ export default function Leaderboard() {
         <PlayerLeaderboardTable playerRows={leaderboard} page={page} />
         <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8">
           <div className="bg-primary rounded-md border border-primary p-0.5">
-            <PlayerLeaderboardPagination
-              totalCount={leaderboard.length}
-              pageSize={50}
-              page={page}
-              onChange={setPage}
-            />
+            <PlayerLeaderboardPagination totalCount={leaderboard.length} pageSize={50} page={page} onChange={setPage} />
           </div>
         </div>
       </Constrict>
