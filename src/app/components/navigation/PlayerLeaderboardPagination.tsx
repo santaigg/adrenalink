@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Pagination,
   PaginationContent,
@@ -8,17 +7,21 @@ import {
   PaginationLink,
 } from "@/app/components/navigation/Pagination";
 
-// Will 100% rework. Temporary solution.
-
 export interface PlayerLeaderboardPaginationProps {
   totalCount: number;
   pageSize: number;
   page: number;
   onChange: (newPage: number) => void;
+  keyPrefix: string; // Add a keyPrefix prop to ensure uniqueness
 }
-const PlayerLeaderboardPagination: React.FC<
-  PlayerLeaderboardPaginationProps
-> = ({ totalCount, pageSize, page, onChange }) => {
+
+const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = ({
+  totalCount,
+  pageSize,
+  page,
+  onChange,
+  keyPrefix, // Accept keyPrefix as a prop
+}) => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleNext = () => {
@@ -34,285 +37,87 @@ const PlayerLeaderboardPagination: React.FC<
   };
 
   const renderPagination = () => {
-    // Start edge cases
+    const maxVisiblePages = 7;
+    let pages = [];
+
+    // If totalPages is less than or equal to maxVisiblePages, render all pages.
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+      return pages.map((p) => (
+        <PaginationItem key={`${keyPrefix}-page-${p}`}>
+          <PaginationLink
+            href="#"
+            className={`rounded-md aspect-square h-9 ${
+              p === page ? "bg-accent text-primary font-extrabold" : ""
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              onChange(p);
+            }}
+          >
+            {p}
+          </PaginationLink>
+        </PaginationItem>
+      ));
+    }
+
+    // Otherwise, handle the edge cases (first, middle, and last page sections).
+    const startPage = Math.max(1, page - 1); // Starting page (up to 2 pages before current page)
+    const endPage = Math.min(totalPages, page + 1); // Ending page (up to 2 pages after current page)
+
     if (page <= 4) {
-      return (
-        <>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == 1 ? "bg-accent text-primary font-extrabold" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(1);
-              }}
-            >
-              {1}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == 2 ? "bg-accent text-primary font-extrabold" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(2);
-              }}
-            >
-              {2}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == 3 ? "bg-accent text-primary font-extrabold" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(3);
-              }}
-            >
-              {3}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == 4 ? "bg-accent text-primary font-extrabold" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(4);
-              }}
-            >
-              {4}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == 5 ? "bg-accent text-primary font-extrabold" : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(5);
-              }}
-            >
-              {5}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Elipsis && Final Page */}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem
-            onClick={(e) => {
-              e.preventDefault();
-              onChange(totalPages);
-            }}
-          >
-            <PaginationLink href="#" className="rounded-md aspect-square h-9 ">
-              {totalPages}
-            </PaginationLink>
-          </PaginationItem>
-        </>
-      );
+      // First few pages
+      for (let i = 1; i <= 5; i++) {
+        pages.push(i);
+      }
+      pages.push("ellipsis");
+      pages.push(totalPages);
+    } else if (page >= totalPages - 3) {
+      // Last few pages
+      pages.push(1);
+      pages.push("ellipsis");
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Middle pages
+      pages.push(1);
+      pages.push("ellipsis");
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      pages.push("ellipsis");
+      pages.push(totalPages);
     }
 
-    // Base case
-    if (page > 4 && page < totalPages - 3) {
+    return pages.map((p, idx) => {
+      if (p === "ellipsis") {
+        return (
+          <PaginationItem key={`${keyPrefix}-ellipsis-${idx}`}>
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
       return (
-        <>
-          {/* Elipsis && First Page */}
-          <PaginationItem
+        <PaginationItem key={`${keyPrefix}-page-${p}`}>
+          <PaginationLink
+            href="#"
+            className={`rounded-md aspect-square h-9 ${
+              p === page ? "bg-accent text-primary font-extrabold" : ""
+            }`}
             onClick={(e) => {
               e.preventDefault();
-              onChange(1);
+              onChange(p);
             }}
           >
-            <PaginationLink href="#" className="rounded-md aspect-square h-9 ">
-              {1}
-            </PaginationLink>
-          </PaginationItem>
-
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-
-          {/* Hide prev page on page 1 */}
-          <PaginationItem>
-            <PaginationLink
-              className="rounded-md aspect-square h-9 "
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handlePrevious();
-              }}
-            >
-              {page - 1}
-            </PaginationLink>
-          </PaginationItem>
-
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 bg-accent text-primary font-extrabold`}
-            >
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-
-          {/* Next Page */}
-          <PaginationItem
-            onClick={(e) => {
-              e.preventDefault();
-              handleNext();
-            }}
-          >
-            <PaginationLink href="#" className="rounded-md aspect-square h-9 ">
-              {page + 1}
-            </PaginationLink>
-          </PaginationItem>
-
-          {/* Elipsis && Final Page */}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem
-            onClick={(e) => {
-              e.preventDefault();
-              onChange(totalPages);
-            }}
-          >
-            <PaginationLink href="#" className="rounded-md aspect-square h-9 ">
-              {totalPages}
-            </PaginationLink>
-          </PaginationItem>
-        </>
+            {p}
+          </PaginationLink>
+        </PaginationItem>
       );
-    }
-
-    // End edge Cases
-    if (page >= totalPages - 3) {
-      return (
-        <>
-          {/* First page && Elepsis */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className="rounded-md aspect-square h-9 "
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(1);
-              }}
-            >
-              {1}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9  ${
-                page == totalPages - 4
-                  ? "bg-accent text-primary font-extrabold"
-                  : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(totalPages - 4);
-              }}
-            >
-              {totalPages - 4}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9  ${
-                page == totalPages - 3
-                  ? "bg-accent text-primary font-extrabold"
-                  : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(totalPages - 3);
-              }}
-            >
-              {totalPages - 3}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9  ${
-                page == totalPages - 2
-                  ? "bg-accent text-primary font-extrabold"
-                  : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(totalPages - 2);
-              }}
-            >
-              {totalPages - 2}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Current page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9  ${
-                page == totalPages - 1
-                  ? "bg-accent text-primary font-extrabold"
-                  : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(totalPages - 1);
-              }}
-            >
-              {totalPages - 1}
-            </PaginationLink>
-          </PaginationItem>
-          {/* Final Page */}
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              className={`rounded-md aspect-square h-9 ${
-                page == totalPages
-                  ? "bg-accent text-primary font-extrabold"
-                  : ""
-              }`}
-              onClick={(e) => {
-                e.preventDefault();
-                onChange(totalPages);
-              }}
-            >
-              {totalPages}
-            </PaginationLink>
-          </PaginationItem>
-        </>
-      );
-    }
+    });
   };
 
   return (

@@ -1,7 +1,7 @@
 import { cn } from "@/app/utils/cn";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { useRouter } from "next/navigation";
-
+import { Dispatch, SetStateAction, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -24,11 +24,15 @@ interface PlayerRow {
 interface PlayerLeaderboardTableProps {
   playerRows: PlayerRow[];
   page: number;
+  searchQuery: string;
+  updateTotalRows: Dispatch<SetStateAction<number>>;
 }
 
 const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
   playerRows,
   page,
+  searchQuery,
+  updateTotalRows,
 }) => {
   const ENTRIES_PER_PAGE = 50;
 
@@ -38,36 +42,45 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
     router.push(`/p/${playerId}`);
   };
 
-  const rows = playerRows.map((playerRow) => {
-    if (
-      playerRow.placement <= page * ENTRIES_PER_PAGE &&
-      playerRow.placement > (page - 1) * ENTRIES_PER_PAGE
-    ) {
-      return (
-        <TableRow
-          key={playerRow.playerId}
-          className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
-          onClick={() => handleRowClick(playerRow.playerId)}
-        >
-            <TableCell>
-              <p className="text-lg">{playerRow.placement}</p>
-            </TableCell>
-            <TableCell>
-              <p className="text-lg">{playerRow.username}</p>
-            </TableCell>
-            <TableCell>
-              <p className="text-lg">{playerRow.soloRank}</p>
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center gap-x-4">
-                <RankImage rank={playerRow.soloRank} />
-                <p className="text-lg mt-0.5">{playerRow.rating}</p>
-              </div>
-            </TableCell>
-        </TableRow>
-      );
-    }
+  const filteredRows = playerRows.filter((playerRow) => {
+    return (
+      searchQuery === "" ||
+      playerRow.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
+
+  useEffect(() => {
+    updateTotalRows(filteredRows.length);
+  }, [filteredRows]);
+
+  const paginatedRows = filteredRows.slice(
+    (page - 1) * ENTRIES_PER_PAGE,
+    page * ENTRIES_PER_PAGE
+  );
+
+  const rows = paginatedRows.map((playerRow) => (
+    <TableRow
+      key={playerRow.playerId}
+      className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
+      onClick={() => handleRowClick(playerRow.playerId)}
+    >
+      <TableCell>
+        <p className="text-lg">{playerRow.placement}</p>
+      </TableCell>
+      <TableCell>
+        <p className="text-lg">{playerRow.username}</p>
+      </TableCell>
+      <TableCell>
+        <p className="text-lg">{playerRow.soloRank}</p>
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-x-4">
+          <RankImage rank={playerRow.soloRank} />
+          <p className="text-lg mt-0.5">{playerRow.rating}</p>
+        </div>
+      </TableCell>
+    </TableRow>
+  ));
 
   return (
     <>

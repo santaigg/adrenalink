@@ -1,13 +1,22 @@
 import * as React from "react";
 import { cn } from "@/app/utils/cn";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
+
+interface SearchLeaderboardProps extends React.ComponentProps<"input"> {
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>;
+}
 
 const SearchLeaderboard = React.forwardRef<
   HTMLInputElement,
-  React.ComponentProps<"input">
->(({ className, type, ...props }, ref) => {
-  const [focus, setFocus] = useState(false);
+  SearchLeaderboardProps
+>(({ className, type, value, setValue, ...props }, ref) => {
+  const [focus, setFocus] = useState<boolean>(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
 
   function toggleFocus() {
     setFocus(!focus);
@@ -19,6 +28,8 @@ const SearchLeaderboard = React.forwardRef<
         type={type}
         onFocus={toggleFocus}
         onBlur={toggleFocus}
+        value={value}
+        onChange={handleChange}
         placeholder="Search Players..."
         className={cn(
           "h-9 w-full bg-secondary rounded-t rounded-br px-3 py-1 border outline-none placeholder:text-muted-foreground border-secondary focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",

@@ -25,7 +25,9 @@ export default function Leaderboard() {
   const DEFAULT_SEASON_VALUE = "Season 0";
 
   const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
   const [season, setSeason] = useState<string | null>(DEFAULT_SEASON_VALUE);
+  const [totalRows, setTotalRows] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState([]);
 
   const formatSeasonKey = (season: string | null): string => {
@@ -42,6 +44,12 @@ export default function Leaderboard() {
     fetchLeaderboardData();
   }, [season]);
 
+  useEffect(() => {
+    if (leaderboard) {
+      setTotalRows(leaderboard.length);
+    }
+  }, [leaderboard]);
+
   return (
     <main className="bg-input py-8">
       {/* <BackgroundImage image={BackgroundImageData} /> */}
@@ -53,45 +61,60 @@ export default function Leaderboard() {
             <h2 className="text-3xl text-primary-foreground">PLAYERS</h2>
             <h1 className="text-5xl text-secondary-foreground">TOP 1000</h1>
           </div>
-          <Image src={soloRank} alt="Spectre Divide solo rank icon." className="w-24" />
+          <Image
+            src={soloRank}
+            alt="Spectre Divide solo rank icon."
+            className="w-24"
+          />
         </div>
         {/* FILTERS START */}
         <div className="w-full flex flex-col-reverse items-center mt-8 sm:mb-16 gap-y-4 sm:px-0 sm:flex-row sm:gap-x-2 sm:items-start">
           <div className="w-full sm:w-96 mr-auto">
-            <SearchLeaderboard />
+            <SearchLeaderboard value={search} setValue={setSearch} />
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
-            defaultValue={"season0"}
-            // onChange={setSeason}
+              defaultValue={"season0"}
+              // onChange={setSeason}
             />
           </div>
           <div className="hidden sm:block">
             <div className="bg-secondary border border-secondary rounded-t rounded-bl h-9">
               <PlayerLeaderboardPagination
-                totalCount={leaderboard.length}
+                totalCount={totalRows}
                 pageSize={50}
                 page={page}
                 onChange={setPage}
+                keyPrefix="top"
               />
             </div>
-            <Extrusion
-              className={cn("min-w-24 border-secondary rounded-br ml-auto")}
-              cornerLocation={CornerLocation.BottomLeft}
-            />
+            {Math.ceil(totalRows / 50) > 3 ? (
+              <Extrusion
+                className={cn("min-w-24 border-secondary rounded-br ml-auto")}
+                cornerLocation={CornerLocation.BottomLeft}
+              />
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
 
         <div className="flex justify-end items-end pb-4 sm:pb-0"></div>
         {/* TABLE START */}
-        <PlayerLeaderboardTable playerRows={leaderboard} page={page} />
-        <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8">
+        <PlayerLeaderboardTable
+          playerRows={leaderboard}
+          page={page}
+          searchQuery={search}
+          updateTotalRows={setTotalRows}
+        />
+        <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8 border-t border-muted">
           <div className="bg-primary rounded-md border border-primary p-0.5">
             <PlayerLeaderboardPagination
-              totalCount={leaderboard.length}
+              totalCount={totalRows}
               pageSize={50}
               page={page}
               onChange={setPage}
+              keyPrefix="btm"
             />
           </div>
         </div>
