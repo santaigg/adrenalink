@@ -8,10 +8,16 @@ import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
 import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
-import getSoloRankFromNumber from "@/app/utils/types/rank";
 import Image from "next/image";
 
-import { Card, CurrentRankCard, SponsorsCard, MapsCard } from "@/app/components/information/Card";
+import {
+  CurrentRankCard,
+  SponsorsCard,
+  MapsCard,
+  OverviewCard,
+  Last20Card,
+  MatchCard,
+} from "@/app/components/information/Card";
 
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
@@ -43,7 +49,9 @@ export default function PlayerProfile() {
     <main className="min-h-screen">
       <BackgroundImage className="mix-bl" image={BackgroundImageData} />
       {loading ? (
-        <p>Loading player profile...</p>
+        <Constrict>
+          <p>Loading player profile...</p>
+        </Constrict>
       ) : playerProfile ? (
         <>
           <div className="w-full -mt-4 h-48 relative">
@@ -66,30 +74,39 @@ export default function PlayerProfile() {
               </div>
             </Constrict>
           </div>
-          <Constrict className="flex flex-col">
+          <Constrict className="flex flex-col text-primary-foreground">
             <div className="ml-36">
-              <h1>{playerProfile.name}</h1>
+              <h1 className="font-medium">{playerProfile.name}</h1>
             </div>
-            <div className="grid grid-cols-4 mt-8 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-4 mt-8 gap-6">
               <div className="gap-y-4 flex-col flex">
                 {/* Current Rank */}
-                <CurrentRankCard stats={playerProfile.stats}/>
+                <CurrentRankCard stats={playerProfile.stats} />
                 {/* Sponsors */}
-                <SponsorsCard sponsorStats={playerProfile.extended_stats?.sponsor_stats!}/>
+                <SponsorsCard
+                  sponsorStats={playerProfile.extended_stats?.sponsor_stats! || {}}
+                />
                 {/* Maps */}
-                <MapsCard mapStats={playerProfile.extended_stats?.map_stats!}/>
+                <MapsCard
+                  mapStats={playerProfile.extended_stats?.map_stats! || {}}
+                />
+                {/* fix */}
               </div>
-              <div className="col-span-3 flex flex-col gap-y-4">
+              <div className="sm:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
-                <Card>
-                  <h2>Season Overview</h2>
-                </Card>
-                <Card>
-                  <h2>Last 20</h2>
-                </Card>
-                <Card>
-                  <h2>Matches</h2>
-                </Card>
+                <OverviewCard
+                  stats={playerProfile.stats}
+                  seasonStats={playerProfile.extended_stats?.season_stats}
+                />
+                <Last20Card
+                  stats={
+                    playerProfile.extended_stats?.last_20_matches_avg_stats
+                  }
+                />
+                <MatchCard
+                  matches={playerProfile.matches}
+                  playerId={playerProfile.id}
+                />
               </div>
             </div>
             <div className="flex gap-x-2"></div>

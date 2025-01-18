@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 // IMAGES
-import BackgroundImage from "../../components/cosmetic/BackgroundImage";
-import BackgroundImageData from "../../assets/images/background/background-spectators.png";
 import soloRank from "../../assets/images/ranks/solo_ranks/icon.svg";
 import Image from "next/image";
 // LEADERBOARD
@@ -14,13 +12,10 @@ import Extrusion, { CornerLocation } from "../../components/cosmetic/Extrusion";
 import { cn } from "../../utils/cn";
 
 // COMPONENTS
-import { Input } from "@/app/components/input/Input";
 import { SearchLeaderboard } from "@/app/components/input/SearchLeaderboard";
 import { SeasonSelector } from "@/app/components/input/SeasonSelector";
 import { PlayerLeaderboardPagination } from "@/app/components/navigation/PlayerLeaderboardPagination";
 import Constrict from "@/app/components/layout/Constrict";
-
-const PRIMARY_COL_HEIGHT = "300px";
 
 // UNFINISHED
 // Need to rework the pagination so that it only pulls needed entries, to reduce load time.
@@ -67,7 +62,7 @@ export default function Leaderboard() {
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
-            // defaultValue={DEFAULT_SEASON_VALUE}
+            defaultValue={"season0"}
             // onChange={setSeason}
             />
           </div>

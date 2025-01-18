@@ -3,8 +3,6 @@ import { cn } from "@/app/utils/cn";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { useState } from "react";
 
-interface SearchLeaderboardProps {}
-
 const SearchLeaderboard = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<"input">

@@ -1,19 +1,39 @@
 import React from "react";
-import Image from "next/image";
-
-interface SponsorImageProps {
+import Image, { ImageProps } from "next/image";
+import { useState, useEffect } from "react";
+import { cn } from "@/app/utils/cn";
+interface SponsorImageProps extends Omit<ImageProps, "src" | "alt"> {
   sponsor: string;
 }
 
-const SponsorImage: React.FC<SponsorImageProps> = ({ sponsor }) => {
-  const sponsorImage = require(`@/app/assets/images/sponsors-logos/${sponsor}.png`);
-  
+const SponsorImage: React.FC<SponsorImageProps> = ({
+  sponsor,
+  className,
+  ...props
+}) => {
+  const [sponsorImage, setSponsorImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      const image = await import(
+        `@/app/assets/images/sponsors-logos/${sponsor}.png`
+      );
+      setSponsorImage(image.default);
+    };
+    loadImage();
+  }, [sponsor]);
+
+  if (!sponsorImage) {
+    return null; // Or a loading spinner
+  }
+
   return (
-    <div className="relative h-10 w-auto">
+    <div className={cn("relative h-10 w-auto", className)}>
       <Image
-        src={sponsorImage.default}
+        src={sponsorImage}
         alt={`${sponsor} Logo`}
         className="h-full w-auto object-contain"
+        {...props}
       />
     </div>
   );

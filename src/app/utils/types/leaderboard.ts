@@ -1,5 +1,4 @@
 import noStoreFetch from "../fetch/noStoreFetch";
-import type { SoloPayload } from "./payload";
 import type PlayerStats from "./playerStats";
 import getSoloRankFromNumber from "./rank";
 

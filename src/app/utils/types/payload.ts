@@ -1,5 +1,3 @@
-import type PlayerStats from "./playerStats";
-
 export type SoloPayload = SoloPayloadObject[];
 
 export interface CrewPayload {
