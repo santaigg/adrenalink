@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/app/utils/cn";
+import { useState, useEffect } from "react";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import getSoloRankFromNumber from "@/app/utils/types/rank";
 import { RankImage } from "../cosmetic/RankImageFromRank";
@@ -32,8 +33,8 @@ interface CurrentRankCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const CurrentRankCard = React.forwardRef<HTMLDivElement, CurrentRankCardProps>(
-  ({ className, stats, ...props }, ref) => (
-    <div className="">
+  ({ stats }, ref) => (
+    <div ref={ref} className="">
       <Extrusion
         className={cn("min-w-36 border-secondary rounded-tl")}
         cornerLocation={CornerLocation.TopRight}
@@ -104,8 +105,8 @@ interface SponsorsCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const SponsorsCard = React.forwardRef<HTMLDivElement, SponsorsCardProps>(
-  ({ className, sponsorStats, ...props }, ref) => (
-    <div>
+  ({ sponsorStats }, ref) => (
+    <div ref={ref}>
       <Card className="rounded-bl-none">
         <h2>Sponsors</h2>
         {Object.entries(sponsorStats).map(([key, sponsor]) => (
@@ -168,48 +169,68 @@ interface MapsCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
-  ({ className, mapStats, ...props }, ref) => (
-    <div>
-      <Extrusion
-        className={cn("min-w-36 border-secondary rounded-tr ml-auto")}
-        cornerLocation={CornerLocation.TopLeft}
-      />
-      <Card className="rounded-bl-none">
-        <h2>Maps</h2>
-        {Object.entries(mapStats).map(([key, map]) => (
-          <div className="flex gap-x-4 py-2.5" key={key}>
-            <Image
-              src={require(`../../../app/assets/images/map-previews/${getMapName(
-                map.map
-              )}_800x800.webp`)}
-              alt={`Image of ${getMapName(map.map)}`}
-              className="w-12 h-12 rounded-md"
-            />
-            <div className="flex h-12">
-              <div className="flex-col flex h-full justify-center items-start">
-                <p className="leading-none text-accent">
-                  {getMapName(map.map)}
-                </p>
-                <h3 className="">
-                  WR {map.average_win_percentage.toFixed(0)}%
-                </h3>
+  ({ mapStats }, ref) => {
+    const [mapImages, setMapImages] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+      const loadImages = async () => {
+        const images: Record<string, string> = {};
+        for (const key in mapStats) {
+          const mapName = getMapName(mapStats[key].map);
+          const image = await import(
+            `../../../app/assets/images/map-previews/${mapName}_800x800.webp`
+          );
+          images[mapName] = image.default;
+        }
+        setMapImages(images);
+      };
+      loadImages();
+    }, [mapStats]);
+    return (
+      <div ref={ref}>
+        <Extrusion
+          className={cn("min-w-36 border-secondary rounded-tr ml-auto")}
+          cornerLocation={CornerLocation.TopLeft}
+        />
+        <Card className="rounded-bl-none">
+          <h2>Maps</h2>
+          {Object.entries(mapStats).map(([key, map]) => {
+            const mapName = getMapName(map.map);
+            const imageSrc = mapImages[mapName];
+            return (
+              <div className="flex gap-x-4 py-2.5" key={key}>
+                <Image
+                  src={imageSrc}
+                  alt={`Image of ${mapName}`}
+                  className="w-12 h-12 rounded-md"
+                />
+                <div className="flex h-12">
+                  <div className="flex-col flex h-full justify-center items-start">
+                    <p className="leading-none text-accent">
+                      {getMapName(map.map)}
+                    </p>
+                    <h3 className="">
+                      WR {map.average_win_percentage.toFixed(0)}%
+                    </h3>
+                  </div>
+                </div>
+                <div className="flex h-12 ml-auto">
+                  <div className="flex-col flex h-full justify-center items-end text-right">
+                    <p className="leading-none">
+                      {(map.total_kills / map.total_deaths).toFixed(2)} KD
+                    </p>
+                    <p className="">
+                      {map.total_wins}W - {map.total_losses}L
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex h-12 ml-auto">
-              <div className="flex-col flex h-full justify-center items-end text-right">
-                <p className="leading-none">
-                  {(map.total_kills / map.total_deaths).toFixed(2)} KD
-                </p>
-                <p className="">
-                  {map.total_wins}W - {map.total_losses}L
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </Card>
-    </div>
-  )
+            );
+          })}
+        </Card>
+      </div>
+    );
+  }
 );
 MapsCard.displayName = "MapsCard";
 
@@ -222,10 +243,10 @@ interface OverviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
-  ({ className, stats, seasonStats, ...props }, ref) => {
+  ({ stats, seasonStats }, ref) => {
     const seasonStatsSelected = seasonStats["2024-S0"];
     return (
-      <div className="">
+      <div className="" ref={ref}>
         <Extrusion
           className={cn("min-w-36 ml-auto border-secondary rounded-tr")}
           cornerLocation={CornerLocation.TopLeft}
@@ -336,9 +357,9 @@ interface Last20CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Last20Card = React.forwardRef<HTMLDivElement, Last20CardProps>(
-  ({ className, stats, ...props }, ref) => {
+  ({ stats }, ref) => {
     return (
-      <div>
+      <div ref={ref}>
         <Card className="rounded-bl-none">
           <div className="grid-cols-4 grid pb-2">
             <div className="flex flex-col">
@@ -437,11 +458,11 @@ interface MatchCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
-  ({ className, matches, playerId, ...props }, ref) => {
+  ({ matches, playerId }, ref) => {
     return (
-      <div className="flex flex-col gap-y-2">
+      <div ref={ref} className="flex flex-col gap-y-2">
         {Object.entries(matches).map(([key, match]) => (
-          <div key={match.id} className="flex h-28 w-full gap-x-1">
+          <div key={key} className="flex h-28 w-full gap-x-1">
             <div
               className={`h-full w-2 ${
                 match.winner == match.player_team.team_index

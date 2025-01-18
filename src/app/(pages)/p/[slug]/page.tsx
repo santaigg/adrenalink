@@ -8,11 +8,9 @@ import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
 import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
-import getSoloRankFromNumber from "@/app/utils/types/rank";
 import Image from "next/image";
 
 import {
-  Card,
   CurrentRankCard,
   SponsorsCard,
   MapsCard,
@@ -86,12 +84,12 @@ export default function PlayerProfile() {
                 <CurrentRankCard stats={playerProfile.stats} />
                 {/* Sponsors */}
                 <SponsorsCard
-                  sponsorStats={playerProfile.extended_stats?.sponsor_stats!}
+                  sponsorStats={playerProfile.extended_stats?.sponsor_stats! || {}}
                 />
                 {/* Maps */}
                 <MapsCard
-                  mapStats={playerProfile.extended_stats?.map_stats!}
-                />{" "}
+                  mapStats={playerProfile.extended_stats?.map_stats! || {}}
+                />
                 {/* fix */}
               </div>
               <div className="sm:col-span-3 flex flex-col gap-y-4">

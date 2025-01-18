@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { useEffect } from "react";
-import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { cn } from "@/app/utils/cn";
 
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -10,7 +9,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/app/components/information/Command";
@@ -31,67 +29,69 @@ const seasons = [
   },
 ];
 
-interface SeasonSelectorProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SeasonSelectorProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   defaultValue: string;
 }
 
-const SeasonSelector = React.forwardRef<
-  HTMLInputElement,
-  SeasonSelectorProps
->(({ className, type, defaultValue, ...props }, ref) => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
+  ({ defaultValue }, ref) => {
+    const [open, setOpen] = React.useState(false);
+    const [value, setValue] = React.useState("");
 
-  useEffect(() => {
-    if (defaultValue != null) {
-      setValue(defaultValue);
-    }
-  }, [defaultValue]);
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <div
-          role="combobox"
-          aria-expanded={open}
-          className="w-52 px-4 py-2 inline-flex items-center gap-2 border whitespace-nowrap cursor-pointer justify-between bg-secondary h-9 rounded border-secondary hover:bg-secondary hover:border-accent text-base text-primary-foreground hover:text-accent font-normal [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-        >
-          {value
-            ? seasons.find((season) => season.value === value)?.label
-            : "Select Season..."}
-          <ChevronsUpDown className="opacity-50" />
-        </div>
-      </PopoverTrigger>
-      <PopoverContent className="w-52 p-0 border-muted-foreground">
-        <Command className="bg-secondary border-secondary">
-          {/* <CommandInput placeholder="Search Seasons..." className="h-9 !border-muted-foreground" /> */}
-          <CommandList>
-            <CommandEmpty>No season found.</CommandEmpty>
-            <CommandGroup>
-              {seasons.map((season) => (
-                <CommandItem
-                  key={season.value}
-                  value={season.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {season.label}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === season.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-});
+    useEffect(() => {
+      if (defaultValue != null) {
+        setValue(defaultValue);
+      }
+    }, [defaultValue]);
+    return (
+      <div ref={ref}>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <div
+              role="combobox"
+              aria-expanded={open}
+              className="w-52 px-4 py-2 inline-flex items-center gap-2 border whitespace-nowrap cursor-pointer justify-between bg-secondary h-9 rounded border-secondary hover:bg-secondary hover:border-accent text-base text-primary-foreground hover:text-accent font-normal [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+            >
+              {value
+                ? seasons.find((season) => season.value === value)?.label
+                : "Select Season..."}
+              <ChevronsUpDown className="opacity-50" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-52 p-0 border-muted-foreground">
+            <Command className="bg-secondary border-secondary">
+              {/* <CommandInput placeholder="Search Seasons..." className="h-9 !border-muted-foreground" /> */}
+              <CommandList>
+                <CommandEmpty>No season found.</CommandEmpty>
+                <CommandGroup>
+                  {seasons.map((season) => (
+                    <CommandItem
+                      key={season.value}
+                      value={season.value}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      {season.label}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          value === season.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  }
+);
 SeasonSelector.displayName = "SeasonSelector";
 
 export { SeasonSelector };

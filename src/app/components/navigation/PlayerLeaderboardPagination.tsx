@@ -6,8 +6,6 @@ import {
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/app/components/navigation/Pagination";
 
 // Will 100% rework. Temporary solution.

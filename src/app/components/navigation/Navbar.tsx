@@ -20,11 +20,21 @@ export default function Navbar() {
             <Link className="hover:text-accent" href={"/leaderboard"}>
               Leaderboard
             </Link>
-            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink href={item.link} title={item.title} />)}
+            {projectData.links.social.length > 0 &&
+              projectData.links.social.map((item) => (
+                <ExternalLink
+                  key={item.title}
+                  href={item.link}
+                  title={item.title}
+                />
+              ))}
           </div>
         </Constrict>
       </div>
-      <Extrusion className="float-right min-w-[15%] border-primary" cornerLocation={CornerLocation.BottomLeft} />
+      <Extrusion
+        className="float-right min-w-[15%] border-primary"
+        cornerLocation={CornerLocation.BottomLeft}
+      />
     </header>
   );
 }

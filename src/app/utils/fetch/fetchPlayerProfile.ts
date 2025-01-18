@@ -3,7 +3,7 @@ import { PlayerFullProfile } from "../types/wavescan.types";
 
 export async function fetchPlayerProfile(playerId: string): Promise<PlayerFullProfile | null> {
     try {
-        const response = await fetch(
+        const response = await noStoreFetch(
           `https://wavescan-production.up.railway.app/api/v1/player/${playerId}/full_profile`
         );
     
