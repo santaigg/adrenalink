@@ -14,7 +14,7 @@ export default function Navbar() {
         <Constrict className="flex flex-row justify-between p-4">
           <Logo />
           <div className="flex flex-row float-right gap-primary">
-            <Link className="hover:text-accent" href={"/"}>
+            <Link className="hidden sm:inline hover:text-accent" href={"/"}>
               Home
             </Link>
             <Link className="hover:text-accent" href={"/leaderboard"}>

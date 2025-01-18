@@ -11,7 +11,7 @@ export default function Home() {
     <main>
       <BackgroundImage image={BackgroundImageData} />
       <Constrict className="my-12 px-4">
-        <NoticeBanner className="text-center" notice="Welcome to Santai.GG Season 1!" />
+        <NoticeBanner className="text-center" noticeTitle="Santai.GG / Flashpoint" noticeBottomText="Brand new website, polished experience." />
       </Constrict>
       <Constrict className="max-w-96">
         <div className="p-secondary rounded-secondary text-primary-foreground">
