@@ -12,8 +12,8 @@ export default function Footer() {
     <footer>
       <Extrusion className="min-w-[20%] border-primary" cornerLocation={CornerLocation.TopRight} />
       <div className="p-8 bg-primary">
-        <Constrict className="flex flex-row justify-between">
-          <div className="flex flex-col flex-1">
+        <Constrict className="flex flex-col sm:flex-row justify-between">
+          <div className="flex flex-col flex-1 items-center sm:items-start">
             <Logo />
             <p className="my-2 text-sm">
               Made by
@@ -24,11 +24,9 @@ export default function Footer() {
                   </>
                 ))}
             </p>
-            <p className="w-1/2 text-xs text-muted-foreground">
-              Santai.GG is not affiliated with Mountaintop Studios and all associated properties “Spectre Divide” are trademarks or registered trademarks of Mountaintop Studios.
-            </p>
+            <p className="sm:w-1/2 text-center sm:text-left text-xs text-muted-foreground">{projectData.affiliateNotice}</p>
           </div>
-          <div className="flex flex-col items-end justify-between text-primary-foreground pr-4 border-r border-primary-foreground">
+          <div className="flex flex-col items-center sm:items-end justify-between text-primary-foreground mt-2 pl-4 sm:pr-4 sm:border-r border-primary-foreground">
             {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink href={item.link} title={item.title} />)}
             {projectData.links.contribution.length > 0 && projectData.links.contribution.map((item) => <ExternalLink href={item.link} title={item.title} />)}
           </div>
