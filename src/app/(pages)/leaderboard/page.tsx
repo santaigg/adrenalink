@@ -67,7 +67,7 @@ export default function Leaderboard() {
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
-            // defaultValue={DEFAULT_SEASON_VALUE}
+            defaultValue={"season0"}
             // onChange={setSeason}
             />
           </div>

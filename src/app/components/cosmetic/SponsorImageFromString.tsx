@@ -1,15 +1,19 @@
 import React from "react";
-import Image from "next/image";
-
-interface SponsorImageProps {
+import Image, { ImageProps } from "next/image";
+import { cn } from "@/app/utils/cn";
+interface SponsorImageProps extends Omit<ImageProps, "src" | "alt"> {
   sponsor: string;
 }
 
-const SponsorImage: React.FC<SponsorImageProps> = ({ sponsor }) => {
+const SponsorImage: React.FC<SponsorImageProps> = ({
+  sponsor,
+  className,
+  ...props
+}) => {
   const sponsorImage = require(`@/app/assets/images/sponsors-logos/${sponsor}.png`);
-  
+
   return (
-    <div className="relative h-10 w-auto">
+    <div className={cn("relative h-10 w-auto", className)}>
       <Image
         src={sponsorImage.default}
         alt={`${sponsor} Logo`}

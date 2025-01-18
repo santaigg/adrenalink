@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-
+import { useEffect } from "react";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { cn } from "@/app/utils/cn";
 
@@ -31,13 +31,22 @@ const seasons = [
   },
 ];
 
+interface SeasonSelectorProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  defaultValue: string;
+}
+
 const SeasonSelector = React.forwardRef<
   HTMLInputElement,
-  React.ComponentProps<"input">
->(({ className, type, ...props }, ref) => {
+  SeasonSelectorProps
+>(({ className, type, defaultValue, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
+  useEffect(() => {
+    if (defaultValue != null) {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

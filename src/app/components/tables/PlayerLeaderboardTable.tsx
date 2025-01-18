@@ -1,5 +1,6 @@
 import { cn } from "@/app/utils/cn";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
+import { useRouter } from "next/navigation";
 
 import {
   Table,
@@ -31,6 +32,13 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
   page,
 }) => {
   const ENTRIES_PER_PAGE = 50;
+
+  const router = useRouter();
+
+  const handleRowClick = (playerId: string) => {
+    router.push(`/p/${playerId}`);
+  };
+
   const rows = playerRows.map((playerRow) => {
     if (
       playerRow.placement <= page * ENTRIES_PER_PAGE &&
@@ -40,22 +48,23 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
         <TableRow
           key={playerRow.playerId}
           className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
+          onClick={() => handleRowClick(playerRow.playerId)}
         >
-          <TableCell>
-            <p className="text-lg">{playerRow.placement}</p>
-          </TableCell>
-          <TableCell>
-            <p className="text-lg">{playerRow.username}</p>
-          </TableCell>
-          <TableCell>
-            <p className="text-lg">{playerRow.soloRank}</p>
-          </TableCell>
-          <TableCell>
-            <div className="flex items-center gap-x-4">
-              <RankImage rank={playerRow.soloRank} />
-              <p className="text-lg mt-0.5">{playerRow.rating}</p>
-            </div>
-          </TableCell>
+            <TableCell>
+              <p className="text-lg">{playerRow.placement}</p>
+            </TableCell>
+            <TableCell>
+              <p className="text-lg">{playerRow.username}</p>
+            </TableCell>
+            <TableCell>
+              <p className="text-lg">{playerRow.soloRank}</p>
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-x-4">
+                <RankImage rank={playerRow.soloRank} />
+                <p className="text-lg mt-0.5">{playerRow.rating}</p>
+              </div>
+            </TableCell>
         </TableRow>
       );
     }
