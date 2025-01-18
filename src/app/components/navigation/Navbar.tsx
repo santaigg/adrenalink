@@ -5,6 +5,7 @@ import Extrusion from "../cosmetic/Extrusion";
 import Link from "next/link";
 import Constrict from "../layout/Constrict";
 import ExternalLink from "./ExternalLink";
+import projectData from "../../project-data.json";
 
 export default function Navbar() {
   return (
@@ -19,7 +20,7 @@ export default function Navbar() {
             <Link className="hover:text-accent" href={"/leaderboard"}>
               Leaderboard
             </Link>
-            <ExternalLink href="https://discord.gg/santaigg" title="Discord" />
+            {projectData.links.social.length > 0 && projectData.links.social.map((item) => <ExternalLink href={item.link} title={item.title} />)}
           </div>
         </Constrict>
       </div>
