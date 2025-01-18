@@ -11,7 +11,7 @@ export default function Home() {
     <main className="h-full">
       <BackgroundImage image={BackgroundImageData} />
       <Constrict className="my-8 px-4">
-        <NoticeBanner className="text-center" noticeTitle="Santai.GG / Flashpoint" noticeBottomText="Brand new website, polished experience." />
+        <NoticeBanner className="text-center" noticeTitle="Santai.GG \ Flashpoint" noticeBottomText="Brand new website, polished experience." />
       </Constrict>
       <Constrict className="h-full px-4 flex flex-col sm:flex-row gap-8">
         <div className="flex-1 flex flex-col gap-8 text-primary-foreground">
