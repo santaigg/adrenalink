@@ -22,23 +22,20 @@ import Constrict from "@/app/components/layout/Constrict";
 // Need to check it doesnt break on mobile view, though it looks fine on my phone.
 
 export default function Leaderboard() {
-  const DEFAULT_SEASON_VALUE = "Season 0";
-
+  const DEFAULT_SEASON_VALUE = "season0";
+  const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [season, setSeason] = useState<string | null>(DEFAULT_SEASON_VALUE);
+  const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
   const [totalRows, setTotalRows] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState([]);
 
-  const formatSeasonKey = (season: string | null): string => {
-    return season ? season.toLowerCase().replace(" ", "") : "";
-  };
-
   useEffect(() => {
     const fetchLeaderboardData = async () => {
-      const formattedSeason = formatSeasonKey(season);
-      const data = await fetchLeaderboard(formattedSeason as LeaderboardId);
+      setLoading(true);
+      const data = await fetchLeaderboard(season as LeaderboardId);
       setLeaderboard(data);
+      setLoading(false);
     };
 
     fetchLeaderboardData();
@@ -74,8 +71,8 @@ export default function Leaderboard() {
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
-              defaultValue={"season0"}
-              // onChange={setSeason}
+              defaultValue={DEFAULT_SEASON_VALUE}
+              setSeason={setSeason}
             />
           </div>
           <div className="hidden sm:block">
@@ -105,6 +102,7 @@ export default function Leaderboard() {
           playerRows={leaderboard}
           page={page}
           searchQuery={search}
+          loading={loading}
           updateTotalRows={setTotalRows}
         />
         <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8 border-t border-muted">
