@@ -23,7 +23,7 @@ import Constrict from "@/app/components/layout/Constrict";
 
 export default function Leaderboard() {
   const DEFAULT_SEASON_VALUE = "Season 0";
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [season, setSeason] = useState<string | null>(DEFAULT_SEASON_VALUE);
@@ -36,9 +36,11 @@ export default function Leaderboard() {
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
+      setLoading(true);
       const formattedSeason = formatSeasonKey(season);
       const data = await fetchLeaderboard(formattedSeason as LeaderboardId);
       setLeaderboard(data);
+      setLoading(false);
     };
 
     fetchLeaderboardData();
@@ -105,6 +107,7 @@ export default function Leaderboard() {
           playerRows={leaderboard}
           page={page}
           searchQuery={search}
+          loading={loading}
           updateTotalRows={setTotalRows}
         />
         <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8 border-t border-muted">
