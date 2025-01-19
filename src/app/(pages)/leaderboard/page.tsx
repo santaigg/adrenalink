@@ -63,7 +63,6 @@ export default function Leaderboard() {
             alt="Spectre Divide solo rank icon."
             className="w-24"
           />
-          {season}
         </div>
         {/* FILTERS START */}
         <div className="w-full flex flex-col-reverse items-center mt-8 sm:mb-16 gap-y-4 sm:px-0 sm:flex-row sm:gap-x-2 sm:items-start">
