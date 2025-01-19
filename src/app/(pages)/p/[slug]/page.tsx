@@ -8,6 +8,7 @@ import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
 import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
+import { Card } from "@/app/components/information/Card";
 import Image from "next/image";
 
 import {
@@ -17,7 +18,8 @@ import {
   OverviewCard,
   Last20Card,
   MatchCard,
-} from "@/app/components/information/Card";
+  SkeletonLoader,
+} from "@/app/components/information/PlayerProfileCards";
 
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
@@ -49,9 +51,7 @@ export default function PlayerProfile() {
     <main className="min-h-screen">
       <BackgroundImage className="mix-bl" image={BackgroundImageData} />
       {loading ? (
-        <Constrict>
-          <p>Loading player profile...</p>
-        </Constrict>
+        <SkeletonLoader />
       ) : playerProfile ? (
         <>
           <div className="w-full -mt-4 h-48 relative">
@@ -84,13 +84,14 @@ export default function PlayerProfile() {
                 <CurrentRankCard stats={playerProfile.stats} />
                 {/* Sponsors */}
                 <SponsorsCard
-                  sponsorStats={playerProfile.extended_stats?.sponsor_stats! || {}}
+                  sponsorStats={
+                    playerProfile.extended_stats?.sponsor_stats! || {}
+                  }
                 />
                 {/* Maps */}
                 <MapsCard
                   mapStats={playerProfile.extended_stats?.map_stats! || {}}
                 />
-                {/* fix */}
               </div>
               <div className="sm:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
