@@ -22,23 +22,18 @@ import Constrict from "@/app/components/layout/Constrict";
 // Need to check it doesnt break on mobile view, though it looks fine on my phone.
 
 export default function Leaderboard() {
-  const DEFAULT_SEASON_VALUE = "Season 0";
+  const DEFAULT_SEASON_VALUE = "season0";
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [season, setSeason] = useState<string | null>(DEFAULT_SEASON_VALUE);
+  const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
   const [totalRows, setTotalRows] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState([]);
-
-  const formatSeasonKey = (season: string | null): string => {
-    return season ? season.toLowerCase().replace(" ", "") : "";
-  };
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       setLoading(true);
-      const formattedSeason = formatSeasonKey(season);
-      const data = await fetchLeaderboard(formattedSeason as LeaderboardId);
+      const data = await fetchLeaderboard(season as LeaderboardId);
       setLeaderboard(data);
       setLoading(false);
     };
@@ -68,6 +63,7 @@ export default function Leaderboard() {
             alt="Spectre Divide solo rank icon."
             className="w-24"
           />
+          {season}
         </div>
         {/* FILTERS START */}
         <div className="w-full flex flex-col-reverse items-center mt-8 sm:mb-16 gap-y-4 sm:px-0 sm:flex-row sm:gap-x-2 sm:items-start">
@@ -76,8 +72,8 @@ export default function Leaderboard() {
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
-              defaultValue={"season0"}
-              // onChange={setSeason}
+              defaultValue={DEFAULT_SEASON_VALUE}
+              setSeason={setSeason}
             />
           </div>
           <div className="hidden sm:block">

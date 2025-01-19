@@ -2,7 +2,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { cn } from "@/app/utils/cn";
-
+import { Dispatch, SetStateAction } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import {
@@ -32,10 +32,11 @@ const seasons = [
 interface SeasonSelectorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   defaultValue: string;
+  setSeason: Dispatch<SetStateAction<string>>;
 }
 
 const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
-  ({ defaultValue }, ref) => {
+  ({ defaultValue, setSeason }, ref) => {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState("");
 
@@ -70,7 +71,8 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
                       key={season.value}
                       value={season.value}
                       onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
+                        setValue(currentValue);
+                        setSeason(currentValue);
                         setOpen(false);
                       }}
                     >

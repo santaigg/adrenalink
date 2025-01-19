@@ -230,6 +230,18 @@ interface OverviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
   ({ stats, seasonStats }, ref) => {
+    const DEFAULT_SEASON_VALUE = "season0";
+    const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
+
+    const formatSeasonKey = (season: string | null): string => {
+      if (!season) return "";
+      return season.replace(
+        /^([a-z])([a-z]*)(\d+)/,
+        (_, firstLetter, rest, number) =>
+          `${firstLetter.toUpperCase()}${rest} ${number}`
+      );
+    };
+
     const seasonStatsSelected = seasonStats["2024-S0"];
     return (
       <div className="" ref={ref}>
@@ -240,8 +252,11 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
         <Card className="rounded-tr-none p-0">
           <div className="px-6 py-6">
             <div className="flex justify-between items-center">
-              <h2>Season 0 Overview</h2>
-              <SeasonSelector defaultValue="season0" />
+              <h2>{formatSeasonKey(season)} Overview</h2>
+              <SeasonSelector
+                defaultValue={DEFAULT_SEASON_VALUE}
+                setSeason={setSeason}
+              />
             </div>
             <div className="flex py-4 gap-x-4">
               <RankImage
