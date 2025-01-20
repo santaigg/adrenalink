@@ -255,6 +255,7 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
               <h2>{formatSeasonKey(season)} Overview</h2>
               <SeasonSelector
                 defaultValue={DEFAULT_SEASON_VALUE}
+                showBeta={true}
                 setSeason={setSeason}
               />
             </div>
