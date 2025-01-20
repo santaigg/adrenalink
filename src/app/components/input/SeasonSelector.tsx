@@ -92,6 +92,7 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
                         setSeason(currentValue);
                         setOpen(false);
                       }}
+                      className={`${value === season.value ? "!bg-accent !text-accent-foreground" : ""}`}
                     >
                       {season.label}
                       <Check

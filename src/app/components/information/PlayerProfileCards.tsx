@@ -233,16 +233,35 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
     const DEFAULT_SEASON_VALUE = "season0";
     const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
 
-    const formatSeasonKey = (season: string | null): string => {
+    const formatSeasonTitle = (season: string | null): string => {
       if (!season) return "";
-      return season.replace(
+      const formattedSeason = season.replace(
         /^([a-z])([a-z]*)(\d+)/,
         (_, firstLetter, rest, number) =>
           `${firstLetter.toUpperCase()}${rest} ${number}`
-      );
+      ); 
+      return String(formattedSeason).charAt(0).toUpperCase() + String(formattedSeason).slice(1);
     };
 
-    const seasonStatsSelected = seasonStats["2024-S0"];
+    const formatSeasonKey = (season: string,) => {
+      switch (season){
+        case 'beta': {
+          return 'Beta'
+        }
+        case 'season0': {
+          return '2024-S0'
+        }
+        case 'season1': {
+          return '2025-S1'
+        }
+        default: {
+          return '2024-S0'
+        }
+      }
+    }
+
+    const seasonStatsSelected = seasonStats[formatSeasonKey(season)];
+
     return (
       <div className="" ref={ref}>
         <Extrusion
@@ -252,7 +271,7 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
         <Card className="rounded-tr-none p-0">
           <div className="px-6 py-6">
             <div className="flex justify-between items-center">
-              <h2>{formatSeasonKey(season)} Overview</h2>
+              <h2>{formatSeasonTitle(season)} Overview</h2>
               <SeasonSelector
                 defaultValue={DEFAULT_SEASON_VALUE}
                 showBeta={true}
@@ -309,12 +328,6 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
                 <p className="text-sm">Assists</p>
                 <p className="text-lg font-semibold">
                   {seasonStatsSelected.total_assists}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Damage/Round</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.average_damage_per_round.toFixed(1)}
                 </p>
               </div>
               <div className="flex flex-col">
@@ -454,6 +467,8 @@ function getMatchOutcome(winner: number, player_team_index: number) {
   }
 }
 import { PlayerMatch } from "@/app/utils/types/wavescan.types";
+import { ChevronDown } from "lucide-react";
+
 interface MatchCardProps extends React.HTMLAttributes<HTMLDivElement> {
   matches: PlayerMatch;
   playerId: string;
@@ -475,7 +490,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
               }`}
             ></div>
             <Card
-              className={`flex pl-3 rounded-l-none w-full bg-gradient-to-r  ${
+              className={`flex pl-3 pr-0 rounded-l-none w-full bg-gradient-to-r  ${
                 match.winner == match.player_team.team_index
                   ? "from-green-700/10"
                   : match.winner == match.opponent_team.team_index
@@ -615,6 +630,9 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
                   </div>
                 </div>
               </div>
+              <div className="w-12 h-full border-l border-l-secondary flex items-end justify-center">
+                  <ChevronDown className="w-5 h-5 stroke-primary-foreground" />
+                </div>
             </Card>
           </div>
         ))}
