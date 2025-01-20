@@ -6,6 +6,24 @@ import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import getSoloRankFromNumber from "@/app/utils/types/rank";
 import { RankImage } from "../cosmetic/RankImageFromRank";
 import { Card } from "./Card";
+import { SeasonStats } from "@/app/utils/types/wavescan.types";
+
+const getPeakStats = (seasons: Record<string, SeasonStats>) => {
+  const [peakRankRating, setPeakRankRating] = useState<number>(0);
+  const [peakRankID, setPeakRankID] = useState<string>("");
+  const [peakSeason, setPeakSeason] = useState<string>("");
+
+  for (var key in seasons) {
+    const season = seasons[key];
+    if (season.top_rank_rating > peakRankRating) {
+      setPeakRankRating(season.top_rank_rating);
+      setPeakRankID(season.top_rank_id);
+      setPeakSeason(season.season);
+    }
+  }
+
+  return [peakRankID, peakRankRating, peakSeason];
+};
 
 interface PlayerStats {
   rank_rating?: number;
@@ -16,59 +34,79 @@ interface PlayerStats {
 
 interface CurrentRankCardProps extends React.HTMLAttributes<HTMLDivElement> {
   stats: PlayerStats;
+  seasonStats: Record<string, SeasonStats>;
 }
 
 const CurrentRankCard = React.forwardRef<HTMLDivElement, CurrentRankCardProps>(
-  ({ stats }, ref) => (
-    <div ref={ref} className="">
-      <Extrusion
-        className={cn("min-w-36 border-secondary rounded-tl")}
-        cornerLocation={CornerLocation.TopRight}
-      />
-      <Card className="rounded-tl-none p-0">
-        <div className="px-6 py-4">
-          <h2>Current Rank</h2>
-          <div className="flex gap-x-4 mt-2.5">
-            <RankImage
-              className="size-14 min-w-14 min-h-14"
-              rank={getSoloRankFromNumber(stats.current_solo_rank!)}
-            />
-            <div className="flex-col flex justify-center ">
-              <h3
-                className={`font-medium ${
-                  stats.current_solo_rank == 29
-                    ? "bg-gradient-to-r from-amber-200 to-yellow-500 inline-block bg-clip-text text-transparent"
-                    : ""
-                }`}
-              >
-                {getSoloRankFromNumber(stats.current_solo_rank!)}
-              </h3>
-              <p>{stats.rank_rating} RR</p>
+  ({ stats, seasonStats }, ref) => {
+    const [peakRankID, peakRankRating, peakSeason] = getPeakStats(seasonStats);
+
+    const formatSeasonTitle = (season: string) => {
+      switch (season) {
+        case "Beta": {
+          return "Beta";
+        }
+        case "2024-S0": {
+          return "Season 0";
+        }
+        case "2025-S1": {
+          return "Season 1";
+        }
+        default: {
+          return "Unknown Season";
+        }
+      }
+    };
+
+    return (
+      <div ref={ref} className="">
+        <Extrusion
+          className={cn("min-w-36 border-secondary rounded-tl")}
+          cornerLocation={CornerLocation.TopRight}
+        />
+        <Card className="rounded-tl-none p-0">
+          <div className="px-6 py-4">
+            <h2>Current Rank</h2>
+            <div className="flex gap-x-4 mt-2.5">
+              <RankImage
+                className="size-14 min-w-14 min-h-14"
+                rank={getSoloRankFromNumber(stats.current_solo_rank!)}
+              />
+              <div className="flex-col flex justify-center ">
+                <h3
+                  className={`font-medium ${
+                    stats.current_solo_rank == 29
+                      ? "bg-gradient-to-r from-amber-200 to-yellow-500 inline-block bg-clip-text text-transparent"
+                      : ""
+                  }`}
+                >
+                  {getSoloRankFromNumber(stats.current_solo_rank!)}
+                </h3>
+                <p>{stats.rank_rating} RR</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full py-4 px-6 bg-input">
-          <h3>Peak Rank</h3>
-          <div className="flex gap-x-4 mt-2.5">
-            <RankImage
-              className="size-14 min-w-14 min-h-14"
-              rank={getSoloRankFromNumber(stats.current_solo_rank!)}
-            />
-            <div className="flex-col flex justify-center ">
-              <h3
-                className={`font-medium ${
-                  stats.current_solo_rank == 29 ? "" : ""
-                }`}
-              >
-                {getSoloRankFromNumber(stats.current_solo_rank!)}
-              </h3>
-              <p>Season 0 ~ Hard Coded, CHANGE!!</p>
+          <div className="w-full py-4 px-6 bg-input">
+            <h3>Peak Rank</h3>
+            <div className="flex gap-x-4 mt-2.5">
+              <RankImage
+                className="size-14 min-w-14 min-h-14"
+                rank={getSoloRankFromNumber(Number(peakRankID))}
+              />
+              <div className="flex-col flex justify-center ">
+                <h3>{getSoloRankFromNumber(Number(peakRankID))}</h3>
+                <p>
+                  {peakRankRating} RR
+                  <span className="text-xs opacity-50 my-auto mx-1">•</span>
+                  {formatSeasonTitle(String(peakSeason))}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Card>
-    </div>
-  )
+        </Card>
+      </div>
+    );
+  }
 );
 CurrentRankCard.displayName = "CurrentRankCard";
 
@@ -172,6 +210,7 @@ const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
       };
       loadImages();
     }, [mapStats]);
+
     return (
       <div ref={ref}>
         <Extrusion
@@ -182,14 +221,17 @@ const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
           <h2>Maps</h2>
           {Object.entries(mapStats).map(([key, map]) => {
             const mapName = getMapName(map.map);
-            const imageSrc = mapImages[mapName];
+            const mapImage = mapImages[mapName];
             return (
               <div className="flex gap-x-4 py-2.5" key={key}>
-                <Image
-                  src={imageSrc}
-                  alt={`Image of ${mapName}`}
-                  className="w-12 h-12 rounded-md"
-                />
+                {mapImage && (
+                  <Image
+                    src={mapImage}
+                    alt={`Image of ${mapName}`}
+                    className="w-12 h-12 rounded-md"
+                  />
+                )}
+
                 <div className="flex h-12">
                   <div className="flex-col flex h-full justify-center items-start">
                     <p className="leading-none text-accent">
@@ -220,12 +262,45 @@ const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
 );
 MapsCard.displayName = "MapsCard";
 
-import type { SeasonStats } from "@/app/utils/types/wavescan.types";
+import { cva, type VariantProps } from "class-variance-authority";
+
+const overviewItemVariants = cva(
+  "pl-4 flex flex-col justify-center items-start",
+  {
+    variants: {
+      variant: {
+        default: "",
+        primary: "rounded-md bg-secondary",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+interface OverviewItemProps {
+  variant?: "default" | "primary";
+  title: string;
+  value: number;
+}
+
+const OverviewItem = React.forwardRef<HTMLDivElement, OverviewItemProps>(
+  ({ variant = "default", title, value }, ref) => {
+    return (
+      <div ref={ref} className={overviewItemVariants({ variant })}>
+        <p className="text-sm">{title}</p>
+        <p className="text-lg font-semibold">{value}</p>
+      </div>
+    );
+  }
+);
+
 import { SeasonSelector } from "../input/SeasonSelector";
 
 interface OverviewCardProps extends React.HTMLAttributes<HTMLDivElement> {
   stats: PlayerStats;
-  seasonStats: SeasonStats;
+  seasonStats: Record<string, SeasonStats>;
 }
 
 const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
@@ -233,16 +308,38 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
     const DEFAULT_SEASON_VALUE = "season0";
     const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
 
-    const formatSeasonKey = (season: string | null): string => {
+    const formatSeasonTitle = (season: string | null): string => {
       if (!season) return "";
-      return season.replace(
+      const formattedSeason = season.replace(
         /^([a-z])([a-z]*)(\d+)/,
         (_, firstLetter, rest, number) =>
           `${firstLetter.toUpperCase()}${rest} ${number}`
       );
+      return (
+        String(formattedSeason).charAt(0).toUpperCase() +
+        String(formattedSeason).slice(1)
+      );
     };
 
-    const seasonStatsSelected = seasonStats["2024-S0"];
+    const formatSeasonKey = (season: string) => {
+      switch (season) {
+        case "beta": {
+          return "Beta";
+        }
+        case "season0": {
+          return "2024-S0";
+        }
+        case "season1": {
+          return "2025-S1";
+        }
+        default: {
+          return "2024-S0";
+        }
+      }
+    };
+
+    const seasonStatsSelected = seasonStats[formatSeasonKey(season)];
+
     return (
       <div className="" ref={ref}>
         <Extrusion
@@ -252,20 +349,25 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
         <Card className="rounded-tr-none p-0">
           <div className="px-6 py-6">
             <div className="flex justify-between items-center">
-              <h2>{formatSeasonKey(season)} Overview</h2>
+              <h2>{formatSeasonTitle(season)} Overview</h2>
               <SeasonSelector
                 defaultValue={DEFAULT_SEASON_VALUE}
+                showBeta={true}
                 setSeason={setSeason}
               />
             </div>
             <div className="flex py-4 gap-x-4">
               <RankImage
                 className="size-16"
-                rank={getSoloRankFromNumber(seasonStatsSelected.top_rank_id)}
+                rank={getSoloRankFromNumber(
+                  Number(seasonStatsSelected.top_rank_id)
+                )}
               />
               <div className="flex flex-col justify-center">
                 <p className="text-lg">
-                  {getSoloRankFromNumber(seasonStatsSelected.top_rank_id)}
+                  {getSoloRankFromNumber(
+                    Number(seasonStatsSelected.top_rank_id)
+                  )}
                 </p>
                 <p className="font-semibold text-xl">{stats.rank_rating} RR</p>
               </div>
@@ -308,12 +410,6 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
                 <p className="text-sm">Assists</p>
                 <p className="text-lg font-semibold">
                   {seasonStatsSelected.total_assists}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Damage/Round</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.average_damage_per_round.toFixed(1)}
                 </p>
               </div>
               <div className="flex flex-col">
@@ -453,6 +549,8 @@ function getMatchOutcome(winner: number, player_team_index: number) {
   }
 }
 import { PlayerMatch } from "@/app/utils/types/wavescan.types";
+import { ChevronDown } from "lucide-react";
+
 interface MatchCardProps extends React.HTMLAttributes<HTMLDivElement> {
   matches: PlayerMatch;
   playerId: string;
@@ -460,163 +558,205 @@ interface MatchCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
   ({ matches, playerId }, ref) => {
+    const [limit, setLimit] = useState(20);
+    const matchEntries = Object.entries(matches).slice(0, limit);
+
+    const loadMoreMatches = () => {
+      setLimit((prevLimit) =>
+        Math.min(prevLimit + 20, Object.entries(matches).length)
+      );
+    };
+
+    const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+
+    const toggleOpen = (key: string) => {
+      setOpenStates((prev) => ({
+        ...prev,
+        [key]: !prev[key],
+      }));
+    };
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
-        {Object.entries(matches).map(([key, match]) => (
-          <div key={key} className="flex h-28 w-full gap-x-1">
-            <div
-              className={`h-full w-2 ${
-                match.winner == match.player_team.team_index
-                  ? "bg-green-700"
-                  : match.winner == match.opponent_team.team_index
-                  ? "bg-red-700"
-                  : "bg-neutral-600"
-              }`}
-            ></div>
-            <Card
-              className={`flex pl-3 rounded-l-none w-full bg-gradient-to-r  ${
-                match.winner == match.player_team.team_index
-                  ? "from-green-700/10"
-                  : match.winner == match.opponent_team.team_index
-                  ? "from-red-700/10"
-                  : "from-neutral-700/10"
-              }`}
-            >
-              <div className="">
-                <SponsorImage
-                  className="w-12 h-auto"
-                  sponsor={
-                    match?.player_team?.players?.find(
-                      (player: any) => player.id === playerId
-                    )?.sponsor_name
-                  }
-                />
-              </div>
-              <div className="flex-col flex w-full">
-                <div className="flex h-5 items-center gap-1 pl-4 mt-1">
-                  <p
-                    className={`font-semibold ${
-                      getMatchOutcome(
-                        match.winner,
-                        match.player_team?.team_index
-                      ) === "Victory"
-                        ? "text-green-500"
-                        : getMatchOutcome(
-                            match.winner,
-                            match.player_team?.team_index
-                          ) === "Defeat"
-                        ? "text-red-500"
-                        : "text-primary-foreground"
-                    }`}
-                  >
-                    {getMatchOutcome(
-                      match.winner,
-                      match.player_team?.team_index
-                    )}
-                  </p>
-                  <span className="text-xs opacity-50 my-auto">•</span>
-                  <p
-                    className={`text-sm font-medium ${
+        {matchEntries.map(([key, match]) => (
+          <div className="">
+            <div key={key} className="flex h-28 w-full gap-x-1">
+              <div
+                className={`h-full w-2 ${
+                  match.winner == match.player_team.team_index
+                    ? "bg-green-700"
+                    : match.winner == match.opponent_team.team_index
+                    ? "bg-red-700"
+                    : "bg-neutral-600"
+                }`}
+              ></div>
+              <Card
+                className={`flex pl-3 pr-0 rounded-l-none w-full bg-gradient-to-r  ${
+                  match.winner == match.player_team.team_index
+                    ? "from-green-700/10"
+                    : match.winner == match.opponent_team.team_index
+                    ? "from-red-700/10"
+                    : "from-neutral-700/10"
+                }`}
+              >
+                <div className="">
+                  <SponsorImage
+                    className="w-12 h-auto"
+                    sponsor={
                       match?.player_team?.players?.find(
                         (player: any) => player.id === playerId
-                      )?.ranked_rating_delta > 0
-                        ? "text-green-500"
-                        : match?.player_team?.players?.find(
-                            (player: any) => player.id === playerId
-                          )?.ranked_rating_delta < 0
-                        ? "text-red-500"
-                        : "text-primary-foreground"
-                    }`}
-                  >
-                    {match?.player_team?.players?.find(
-                      (player: any) => player.id === playerId
-                    )?.ranked_rating_delta
-                      ? match?.player_team?.players?.find(
+                      )?.sponsor_name
+                    }
+                  />
+                </div>
+                <div className="flex-col flex w-full">
+                  <div className="flex h-5 items-center gap-1 pl-4 mt-1">
+                    <p
+                      className={`font-semibold ${
+                        getMatchOutcome(
+                          match.winner,
+                          match.player_team?.team_index
+                        ) === "Victory"
+                          ? "text-green-500"
+                          : getMatchOutcome(
+                              match.winner,
+                              match.player_team?.team_index
+                            ) === "Defeat"
+                          ? "text-red-500"
+                          : "text-primary-foreground"
+                      }`}
+                    >
+                      {getMatchOutcome(
+                        match.winner,
+                        match.player_team?.team_index
+                      )}
+                    </p>
+                    <span className="text-xs opacity-50 my-auto">•</span>
+                    <p
+                      className={`text-sm font-medium ${
+                        match?.player_team?.players?.find(
                           (player: any) => player.id === playerId
                         )?.ranked_rating_delta > 0
-                        ? `+${
-                            match?.player_team?.players?.find(
+                          ? "text-green-500"
+                          : match?.player_team?.players?.find(
                               (player: any) => player.id === playerId
-                            )?.ranked_rating_delta
-                          }`
+                            )?.ranked_rating_delta < 0
+                          ? "text-red-500"
+                          : "text-primary-foreground"
+                      }`}
+                    >
+                      {match?.player_team?.players?.find(
+                        (player: any) => player.id === playerId
+                      )?.ranked_rating_delta
+                        ? match?.player_team?.players?.find(
+                            (player: any) => player.id === playerId
+                          )?.ranked_rating_delta > 0
+                          ? `+${
+                              match?.player_team?.players?.find(
+                                (player: any) => player.id === playerId
+                              )?.ranked_rating_delta
+                            }`
+                          : `${
+                              match?.player_team?.players?.find(
+                                (player: any) => player.id === playerId
+                              )?.ranked_rating_delta
+                            }`
                         : `${
                             match?.player_team?.players?.find(
                               (player: any) => player.id === playerId
                             )?.ranked_rating_delta
-                          }`
-                      : `${
-                          match?.player_team?.players?.find(
+                          }`}
+                    </p>
+                    <span className="text-xs opacity-50 my-auto">•</span>
+                    <p className="text-sm font-medium">
+                      {getMatchQueueName(
+                        match.queue_name,
+                        match.player_team.used_team_rank
+                      )}
+                    </p>
+                    <span className="text-xs opacity-50 my-auto">•</span>
+                    <p className="text-sm">{getDate(match.match_date)}</p>
+                  </div>
+                  <div className="w-full h-full grid grid-cols-4 pl-4 pt-2">
+                    <div className="h-full w-full flex flex-col items-start justify-between">
+                      <p className="font-semibold">
+                        {match.player_team.rounds_won} -{" "}
+                        {match.opponent_team.rounds_won}
+                      </p>
+                      <p className="text-sm opacity-80">
+                        {getMapName(match.map)}
+                      </p>
+                    </div>
+                    <div className="h-full w-full flex flex-col items-start justify-between">
+                      <p className="font-semibold">
+                        {
+                          match.player_team.players.find(
                             (player: any) => player.id === playerId
-                          )?.ranked_rating_delta
-                        }`}
-                  </p>
-                  <span className="text-xs opacity-50 my-auto">•</span>
-                  <p className="text-sm font-medium">
-                    {getMatchQueueName(
-                      match.queue_name,
-                      match.player_team.used_team_rank
-                    )}
-                  </p>
-                  <span className="text-xs opacity-50 my-auto">•</span>
-                  <p className="text-sm">{getDate(match.match_date)}</p>
-                </div>
-                <div className="w-full h-full grid grid-cols-4 pl-4 pt-2">
-                  <div className="h-full w-full flex flex-col items-start justify-between">
-                    <p className="font-semibold">
-                      {match.player_team.rounds_won} -{" "}
-                      {match.opponent_team.rounds_won}
-                    </p>
-                    <p className="text-sm opacity-80">
-                      {getMapName(match.map)}
-                    </p>
-                  </div>
-                  <div className="h-full w-full flex flex-col items-start justify-between">
-                    <p className="font-semibold">
-                      {
-                        match.player_team.players.find(
-                          (player: any) => player.id === playerId
-                        ).kills
-                      }{" "}
-                      /{" "}
-                      {
-                        match.player_team.players.find(
-                          (player: any) => player.id === playerId
-                        ).deaths
-                      }{" "}
-                      /{" "}
-                      {
-                        match.player_team.players.find(
-                          (player: any) => player.id === playerId
-                        ).assists
-                      }
-                    </p>
-                    <p className="text-sm opacity-80">KDA</p>
-                  </div>
-                  <div className="h-full w-full flex flex-col items-start justify-between">
-                    <p className="font-semibold">
-                      {(
-                        match.player_team.players.find(
-                          (player: any) => player.id === playerId
-                        ).kills / match.rounds
-                      ).toFixed(2)}
-                    </p>
-                    <p className="text-sm opacity-80">KPR</p>
-                  </div>
-                  <div className=" h-full w-full flex flex-col items-start justify-between">
-                    <p className="font-semibold">
-                      {(
-                        match.player_team.players.find(
-                          (player: any) => player.id === playerId
-                        ).damage_dealt / match.rounds
-                      ).toFixed(2)}
-                    </p>
-                    <p className="text-sm opacity-80">ADR</p>
+                          ).kills
+                        }{" "}
+                        /{" "}
+                        {
+                          match.player_team.players.find(
+                            (player: any) => player.id === playerId
+                          ).deaths
+                        }{" "}
+                        /{" "}
+                        {
+                          match.player_team.players.find(
+                            (player: any) => player.id === playerId
+                          ).assists
+                        }
+                      </p>
+                      <p className="text-sm opacity-80">KDA</p>
+                    </div>
+                    <div className="h-full w-full flex flex-col items-start justify-between">
+                      <p className="font-semibold">
+                        {(
+                          match.player_team.players.find(
+                            (player: any) => player.id === playerId
+                          ).kills / match.rounds
+                        ).toFixed(2)}
+                      </p>
+                      <p className="text-sm opacity-80">KPR</p>
+                    </div>
+                    <div className=" h-full w-full flex flex-col items-start justify-between">
+                      <p className="font-semibold">
+                        {(
+                          match.player_team.players.find(
+                            (player: any) => player.id === playerId
+                          ).damage_dealt / match.rounds
+                        ).toFixed(2)}
+                      </p>
+                      <p className="text-sm opacity-80">ADR</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+                <div
+                  className="w-10 h-full border-l border-l-secondary flex items-end justify-center cursor-pointer"
+                  onClick={() => toggleOpen(key)}
+                >
+                  <ChevronDown
+                    className={`w-5 h-5 stroke-primary-foreground transition-all ${
+                      openStates[key] ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+              </Card>
+            </div>
+            <MatchDetailsCard
+              open={openStates[key] || false}
+              match={match}
+              playerId={playerId}
+            />
           </div>
         ))}
+        {limit < Object.entries(matches).length && (
+          <div
+            onClick={loadMoreMatches}
+            className="py-2 w-full flex justify-center items-center cursor-pointer rounded hover:bg-muted/25"
+          >
+            Load More
+          </div>
+        )}
       </div>
     );
   }
@@ -633,6 +773,7 @@ export {
 };
 
 import Constrict from "../layout/Constrict";
+import { MatchDetailsCard } from "./MatchDetailsCard";
 
 const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
   return (

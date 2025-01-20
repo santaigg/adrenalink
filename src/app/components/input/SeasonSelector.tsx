@@ -3,7 +3,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { cn } from "@/app/utils/cn";
 import { Dispatch, SetStateAction } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Truck } from "lucide-react";
 
 import {
   Command,
@@ -18,33 +18,50 @@ import {
   PopoverTrigger,
 } from "@/app/components/information/Popover";
 
-const seasons = [
-  {
-    value: "season0",
-    label: "Season 0",
-  },
-  {
-    value: "season1",
-    label: "Season 1: Flashpoint",
-  },
-];
+interface Season {
+  value: string;
+  label: string;
+}
 
 interface SeasonSelectorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   defaultValue: string;
+  showBeta?: boolean;
   setSeason: Dispatch<SetStateAction<string>>;
 }
 
 const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
-  ({ defaultValue, setSeason }, ref) => {
+  ({ defaultValue, showBeta = false, setSeason }, ref) => {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState("");
+    const [seasons, setSeasons] = React.useState<Season[]>([
+      { value: "beta", label: "Beta" },
+      { value: "season0", label: "Season 0" },
+      { value: "season1", label: "Season 1: Flashpoint" },
+    ])
+
+    const addSeason = (newSeason: Season) => {
+      setSeasons((prevSeasons) => [...prevSeasons, newSeason]);
+    };
+    
+    const removeSeason = (valueToRemove: string) => {
+      setSeasons((prevSeasons) =>
+        prevSeasons.filter((season) => season.value !== valueToRemove)
+      );
+    };
 
     useEffect(() => {
       if (defaultValue != null) {
         setValue(defaultValue);
       }
     }, [defaultValue]);
+
+    useEffect(() => {
+      if (showBeta === false) {
+        removeSeason("beta")
+      }
+    }, [showBeta])
+
     return (
       <div ref={ref}>
         <Popover open={open} onOpenChange={setOpen}>
@@ -75,6 +92,7 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
                         setSeason(currentValue);
                         setOpen(false);
                       }}
+                      className={`${value === season.value ? "!bg-accent !text-accent-foreground" : ""}`}
                     >
                       {season.label}
                       <Check
@@ -90,6 +108,7 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
             </Command>
           </PopoverContent>
         </Popover>
+        {showBeta}
       </div>
     );
   }

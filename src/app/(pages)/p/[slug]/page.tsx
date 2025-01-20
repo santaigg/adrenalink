@@ -21,6 +21,10 @@ import {
   SkeletonLoader,
 } from "@/app/components/information/PlayerProfileCards";
 
+import { SeasonStats } from "@/app/utils/types/wavescan.types";
+
+
+
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
   const playerId = params.slug;
@@ -62,9 +66,7 @@ export default function PlayerProfile() {
             /> */}
             <div className="size-full absolute top-0 -z-50 bg-input" />
             <Constrict className="h-full flex">
-              {/* <p className="text-muted">{playerId}</p> */}
               <p className="text-muted">{status}</p>
-              {/* <h1 className="mt-auto mb-2 ml-36">{playerProfile.name}</h1> */}
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
                 <img
                   src={playerProfile.steam_profile.avatar?.large}
@@ -81,7 +83,7 @@ export default function PlayerProfile() {
             <div className="grid grid-cols-1 sm:grid-cols-4 mt-8 gap-6">
               <div className="gap-y-4 flex-col flex">
                 {/* Current Rank */}
-                <CurrentRankCard stats={playerProfile.stats} />
+                <CurrentRankCard stats={playerProfile.stats} seasonStats={playerProfile.extended_stats?.season_stats!}/>
                 {/* Sponsors */}
                 <SponsorsCard
                   sponsorStats={
@@ -89,19 +91,17 @@ export default function PlayerProfile() {
                   }
                 />
                 {/* Maps */}
-                <MapsCard
-                  mapStats={playerProfile.extended_stats?.map_stats! || {}}
-                />
+                <MapsCard mapStats={playerProfile.extended_stats?.map_stats!} />
               </div>
               <div className="sm:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
                 <OverviewCard
                   stats={playerProfile.stats}
-                  seasonStats={playerProfile.extended_stats?.season_stats}
+                  seasonStats={playerProfile.extended_stats?.season_stats!}
                 />
                 <Last20Card
                   stats={
-                    playerProfile.extended_stats?.last_20_matches_avg_stats
+                    playerProfile.extended_stats?.last_20_matches_avg_stats!
                   }
                 />
                 <MatchCard
