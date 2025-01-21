@@ -14,12 +14,18 @@
   h3 {
     font-size: 1.17em;
   }
-
-
 }
 
 @layer utilities {
   .corner-clip {
     clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 80% 100%, 100% 80%);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
   }
 }

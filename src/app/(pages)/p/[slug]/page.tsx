@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import BackgroundImage from "../../../components/cosmetic/BackgroundImage";
 import BackgroundImageData from "../../../assets/images/background/background-spectators.png";
+import DefaultAvatar from "@/app/assets/images/avatars/default.png"
 import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
@@ -20,10 +21,6 @@ import {
   MatchCard,
   SkeletonLoader,
 } from "@/app/components/information/PlayerProfileCards";
-
-import { SeasonStats } from "@/app/utils/types/wavescan.types";
-
-
 
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
@@ -52,8 +49,8 @@ export default function PlayerProfile() {
     fetchData();
   }, [playerId]);
   return (
-    <main className="min-h-screen">
-      <BackgroundImage className="mix-bl" image={BackgroundImageData} />
+    <main>
+      <BackgroundImage image={BackgroundImageData} />
       {loading ? (
         <SkeletonLoader />
       ) : playerProfile ? (
@@ -68,11 +65,19 @@ export default function PlayerProfile() {
             <Constrict className="h-full flex">
               <p className="text-muted">{status}</p>
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
-                <img
-                  src={playerProfile.steam_profile.avatar?.large}
-                  alt={`${playerProfile.name}'s avatar`}
-                  className="w-32 h-32"
-                />
+                {playerProfile.steam_profile?.avatar?.large ? (
+                  <img
+                    src={playerProfile.steam_profile.avatar.large}
+                    alt={`${playerProfile.name}'s avatar`}
+                    className="w-32 h-32"
+                  />
+                ) : (
+                  <Image
+                    src={DefaultAvatar}
+                    alt={`Default avatar`}
+                    className="w-32 h-32"
+                  />
+                )}
               </div>
             </Constrict>
           </div>
@@ -83,7 +88,10 @@ export default function PlayerProfile() {
             <div className="grid grid-cols-1 sm:grid-cols-4 mt-8 gap-6">
               <div className="gap-y-4 flex-col flex">
                 {/* Current Rank */}
-                <CurrentRankCard stats={playerProfile.stats} seasonStats={playerProfile.extended_stats?.season_stats!}/>
+                <CurrentRankCard
+                  stats={playerProfile.stats}
+                  seasonStats={playerProfile.extended_stats?.season_stats!}
+                />
                 {/* Sponsors */}
                 <SponsorsCard
                   sponsorStats={

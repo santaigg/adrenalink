@@ -1,4 +1,5 @@
 "use client";
+import * as React from "react";
 
 import Logo from "./Logo";
 import Extrusion from "../cosmetic/Extrusion";
@@ -18,20 +19,19 @@ export default function Footer() {
         <Constrict className="flex flex-col sm:flex-row justify-between">
           <div className="flex flex-col flex-1 items-center sm:items-start">
             <Logo />
-            <p className="my-2 text-sm">
+            <div className="my-2 text-sm">
               Made by
               {projectData.developers.length > 0 &&
                 projectData.developers.map((developer) => (
-                  <>
+                  <React.Fragment key={developer.name}>
                     &nbsp;&nbsp;
                     <ExternalLink
-                      key={developer.name}
                       href={developer.socialLink}
                       title={developer.name}
                     />
-                  </>
+                  </React.Fragment>
                 ))}
-            </p>
+            </div>
             <p className="sm:w-1/2 text-center sm:text-left text-xs text-muted-foreground">
               {projectData.affiliateNotice}
             </p>
@@ -39,11 +39,19 @@ export default function Footer() {
           <div className="flex flex-col items-center sm:items-end justify-between text-primary-foreground mt-2 pl-4 sm:pr-4 sm:border-r border-primary-foreground">
             {projectData.links.social.length > 0 &&
               projectData.links.social.map((item) => (
-                <ExternalLink href={item.link} title={item.title} />
+                <React.Fragment key={item.title}>
+                  <ExternalLink
+                    key={item.title}
+                    href={item.link}
+                    title={item.title}
+                  />
+                </React.Fragment>
               ))}
             {projectData.links.contribution.length > 0 &&
               projectData.links.contribution.map((item) => (
-                <ExternalLink href={item.link} title={item.title} />
+                <React.Fragment key={item.title}>
+                  <ExternalLink href={item.link} title={item.title} />{" "}
+                </React.Fragment>
               ))}
           </div>
         </Constrict>

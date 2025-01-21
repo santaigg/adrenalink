@@ -12,10 +12,17 @@ const getPeakStats = (seasons: Record<string, SeasonStats>) => {
   const [peakRankRating, setPeakRankRating] = useState<number>(0);
   const [peakRankID, setPeakRankID] = useState<string>("");
   const [peakSeason, setPeakSeason] = useState<string>("");
+  const [firstPass, setFirstPass] = useState<boolean>(true);
 
   for (var key in seasons) {
     const season = seasons[key];
-    if (season.top_rank_rating > peakRankRating) {
+    if (peakRankRating === 0 && firstPass) {
+      // Updates values if top_rank_rating is 0, to prevent 'Unkown Season' from displaying on the peak rank card 
+      setPeakRankRating(season.top_rank_rating);
+      setPeakRankID(season.top_rank_id);
+      setPeakSeason(season.season);
+      setFirstPass(false);
+    } else if (season.top_rank_rating > peakRankRating) {
       setPeakRankRating(season.top_rank_rating);
       setPeakRankID(season.top_rank_id);
       setPeakSeason(season.season);
@@ -578,8 +585,8 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
         {matchEntries.map(([key, match]) => (
-          <div className="">
-            <div key={key} className="flex h-28 w-full gap-x-1">
+          <div key={key} className="">
+            <div className="flex h-28 w-full gap-x-1">
               <div
                 className={`h-full w-2 ${
                   match.winner == match.player_team.team_index

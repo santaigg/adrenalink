@@ -1,18 +1,22 @@
 "use client";
-import { CornerLocation } from "../cosmetic/Extrusion";
-import Logo from "./Logo";
-import Extrusion from "../cosmetic/Extrusion";
+import * as React from "react";
 import Link from "next/link";
+import Logo from "./Logo";
+import { Searchbox } from "../input/Searchbox";
 import Constrict from "../layout/Constrict";
 import ExternalLink from "./ExternalLink";
+import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import projectData from "../../project-data.json";
 
 export default function Navbar() {
   return (
     <header className="mb-primary">
       <div className="bg-primary text-primary-foreground">
-        <Constrict className="flex flex-row justify-between p-4">
-          <Logo />
+        <Constrict className="flex items-center flex-row justify-between p-4">
+          <div className="flex items-center gap-primary">
+            <Logo />
+            {/* <Searchbox placeholder="Search"/> */}
+          </div>
           <div className="flex flex-row float-right gap-primary">
             <Link className="hidden sm:inline hover:text-accent" href={"/"}>
               Home
@@ -22,11 +26,9 @@ export default function Navbar() {
             </Link>
             {projectData.links.social.length > 0 &&
               projectData.links.social.map((item) => (
-                <ExternalLink
-                  key={item.title}
-                  href={item.link}
-                  title={item.title}
-                />
+                <React.Fragment key={item.title}>
+                  <ExternalLink href={item.link} title={item.title} />
+                </React.Fragment>
               ))}
           </div>
         </Constrict>
