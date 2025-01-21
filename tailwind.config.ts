@@ -48,6 +48,9 @@ export default {
         primary: "calc(var(--spacing))",
         secondary: "calc(var(--spacing) * 0.6)",
       },
+      borderRadius: {
+        primary: "calc(var(--rounding))"
+      },
       fontFamily: {
         sans: ["mohave", "system-ui", "sans-serif"]
       },

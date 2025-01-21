@@ -68,7 +68,7 @@ const CurrentRankCard = React.forwardRef<HTMLDivElement, CurrentRankCardProps>(
     return (
       <div ref={ref} className="">
         <Extrusion
-          className={cn("min-w-36 border-secondary rounded-tl")}
+          className={cn("min-w-36 border-secondary rounded-tl-primary")}
           cornerLocation={CornerLocation.TopRight}
         />
         <Card className="rounded-tl-none p-0">
@@ -167,7 +167,7 @@ const SponsorsCard = React.forwardRef<HTMLDivElement, SponsorsCardProps>(
         ))}
       </Card>
       <Extrusion
-        className={cn("min-w-36 border-secondary rounded-bl")}
+        className={cn("min-w-36 border-secondary rounded-bl-primary")}
         cornerLocation={CornerLocation.BottomRight}
       />
     </div>
@@ -221,7 +221,7 @@ const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
     return (
       <div ref={ref}>
         <Extrusion
-          className={cn("min-w-36 border-secondary rounded-tr ml-auto")}
+          className={cn("min-w-36 border-secondary rounded-tr-primary ml-auto")}
           cornerLocation={CornerLocation.TopLeft}
         />
         <Card className="rounded-bl-none">
@@ -286,12 +286,6 @@ const overviewItemVariants = cva(
   }
 );
 
-interface OverviewItemProps {
-  variant?: "default" | "primary";
-  title: string;
-  value: number;
-}
-
 const OverviewItem = React.forwardRef<HTMLDivElement, OverviewItemProps>(
   ({ variant = "default", title, value }, ref) => {
     return (
@@ -302,6 +296,12 @@ const OverviewItem = React.forwardRef<HTMLDivElement, OverviewItemProps>(
     );
   }
 );
+
+interface OverviewItemProps {
+  variant?: "default" | "primary";
+  title: string;
+  value: number;
+}
 
 import { SeasonSelector } from "../input/SeasonSelector";
 
@@ -350,7 +350,7 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
     return (
       <div className="" ref={ref}>
         <Extrusion
-          className={cn("min-w-36 ml-auto border-secondary rounded-tr")}
+          className={cn("min-w-36 ml-auto border-secondary rounded-tr-primary")}
           cornerLocation={CornerLocation.TopLeft}
         />
         <Card className="rounded-tr-none p-0">
@@ -492,7 +492,7 @@ const Last20Card = React.forwardRef<HTMLDivElement, Last20CardProps>(
               </p>
             </div>
           </div>
-          <div className="relative w-full h-1 rounded overflow-hidden">
+          <div className="relative w-full h-1 rounded-primary overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full bg-red-500"></div>
             <div
               style={{ width: `${stats.average_win_percentage.toFixed(0)}%` }}
@@ -501,7 +501,7 @@ const Last20Card = React.forwardRef<HTMLDivElement, Last20CardProps>(
           </div>
         </Card>
         <Extrusion
-          className={cn("min-w-36 border-secondary rounded-bl")}
+          className={cn("min-w-36 border-secondary rounded-bl-primary")}
           cornerLocation={CornerLocation.BottomRight}
         />
       </div>
@@ -759,7 +759,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
         {limit < Object.entries(matches).length && (
           <div
             onClick={loadMoreMatches}
-            className="py-2 w-full flex justify-center items-center cursor-pointer rounded hover:bg-muted/25"
+            className="py-2 w-full flex justify-center items-center cursor-pointer rounded-primary hover:bg-muted/25"
           >
             Load More
           </div>
@@ -802,7 +802,7 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
             {/* Current Rank */}
             <div className="">
               <Extrusion
-                className={cn("min-w-36 border-secondary rounded-tl")}
+                className={cn("min-w-36 border-secondary rounded-tl-primary")}
                 cornerLocation={CornerLocation.TopRight}
               />
               <Card className="rounded-tl-none p-0">
@@ -851,14 +851,14 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
                 ))}
               </Card>
               <Extrusion
-                className={cn("min-w-36 border-secondary rounded-bl")}
+                className={cn("min-w-36 border-secondary rounded-bl-primary")}
                 cornerLocation={CornerLocation.BottomRight}
               />
             </div>
             {/* Maps */}
             <div>
               <Extrusion
-                className={cn("min-w-36 border-secondary rounded-tr ml-auto")}
+                className={cn("min-w-36 border-secondary rounded-tr-primary ml-auto")}
                 cornerLocation={CornerLocation.TopLeft}
               />
               <Card className="rounded-tr-none">
@@ -887,7 +887,7 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
             {/* Overview */}
             <div>
               <Extrusion
-                className={cn("min-w-36 ml-auto border-secondary rounded-tr")}
+                className={cn("min-w-36 ml-auto border-secondary rounded-tr-primary")}
                 cornerLocation={CornerLocation.TopLeft}
               />
               <Card className="rounded-tr-none p-0">
@@ -946,7 +946,7 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
                 </div>
               </Card>
               <Extrusion
-                className={cn("min-w-36 border-secondary rounded-bl")}
+                className={cn("min-w-36 border-secondary rounded-bl-primary")}
                 cornerLocation={CornerLocation.BottomRight}
               />
             </div>

@@ -76,7 +76,7 @@ export default function Leaderboard() {
             />
           </div>
           <div className="hidden sm:block">
-            <div className="bg-secondary border border-secondary rounded-t rounded-bl h-9">
+            <div className="bg-secondary border border-secondary rounded-primary rounded-br-none h-9">
               <PlayerLeaderboardPagination
                 totalCount={totalRows}
                 pageSize={50}
@@ -87,7 +87,7 @@ export default function Leaderboard() {
             </div>
             {Math.ceil(totalRows / 50) > 3 ? (
               <Extrusion
-                className={cn("min-w-24 border-secondary rounded-br ml-auto")}
+                className={cn("min-w-24 border-secondary rounded-br-primary ml-auto")}
                 cornerLocation={CornerLocation.BottomLeft}
               />
             ) : (
@@ -105,8 +105,8 @@ export default function Leaderboard() {
           loading={loading}
           updateTotalRows={setTotalRows}
         />
-        <div className="bg-secondary w-full h-24 rounded-b flex justify-center sm:justify-end items-center px-8 border-t border-muted">
-          <div className="bg-primary rounded-md border border-primary p-0.5">
+        <div className="bg-secondary w-full h-24 rounded-b-primary flex justify-center sm:justify-end items-center px-8 border-t border-muted">
+          <div className="bg-primary rounded-primary border border-primary p-0.5">
             <PlayerLeaderboardPagination
               totalCount={totalRows}
               pageSize={50}

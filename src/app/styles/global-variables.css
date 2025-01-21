@@ -24,6 +24,7 @@
     --input-foreground: 240 5% 70%;
 
     --spacing: 1rem;
+    --rounding: 0.25rem;
 
     --constrict-threshold: 1200px;
   }

@@ -151,7 +151,7 @@ const Searchbox = React.forwardRef<
               searchValue.length > 0
                 ? "border-accent"
                 : "border-input-foreground",
-              "h-9 w-full bg-input px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
+              "h-9 w-full bg-input rounded-primary rounded-br-none px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
               className
             )}
             ref={ref}
@@ -159,7 +159,7 @@ const Searchbox = React.forwardRef<
           />
           <Extrusion
             className={cn(
-              "min-w-[20%] float-right",
+              "min-w-[20%] float-right rounded-br-primary",
               focus || searchValue.length > 0
                 ? "border-accent"
                 : "border-input-foreground"
@@ -171,7 +171,7 @@ const Searchbox = React.forwardRef<
           onClick={onSearchButtonClick}
           variant="loaded"
           className={cn(
-            "size-11 justify-center items-center px-0 ml-2",
+            "size-11 justify-center items-center px-0 ml-2 rounded-primary",
             searchValue.length > 0 ? "flex" : "hidden"
           )}
         >
@@ -180,7 +180,7 @@ const Searchbox = React.forwardRef<
       </div>
       <div
         ref={dropdownRef}
-        className={`w-full max-h-60 rounded-sm bg-input border border-accent absolute top-12 left-0 overflow-y-scroll scrollbar-hide ${
+        className={`w-full max-h-60 rounded-primary bg-input border border-accent absolute top-12 left-0 overflow-y-scroll scrollbar-hide ${
           showDropdown ? "" : "hidden"
         }`}
       >

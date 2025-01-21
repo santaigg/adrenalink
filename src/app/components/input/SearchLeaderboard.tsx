@@ -32,7 +32,7 @@ const SearchLeaderboard = React.forwardRef<
         onChange={handleChange}
         placeholder="Search Players..."
         className={cn(
-          "h-9 w-full bg-secondary rounded-t rounded-br px-3 py-1 border outline-none placeholder:text-muted-foreground border-secondary focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
+          "h-9 w-full bg-secondary rounded-primary rounded-bl-none px-3 py-1 border outline-none placeholder:text-muted-foreground border-secondary focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         ref={ref}
@@ -40,7 +40,7 @@ const SearchLeaderboard = React.forwardRef<
       />
       <Extrusion
         className={cn(
-          "min-w-24 rounded-bl",
+          "min-w-24 rounded-bl-primary",
           focus ? "border-accent" : "border-secondary"
         )}
         cornerLocation={CornerLocation.BottomRight}

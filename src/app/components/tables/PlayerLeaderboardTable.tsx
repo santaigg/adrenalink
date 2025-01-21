@@ -63,10 +63,10 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
   return (
     <>
       <Extrusion
-        className={cn("min-w-36 border-secondary rounded-tl")}
+        className={cn("min-w-36 border-secondary rounded-tl-primary")}
         cornerLocation={CornerLocation.TopRight}
       />
-      <Table className="rounded-tr overflow-hidden">
+      <Table className="rounded-tr-primary overflow-hidden">
         <TableHeader className="bg-secondary h-20">
           <TableRow className="text-secondary-foreground border-b-[1px] border-muted">
             <TableHead>
