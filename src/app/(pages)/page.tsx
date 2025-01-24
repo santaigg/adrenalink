@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import PlayerLeaderboardTable from "../components/tables/PlayerLeaderboardTable";
 import { fetchLeaderboard } from "../utils/fetch/fetchLeaderboard";
@@ -12,6 +12,9 @@ import Image from "next/image";
 import SpectreLogoImage from "../assets/images/brand/spectre-logo.png";
 import NoticeBanner from "../components/information/NoticeBanner";
 
+import { PlayerProfile } from "../utils/types/wavescan.types";
+import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
+
 interface PlayerRow {
   username: string;
   placement: number;
@@ -21,18 +24,38 @@ interface PlayerRow {
 }
 
 export default function Home() {
-  const season = "season0"
-    const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
-  
-    useEffect(() => {
-      const fetchLeaderboardData = async () => {
-        const data = await fetchLeaderboard(season as LeaderboardId);
-        setLeaderboard(data);
-      };
-  
-      fetchLeaderboardData();
-    }, [season]);
+  const season = "season0";
+  const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
 
+  useEffect(() => {
+    const fetchLeaderboardData = async () => {
+      const data = await fetchLeaderboard(season as LeaderboardId);
+      setLeaderboard(data.slice(0, 3));
+    };
+
+    fetchLeaderboardData();
+  }, [season]);
+
+  const [profileImages, setProfileImages] = useState<Record<string, string>>(
+    {}
+  );
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const images: Record<string, string> = {};
+      for (const player in leaderboard) {
+        const response = await noStoreFetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${leaderboard[player].playerId}/full_profile`
+        );
+
+        const data: PlayerProfile = await response.json();
+        images[player] = data.steam_profile.avatar?.large;
+      }
+      setProfileImages(images);
+    };
+
+    loadImages();
+  }, [leaderboard]);
 
   return (
     <main className="h-full">
@@ -44,8 +67,8 @@ export default function Home() {
           noticeBottomText="Brand new website, polished experience."
         />
       </Constrict>
-      <Constrict className="h-full px-4 flex flex-col gap-8">
-        <div className="flex flex-col gap-8 text-primary-foreground">
+      <Constrict className="h-full px-4 flex gap-8">
+        <div className="flex flex-1 flex-col gap-8 text-primary-foreground">
           <div>
             <div className="flex flex-row">
               <h2 className="mb-1 text-primary-foreground">Player Search</h2>
@@ -59,67 +82,69 @@ export default function Home() {
           </div>
           {/* <div className="h-full p-4 bg-primary">Real time logs.</div> */}
         </div>
-        <div className="flex justify-center gap-x-8 flex-row">
-          {leaderboard.slice(0, 3).map((player, index) => (
-            <div
-              key={player.id} // Assuming each player has a unique ID
-              className={`flex flex-col items-center ${
-                index === 0
-                  ? "order-2" // First object in the middle
-                  : index === 1
-                  ? "order-1" // Second object on the left
-                  : "order-3" // Third object on the right
-              }`}
-            >
+        <div className="flex flex-1 justify-start gap-y-4 flex-col">
+          {leaderboard.map((player, index) => {
+            const pfp = profileImages[index];
+            return (
               <div
-                className={`hover:-translate-y-2 transition-all ${
-                  index === 0 ? "" : "mt-4"
-                }`}
+                key={player.playerId}
+                className={`flex flex-col items-center w-full`}
               >
                 <div
-                  className={`w-24 text-input pl-4 py-0.5 flex justify-start items-center ${
-                    index === 0
-                      ? "bg-amber-500"
-                      : index === 1
-                      ? "bg-stone-500"
-                      : "bg-amber-900"
+                  className={`hover:-translate-y-2 transition-all w-full ${
+                    index === 0 ? "" : ""
                   }`}
-                  style={{
-                    clipPath:
-                      "polygon(0 0, calc(100px - 15px) 0%, 100% 15px, 100% 100%, 0% 100%)",
-                  }}
                 >
-                  <p
-                    className={`${
+                  <div
+                    className={`w-48 text-input pl-4 py-0.5 flex justify-start items-center ${
                       index === 0
-                        ? "text-amber-100"
+                        ? "bg-amber-500"
                         : index === 1
-                        ? "text-stone-100"
-                        : "text-amber-100"
+                        ? "bg-stone-500"
+                        : "bg-amber-900"
                     }`}
+                    style={{
+                      clipPath:
+                        "polygon(0 0, calc(100% - 15px) 0%, 100% 15px, 100% 100%, 0% 100%)",
+                    }}
                   >
-                    #{index + 1}
-                  </p>
-                </div>
-                <div
-                  className="w-52 aspect-[2/3] bg-primary border-secondary border flex flex-col overflow-hidden hover:bg-primary/85 transition-all cursor-pointer"
-                  style={{
-                    clipPath:
-                      "polygon(100% 0%, 0% 0%, 0% 100%, calc(100% - 30px) 100%, 100% calc(100% - 30px))",
-                  }}
-                >
-                  <div className="flex flex-col p-4 w-full">
-                    <div className="size-24 corner-clip bg-neutral-600 animate-pulse"></div>
-                    <h2 className="mt-2">{player.username}</h2>
-                    <h3>{player.rating} RR</h3>
+                    <p
+                      className={`${
+                        index === 0
+                          ? "text-amber-100"
+                          : index === 1
+                          ? "text-stone-100"
+                          : "text-amber-100"
+                      }`}
+                    >
+                      #{index + 1}
+                    </p>
                   </div>
-                  <div className="mt-auto bg-secondary hover:bg-muted/50 transition-all w-full py-4 flex justify-center items-center cursor-pointer">
-                    <p>Leaderboard</p>
+                  <div
+                    className="w-full bg-primary border-secondary border flex flex-col overflow-hidden hover:bg-primary/85 transition-all cursor-pointer"
+                    style={{
+                      clipPath:
+                        "polygon(100% 0%, 0% 0%, 0% 100%, calc(100% - 30px) 100%, 100% calc(100% - 30px))",
+                    }}
+                  >
+                    <div className="flex gap-x-4 items-center justify p-4 w-full">
+                      {pfp && (
+                        <img
+                          src={pfp}
+                          className="size-24 corner-clip bg-neutral-600 animate-pulse"
+                        ></img>
+                      )}
+
+                      <div className="flex flex-col items-start justify-center">
+                        <h2 className="">{player.username}</h2>
+                        <h3>{player.rating} RR</h3>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Constrict>
     </main>
