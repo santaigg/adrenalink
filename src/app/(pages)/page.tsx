@@ -15,6 +15,8 @@ import NoticeBanner from "../components/information/NoticeBanner";
 import { PlayerProfile } from "../utils/types/wavescan.types";
 import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 
+import { useRouter } from "next/navigation";
+
 interface PlayerRow {
   username: string;
   placement: number;
@@ -24,6 +26,7 @@ interface PlayerRow {
 }
 
 export default function Home() {
+  const router = useRouter();
   const season = "season0";
   const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
 
@@ -52,6 +55,7 @@ export default function Home() {
         images[player] = data.steam_profile.avatar?.large;
       }
       setProfileImages(images);
+      console.log(profileImages);
     };
 
     loadImages();
@@ -67,8 +71,8 @@ export default function Home() {
           noticeBottomText="Brand new website, polished experience."
         />
       </Constrict>
-      <Constrict className="h-full px-4 flex gap-8">
-        <div className="flex flex-1 flex-col gap-8 text-primary-foreground">
+      <Constrict className="h-full px-4 flex flex-col sm:flex-row gap-8">
+        <div className="flex sm:flex-1 flex-col gap-8 text-primary-foreground">
           <div>
             <div className="flex flex-row">
               <h2 className="mb-1 text-primary-foreground">Player Search</h2>
@@ -83,6 +87,9 @@ export default function Home() {
           {/* <div className="h-full p-4 bg-primary">Real time logs.</div> */}
         </div>
         <div className="flex flex-1 justify-start gap-y-4 flex-col">
+          <div className="h-6">
+            <h2 className="mb-1 text-primary-foreground">Top 3</h2>
+          </div>
           {leaderboard.map((player, index) => {
             const pfp = profileImages[index];
             return (
@@ -90,13 +97,15 @@ export default function Home() {
                 key={player.playerId}
                 className={`flex flex-col items-center w-full`}
               >
+                {/* whole thing */}
                 <div
                   className={`hover:-translate-y-2 transition-all w-full ${
                     index === 0 ? "" : ""
                   }`}
                 >
+                  {/* number on top */}
                   <div
-                    className={`w-48 text-input pl-4 py-0.5 flex justify-start items-center ${
+                    className={`w-48 rounded-tl-primary text-input pl-4 py-0.5 flex justify-start items-center ${
                       index === 0
                         ? "bg-amber-500"
                         : index === 1
@@ -120,24 +129,28 @@ export default function Home() {
                       #{index + 1}
                     </p>
                   </div>
+                  {/* main body */}
                   <div
-                    className="w-full bg-primary border-secondary border flex flex-col overflow-hidden hover:bg-primary/85 transition-all cursor-pointer"
+                    className="w-full rounded-tr-primary rounded-bl-primary bg-primary border-secondary border-y flex flex-col overflow-hidden hover:bg-primary/85 transition-all cursor-pointer"
                     style={{
                       clipPath:
                         "polygon(100% 0%, 0% 0%, 0% 100%, calc(100% - 30px) 100%, 100% calc(100% - 30px))",
                     }}
+                    onClick={() => router.push(`/p/${player.playerId}`)}
                   >
                     <div className="flex gap-x-4 items-center justify p-4 w-full">
-                      {pfp && (
+                      {pfp ? (
                         <img
-                          src={pfp}
-                          className="size-24 corner-clip bg-neutral-600 animate-pulse"
+                          src={profileImages[index]}
+                          className="size-20 corner-clip"
                         ></img>
+                      ) : (
+                        <div className="size-20 bg-neutral-600 corner-clip animate-pulse"></div>
                       )}
 
                       <div className="flex flex-col items-start justify-center">
                         <h2 className="">{player.username}</h2>
-                        <h3>{player.rating} RR</h3>
+                        <h3 className="">{player.rating} RR</h3>
                       </div>
                     </div>
                   </div>
@@ -145,6 +158,16 @@ export default function Home() {
               </div>
             );
           })}
+          <button
+            className="bg-primary hover:bg-secondary/65 transition-all py-2 hover:text-accent flex justify-center items-center"
+            style={{
+              clipPath:
+                "polygon(15px 0%, 0% 15px, 0% 100%, calc(100% - 15px) 100%, 100% calc(100% - 15px), 100% 0%)",
+            }}
+            onClick={() => router.push(`/leaderboard`)}
+          >
+            Leaderboard
+          </button>
         </div>
       </Constrict>
     </main>

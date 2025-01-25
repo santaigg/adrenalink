@@ -105,7 +105,7 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
         <PaginationItem key={`${keyPrefix}-page-${p}`}>
           <PaginationLink
             href="#"
-            className={`rounded-md aspect-square h-9 ${
+            className={`rounded-primary aspect-square h-9 ${
               p === page ? "bg-accent text-primary font-extrabold" : ""
             }`}
             onClick={(e) => {

@@ -582,6 +582,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
         [key]: !prev[key],
       }));
     };
+    
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
         {matchEntries.map(([key, match]) => (

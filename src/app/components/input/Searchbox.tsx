@@ -150,7 +150,7 @@ const Searchbox = React.forwardRef<
             className={cn(
               searchValue.length > 0
                 ? "border-accent"
-                : "border-input-foreground",
+                : "border-secondary",
               "h-9 w-full bg-input rounded-primary rounded-br-none px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
               className
             )}
@@ -162,7 +162,7 @@ const Searchbox = React.forwardRef<
               "min-w-[20%] float-right rounded-br-primary",
               focus || searchValue.length > 0
                 ? "border-accent"
-                : "border-input-foreground"
+                : "border-secondary"
             )}
             cornerLocation={CornerLocation.BottomLeft}
           />

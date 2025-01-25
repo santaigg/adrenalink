@@ -38,12 +38,12 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
       { value: "beta", label: "Beta" },
       { value: "season0", label: "Season 0" },
       { value: "season1", label: "Season 1: Flashpoint" },
-    ])
+    ]);
 
     const addSeason = (newSeason: Season) => {
       setSeasons((prevSeasons) => [...prevSeasons, newSeason]);
     };
-    
+
     const removeSeason = (valueToRemove: string) => {
       setSeasons((prevSeasons) =>
         prevSeasons.filter((season) => season.value !== valueToRemove)
@@ -58,9 +58,9 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
 
     useEffect(() => {
       if (showBeta === false) {
-        removeSeason("beta")
+        removeSeason("beta");
       }
-    }, [showBeta])
+    }, [showBeta]);
 
     return (
       <div ref={ref}>
@@ -69,7 +69,7 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
             <div
               role="combobox"
               aria-expanded={open}
-              className="w-52 px-4 py-2 inline-flex items-center gap-2 border whitespace-nowrap cursor-pointer justify-between bg-secondary h-9 rounded border-secondary hover:bg-secondary hover:border-accent text-base text-primary-foreground hover:text-accent font-normal [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+              className="w-52 px-4 py-2 inline-flex items-center gap-2 border whitespace-nowrap cursor-pointer justify-between bg-secondary h-9 rounded-primary border-secondary hover:bg-secondary hover:border-accent text-base text-primary-foreground hover:text-accent font-normal [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             >
               {value
                 ? seasons.find((season) => season.value === value)?.label
@@ -77,8 +77,8 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
               <ChevronsUpDown className="opacity-50" />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-52 p-0 border-muted-foreground">
-            <Command className="bg-secondary border-secondary">
+          <PopoverContent className="w-52 p-0 border-muted-foreground rounded-primary">
+            <Command className="bg-secondary border-secondary rounded-primary">
               {/* <CommandInput placeholder="Search Seasons..." className="h-9 !border-muted-foreground" /> */}
               <CommandList>
                 <CommandEmpty>No season found.</CommandEmpty>
@@ -92,7 +92,11 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
                         setSeason(currentValue);
                         setOpen(false);
                       }}
-                      className={`${value === season.value ? "!bg-accent !text-accent-foreground" : ""}`}
+                      className={`!rounded-primary ${
+                        value === season.value
+                          ? "!bg-accent !text-accent-foreground"
+                          : ""
+                      }`}
                     >
                       {season.label}
                       <Check
