@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 
 import BackgroundImage from "../../../components/cosmetic/BackgroundImage";
 import BackgroundImageData from "../../../assets/images/background/background-spectators.png";
-import DefaultAvatar from "@/app/assets/images/avatars/default.png"
+import DefaultAvatar from "@/app/assets/images/avatars/default.png";
 import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
 import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
-import { Card } from "@/app/components/information/Card";
+import { Plus, RefreshCcw } from "lucide-react";
 import Image from "next/image";
 
 import {
@@ -62,8 +62,7 @@ export default function PlayerProfile() {
               src={BannerImageData}
             /> */}
             <div className="size-full absolute top-0 -z-50 bg-input" />
-            <Constrict className="h-full flex">
-              <p className="text-muted">{status}</p>
+            <Constrict className="h-full flex px-1">
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
                 {playerProfile.steam_profile?.avatar?.large ? (
                   <img
@@ -79,14 +78,24 @@ export default function PlayerProfile() {
                   />
                 )}
               </div>
+              <div className="flex justify-end items-end mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
+              <div className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
+                  <RefreshCcw className="size-5" />
+                  <p className="leading-none mt-0.5">Refresh Matches</p>
+                </div>
+                <div className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
+                  <Plus className="size-5" />
+                  <p className="leading-none mt-0.5">Add Match</p>
+                </div>
+              </div>
             </Constrict>
           </div>
-          <Constrict className="flex flex-col text-primary-foreground">
+          <Constrict className="flex flex-col text-primary-foreground px-1">
             <div className="ml-36">
               <h1 className="font-medium">{playerProfile.name}</h1>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-4 mt-8 gap-6">
-              <div className="gap-y-4 flex-col flex">
+            <div className="grid grid-cols-1 md:grid-cols-4 mt-8 gap-6">
+              <div className="gap-y-4 flex-col flex w-full">
                 {/* Current Rank */}
                 <CurrentRankCard
                   stats={playerProfile.stats}
@@ -101,7 +110,7 @@ export default function PlayerProfile() {
                 {/* Maps */}
                 <MapsCard mapStats={playerProfile.extended_stats?.map_stats!} />
               </div>
-              <div className="sm:col-span-3 flex flex-col gap-y-4">
+              <div className="md:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
                 <OverviewCard
                   stats={playerProfile.stats}

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function ExternalLink({ href, title }: { href: string; title: string }) {
   return (
-    <Link className={cn("group/externalLink inline-flex flex-row hover:text-accent")} rel="noreferrer nofollow" href={href}>
+    <Link className={cn("group/externalLink inline-flex flex-row hover:text-accent")} rel="noreferrer nofollow" target="_blank" href={href}>
       <p>{title}</p>
       <svg
         className="size-2 mt-1 stroke-muted-foreground group-hover/externalLink:stroke-accent"
