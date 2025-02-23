@@ -25,13 +25,14 @@ interface Season {
 
 interface SeasonSelectorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
+  loading: boolean;
   defaultValue: string;
   showBeta?: boolean;
   setSeason: Dispatch<SetStateAction<string>>;
 }
 
 const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
-  ({ defaultValue, showBeta = false, setSeason }, ref) => {
+  ({ loading, defaultValue, showBeta = false, setSeason }, ref) => {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState("");
     const [seasons, setSeasons] = React.useState<Season[]>([
@@ -65,7 +66,10 @@ const SeasonSelector = React.forwardRef<HTMLInputElement, SeasonSelectorProps>(
     return (
       <div ref={ref}>
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            className={`${loading ? "pointer-events-none" : ""}`}
+          >
             <div
               role="combobox"
               aria-expanded={open}

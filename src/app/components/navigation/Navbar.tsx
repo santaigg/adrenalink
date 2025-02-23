@@ -10,7 +10,7 @@ import projectData from "../../project-data.json";
 
 export default function Navbar() {
   return (
-    <header className="mb-primary">
+    <header className="mb-primary z-50">
       <div className="bg-primary text-primary-foreground">
         <Constrict className="flex items-center flex-row justify-between p-4">
           <div className="flex items-center gap-primary">

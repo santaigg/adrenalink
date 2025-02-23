@@ -12,7 +12,7 @@ export default function Footer() {
   return (
     <footer>
       <Extrusion
-        className="min-w-[20%] border-primary"
+        className="min-w-[20%] shrink-0 border-primary"
         cornerLocation={CornerLocation.TopRight}
       />
       <div className="p-8 bg-primary">

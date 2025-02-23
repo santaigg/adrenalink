@@ -48,7 +48,7 @@ export default function Leaderboard() {
   }, [leaderboard]);
 
   return (
-    <main className="bg-input py-8">
+    <main className="bg-input -mt-4 min-h-[82svh] -z-10 py-8">
       {/* <BackgroundImage image={BackgroundImageData} /> */}
 
       <Constrict className="flex flex-col">
@@ -71,6 +71,7 @@ export default function Leaderboard() {
           </div>
           <div className="w-full sm:w-52">
             <SeasonSelector
+              loading={loading}
               defaultValue={DEFAULT_SEASON_VALUE}
               setSeason={setSeason}
             />
@@ -87,7 +88,9 @@ export default function Leaderboard() {
             </div>
             {Math.ceil(totalRows / 50) > 3 ? (
               <Extrusion
-                className={cn("min-w-24 border-secondary rounded-br-primary ml-auto")}
+                className={cn(
+                  "min-w-24 border-secondary rounded-br-primary ml-auto"
+                )}
                 cornerLocation={CornerLocation.BottomLeft}
               />
             ) : (
@@ -106,7 +109,7 @@ export default function Leaderboard() {
           updateTotalRows={setTotalRows}
         />
         <div className="bg-secondary w-full h-24 rounded-b-primary flex justify-center sm:justify-end items-center px-8 border-t border-muted">
-          <div className="bg-primary rounded-primary border border-primary p-0.5">
+          <div className="bg-primary rounded-[calc(var(--rounding)+4px)] border border-primary p-0.5">
             <PlayerLeaderboardPagination
               totalCount={totalRows}
               pageSize={50}

@@ -24,7 +24,7 @@ const SponsorImage: React.FC<SponsorImageProps> = ({
   }, [sponsor]);
 
   if (!sponsorImage) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   return (

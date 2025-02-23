@@ -12,7 +12,7 @@ export interface PlayerLeaderboardPaginationProps {
   pageSize: number;
   page: number;
   onChange: (newPage: number) => void;
-  keyPrefix: string; // Add a keyPrefix prop to ensure uniqueness
+  keyPrefix: string;
 }
 
 const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = ({
@@ -20,7 +20,7 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
   pageSize,
   page,
   onChange,
-  keyPrefix, // Accept keyPrefix as a prop
+  keyPrefix,
 }) => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -40,7 +40,6 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
     const maxVisiblePages = 7;
     let pages = [];
 
-    // If totalPages is less than or equal to maxVisiblePages, render all pages.
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -63,26 +62,25 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
       ));
     }
 
-    // Otherwise, handle the edge cases (first, middle, and last page sections).
-    const startPage = Math.max(1, page - 1); // Starting page (up to 2 pages before current page)
-    const endPage = Math.min(totalPages, page + 1); // Ending page (up to 2 pages after current page)
+    const startPage = Math.max(1, page - 1);
+    const endPage = Math.min(totalPages, page + 1);
 
     if (page <= 4) {
-      // First few pages
+
       for (let i = 1; i <= 5; i++) {
         pages.push(i);
       }
       pages.push("ellipsis");
       pages.push(totalPages);
     } else if (page >= totalPages - 3) {
-      // Last few pages
+
       pages.push(1);
       pages.push("ellipsis");
       for (let i = totalPages - 4; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Middle pages
+
       pages.push(1);
       pages.push("ellipsis");
       for (let i = startPage; i <= endPage; i++) {

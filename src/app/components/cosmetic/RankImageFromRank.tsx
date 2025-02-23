@@ -1,8 +1,8 @@
 import React from "react";
 import Image, { ImageProps } from "next/image";
 import { useState, useEffect } from "react";
-
 import { cn } from "@/app/utils/cn";
+
 interface RankImageProps extends Omit<ImageProps, "src" | "alt"> {
   rank: string;
 }
@@ -19,7 +19,7 @@ const RankImage: React.FC<RankImageProps> = ({ rank, className, ...props }) => {
   }, [rank]);
 
   if (!rankImage) {
-    return null; // Or a loading spinner
+    return null;
   }
   
   return (
