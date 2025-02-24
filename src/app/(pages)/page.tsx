@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import PlayerLeaderboardTable from "../components/tables/PlayerLeaderboardTable";
 import { fetchLeaderboard } from "../utils/fetch/fetchLeaderboard";
 import type { LeaderboardId } from "../utils/types/leaderboard";
 
@@ -12,7 +11,10 @@ import Image from "next/image";
 import SpectreLogoImage from "../assets/images/brand/spectre-logo.png";
 import NoticeBanner from "../components/information/NoticeBanner";
 
-import { PlayerProfile } from "../utils/types/wavescan.types";
+import {
+  PlayerProfile,
+  PlayerSteamProfile,
+} from "../utils/types/wavescan.types";
 import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 
 import { useRouter } from "next/navigation";
@@ -48,14 +50,13 @@ export default function Home() {
       const images: Record<string, string> = {};
       for (const player in leaderboard) {
         const response = await noStoreFetch(
-          `https://wavescan-production.up.railway.app/api/v1/player/${leaderboard[player].playerId}/full_profile`
+          `https://wavescan-production.up.railway.app/api/v1/player/${leaderboard[player].playerId}/steam_profile`
         );
 
-        const data: PlayerProfile = await response.json();
+        const data: PlayerSteamProfile = await response.json();
         images[player] = data.steam_profile.avatar?.large;
       }
       setProfileImages(images);
-      console.log(profileImages);
     };
 
     loadImages();
