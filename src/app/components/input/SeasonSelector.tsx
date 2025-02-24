@@ -25,7 +25,7 @@ interface Season {
 
 interface SeasonSelectorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  loading: boolean;
+  loading?: boolean;
   defaultValue: string;
   showBeta?: boolean;
   setSeason: Dispatch<SetStateAction<string>>;
