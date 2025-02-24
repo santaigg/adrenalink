@@ -37,13 +37,9 @@ export default function PlayerProfile() {
 
     const fetchData = async () => {
       setLoading(true);
-      setStatus("Fetching...");
       const data = await fetchPlayerProfile(playerId);
-      setStatus("Writing...");
       setPlayerProfile(data);
-      setStatus("Done!");
       setLoading(false);
-      setStatus("");
     };
 
     fetchData();

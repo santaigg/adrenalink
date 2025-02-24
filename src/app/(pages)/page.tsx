@@ -18,6 +18,7 @@ import {
 import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 
 import { useRouter } from "next/navigation";
+import Extrusion, { CornerLocation } from "../components/cosmetic/Extrusion";
 
 interface PlayerRow {
   username: string;
@@ -28,14 +29,15 @@ interface PlayerRow {
 }
 
 export default function Home() {
-  const router = useRouter();
   const season = "season0";
   const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       const data = await fetchLeaderboard(season as LeaderboardId);
       setLeaderboard(data.slice(0, 3));
+      setLoading(false);
     };
 
     fetchLeaderboardData();
@@ -62,18 +64,31 @@ export default function Home() {
     loadImages();
   }, [leaderboard]);
 
+  const sponsors = [
+    "Phantom Industries",
+    "Eclipse Syndicate",
+    "Oblivion Core",
+    "Shadow Nexus",
+    "Spectral Union",
+  ];
+
+  const getRandomStat = () => (Math.random() * 100).toFixed(2);
+
   return (
     <main className="h-full">
-      <BackgroundImage className="max-h-[35rem]" image={BackgroundImageData} />
       {/* <NoticeBanner
         className="text-center"
         noticeTitle="Santai.GG \\ Flashpoint"
         noticeBottomText="Brand new website, polished experience."
         ver={2}
       /> */}
-      <div className="relative overflow-hidden w-full border-b border-secondary h-[30rem]">
-        <Constrict className="h-full px-4 flex items-start justify-start gap-8 space-x-16">
-          <div className="w-1/2 h-full flex justify-center flex-col">
+      <div className="w-full border-b border-secondary-foreground/15 h-[30rem]">
+        <BackgroundImage
+          className="max-h-full overflow-hidden blur-md object-top"
+          image={BackgroundImageData}
+        />
+        <Constrict className="h-full flex items-start justify-start space-x-8">
+          <div className={`w-1/2 h-full flex justify-center flex-col mx-auto`}>
             <div className="flex flex-row">
               <h2 className="mb-1 text-primary-foreground">Player Search</h2>
               <Image
@@ -85,11 +100,15 @@ export default function Home() {
             <Searchbox placeholder="Username or Steam64..." />
             <div className="h-8 bg-accent rounded w-full mt-8 opacity-0 flex items-center justify-center text-accent-foreground text-sm font-medium"></div>
           </div>
-          <div className="w-1/2 h-full flex justify-center items-center space-x-4">
+          <div
+            className={`h-full flex justify-center items-center space-x-4 ${
+              loading ? "" : "w-1/2"
+            }`}
+          >
             {leaderboard.map((player, index) => {
               const pfp = profileImages[index];
               return (
-                <div className="w-36 h-56 bg-secondary/70 border border-primary-foreground/15 flex flex-col items-center rounded-primary px-4 py-4">
+                <div className="w-36 h-56 bg-secondary/70 border border-primary-foreground/5 cursor-pointer flex flex-col items-center rounded-primary px-4 py-4">
                   {pfp ? (
                     <img
                       src={profileImages[index]}
@@ -103,6 +122,54 @@ export default function Home() {
                 </div>
               );
             })}
+          </div>
+        </Constrict>
+      </div>
+      <div className="py-16 w-full bg-primary">
+        <Constrict>
+          <div className="flex flex-col items-start justify-start">
+            <Extrusion
+              className="border-secondary min-w-[10%] rounded-tl"
+              cornerLocation={CornerLocation.TopRight}
+            />
+            <div className="w-1/2 rounded border border-secondary rounded-tl-none flex flex-col">
+              <div className="p-4">
+                <h3>Statistics</h3>
+              </div>
+              <div className="w-full bg-secondary/50 border-y border-secondary px-4 h-10 flex items-center justify-start">
+                <div className="w-5/12 shrink-0 flex items-center justify-start">
+                  <p>Sponsor</p>
+                </div>
+                <div className="w-full flex items-center justify-center">
+                  <p>Win %</p>
+                </div>
+                <div className="w-full flex items-center justify-center">
+                  <p>Pick %</p>
+                </div>
+                <div className="w-full flex items-center justify-center">
+                  <p>K/D</p>
+                </div>
+              </div>
+              {sponsors.map((sponsor, index) => (
+                <div
+                  key={index}
+                  className="w-full even:bg-secondary/50 border-y border-secondary px-4 h-12 flex items-center justify-start"
+                >
+                  <div className="w-5/12 shrink-0 flex items-center justify-start">
+                    <p>{sponsor}</p>
+                  </div>
+                  <div className="w-full flex items-center justify-center">
+                    <p>{getRandomStat()}%</p>
+                  </div>
+                  <div className="w-full flex items-center justify-center">
+                    <p>{getRandomStat()}%</p>
+                  </div>
+                  <div className="w-full flex items-center justify-center">
+                    <p>{getRandomStat()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </Constrict>
       </div>
