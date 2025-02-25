@@ -63,7 +63,6 @@ const AddMatchModal = ({
       setLoading(true);
       addMatch(matchId);
     } else {
-      console.log(matchId);
       setAddMatchError("Match ID cannot be empty.");
     }
   }
@@ -169,7 +168,6 @@ const RefreshMatchButton = ({
 
   async function refreshMatches() {
     if (!(await isRefreshAllowed())) {
-      console.log("Refresh not allowed: Player has not been initially dumped");
       return;
     }
 
@@ -231,7 +229,6 @@ const RefreshMatchButton = ({
           currentTime.toString()
         );
       } else {
-        console.log("No refresh or dump needed at this time");
       }
     } catch (error) {
       console.error("Error refreshing matches:", error);

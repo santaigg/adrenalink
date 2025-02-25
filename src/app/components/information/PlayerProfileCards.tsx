@@ -64,7 +64,7 @@ const CurrentRankCard = React.forwardRef<HTMLDivElement, CurrentRankCardProps>(
         }
       }
     };
-    
+
     return (
       <div ref={ref} className="">
         <Extrusion
@@ -330,23 +330,20 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
 
     const formatSeasonKey = (season: string) => {
       switch (season) {
-        case "beta": {
+        case "beta":
           return "Beta";
-        }
-        case "season0": {
+        case "season0":
           return "2024-S0";
-        }
-        case "season1": {
+        case "season1":
           return "2025-S1";
-        }
-        default: {
+        default:
           return "2024-S0";
-        }
       }
     };
 
-    const seasonStatsSelected = seasonStats[formatSeasonKey(season)];
-    console.log(seasonStatsSelected.top_rank_id);
+    const formattedSeasonKey = formatSeasonKey(season);
+    const seasonStatsSelected = seasonStats[formattedSeasonKey] ?? null;
+
     return (
       <div className="" ref={ref}>
         <Extrusion
@@ -363,90 +360,102 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
                 setSeason={setSeason}
               />
             </div>
-            <div className="flex py-4 gap-x-4">
-              <RankImage
-                className="size-16"
-                rank={getSoloRankFromNumber(
-                  Number(seasonStatsSelected.top_rank_id)
-                )}
-              />
-              <div className="flex flex-col justify-center">
-                <p className="text-lg">
-                  {getSoloRankFromNumber(
-                    Number(seasonStatsSelected.top_rank_id)
-                  )}
-                </p>
-                <p className="font-semibold text-xl">{stats.rank_rating} RR</p>
-              </div>
-              <div className="pl-4 flex flex-col justify-center">
-                <p className="leading-[1.8rem]">
-                  {seasonStatsSelected.total_wins}W -{" "}
-                  {seasonStatsSelected.total_losses}L
-                </p>
-                <p className="text-lg font-medium">
-                  {seasonStatsSelected.average_win_percentage.toFixed(2)}%
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-5 gap-4 pt-2">
-              <div className="flex flex-col">
-                <p className="text-sm">ADR</p>
+            {seasonStatsSelected ? (
+              <>
+                <div className="flex py-4 gap-x-4">
+                  <RankImage
+                    className="size-16"
+                    rank={getSoloRankFromNumber(
+                      Number(seasonStatsSelected.top_rank_id)
+                    )}
+                  />
+                  <div className="flex flex-col justify-center">
+                    <p className="text-lg">
+                      {getSoloRankFromNumber(
+                        Number(seasonStatsSelected.top_rank_id)
+                      )}
+                    </p>
+                    <p className="font-semibold text-xl">
+                      {stats.rank_rating} RR
+                    </p>
+                  </div>
+                  <div className="pl-4 flex flex-col justify-center">
+                    <p className="leading-[1.8rem]">
+                      {seasonStatsSelected.total_wins}W -{" "}
+                      {seasonStatsSelected.total_losses}L
+                    </p>
+                    <p className="text-lg font-medium">
+                      {seasonStatsSelected.average_win_percentage.toFixed(2)}%
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-5 gap-4 pt-2">
+                  <div className="flex flex-col">
+                    <p className="text-sm">ADR</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.average_damage_per_round.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Wins</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.total_wins}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Kills</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.total_kills}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Deaths</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.total_deaths}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Assists</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.total_assists}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">K/D</p>
+                    <p className="text-lg font-semibold">
+                      {(
+                        seasonStatsSelected.total_kills /
+                        seasonStatsSelected.total_deaths
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Kill/Round</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.average_kills_per_round.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Top DMG</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.top_damage_dealt}
+                    </p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm">Top Kills</p>
+                    <p className="text-lg font-semibold">
+                      {seasonStatsSelected.top_kills}
+                    </p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="py-8 text-center">
                 <p className="text-lg font-semibold">
-                  {seasonStatsSelected.average_damage_per_round.toFixed(2)}
+                  No data available for {formatSeasonTitle(season)}
                 </p>
               </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Wins</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.total_wins}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Kills</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.total_kills}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Deaths</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.total_deaths}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Assists</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.total_assists}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">K/D</p>
-                <p className="text-lg font-semibold">
-                  {(
-                    seasonStatsSelected.total_kills /
-                    seasonStatsSelected.total_deaths
-                  ).toFixed(2)}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Kill/Round</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.average_kills_per_round.toFixed(2)}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Top DMG</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.top_damage_dealt}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Top Kills</p>
-                <p className="text-lg font-semibold">
-                  {seasonStatsSelected.top_kills}
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </Card>
       </div>
@@ -586,7 +595,11 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
         {matchEntries.map(([key, match]) => (
-          <div key={key} onClick={() => toggleOpen(key)} className="hover:cursor-pointer">
+          <div
+            key={key}
+            onClick={() => toggleOpen(key)}
+            className="hover:cursor-pointer"
+          >
             <div className="flex h-28 w-full gap-x-1">
               <div
                 className={`h-full w-2 ${
@@ -738,9 +751,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
                     </div>
                   </div>
                 </div>
-                <div
-                  className="w-10 h-full border-l border-l-secondary flex items-end justify-center"
-                >
+                <div className="w-10 h-full border-l border-l-secondary flex items-end justify-center">
                   <ChevronDown
                     className={`w-5 h-5 stroke-primary-foreground transition-all ${
                       openStates[key] ? "rotate-180" : ""

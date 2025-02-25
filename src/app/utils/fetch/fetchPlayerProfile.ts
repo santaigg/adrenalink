@@ -13,7 +13,6 @@ export async function fetchPlayerProfile(playerId: string): Promise<PlayerFullPr
         }
     
         const data: PlayerFullProfile = await response.json();
-        console.log("data in fetch:: ", data)
         return data;
       } catch (error) {
         console.error("Error fetching player profile:", error);
