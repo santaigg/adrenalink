@@ -8,7 +8,7 @@ import DefaultAvatar from "@/app/assets/images/avatars/default.png";
 import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
-import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
+import { PlayerFullProfile, MapStats } from "@/app/utils/types/wavescan.types";
 import { Plus, RefreshCcw } from "lucide-react";
 import Image from "next/image";
 
@@ -269,7 +269,17 @@ export default function PlayerProfile() {
                   }
                 />
                 {/* Maps */}
-                <MapsCard mapStats={playerProfile.extended_stats?.map_stats!} />
+                <MapsCard 
+                  mapStats={
+                    Object.entries(playerProfile.extended_stats?.map_stats || {}).reduce(
+                      (acc, [mapName, stats]) => ({
+                        ...acc,
+                        [mapName]: { ...stats, map: mapName }
+                      }), 
+                      {}
+                    ) as Record<string, MapStats>
+                  } 
+                />
               </div>
               <div className="md:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
@@ -283,7 +293,7 @@ export default function PlayerProfile() {
                   }
                 />
                 <MatchCard
-                  matches={playerProfile.matches}
+                  matches={playerProfile.matches as any}
                   playerId={playerProfile.id}
                 />
               </div>
