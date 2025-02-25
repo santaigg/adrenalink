@@ -19,6 +19,8 @@ import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 import Extrusion, { CornerLocation } from "../components/cosmetic/Extrusion";
 import HomeStatTable from "../components/tables/HomeStatTable";
 
+const DEFAULT_SEASON_VALUE = "season0";
+
 interface PlayerRow {
   username: string;
   placement: number;
@@ -29,19 +31,24 @@ interface PlayerRow {
 
 export default function Home() {
   const router = useRouter();
-  const season = "season0";
   const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  function formatSeasonLeaderboardKey(season: string) {
+    return Number(season.slice(-1));
+  }
+
   useEffect(() => {
     const fetchLeaderboardData = async () => {
-      const data = await fetchLeaderboard(season as LeaderboardId);
+      const data = await fetchLeaderboard(
+        formatSeasonLeaderboardKey(DEFAULT_SEASON_VALUE) as LeaderboardId
+      );
       setLeaderboard(data.slice(0, 3));
       setLoading(false);
     };
 
     fetchLeaderboardData();
-  }, [season]);
+  }, [DEFAULT_SEASON_VALUE]);
 
   const [profileImages, setProfileImages] = useState<Record<string, string>>(
     {}
@@ -159,7 +166,9 @@ export default function Home() {
         </div>
         <Constrict className="px-4 py-16">
           <div className="flex w-full space-x-6">
-            <HomeStatTable title="Sponsors" buttonHidden>
+            <p className="mx-auto">Data coming soon.</p>
+
+            {/* <HomeStatTable title="Sponsors" buttonHidden>
               <>
                 {sponsors.map((sponsor, index) => {
                   return (
@@ -187,7 +196,7 @@ export default function Home() {
                   );
                 })}
               </>
-            </HomeStatTable>
+            </HomeStatTable> */}
             {/* <HomeStatTable title="Team Comps">
               <>
                 {sponsors.map((sponsor, index) => {

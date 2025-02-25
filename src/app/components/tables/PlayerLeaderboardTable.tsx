@@ -84,49 +84,51 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {loading
-            ? Array.from({ length: ENTRIES_PER_PAGE }).map((_, index) => (
-                <TableRow
-                  key={index}
-                  className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
-                >
-                  <TableCell>
-                    <div className="w-8 h-4 bg-neutral-600 animate-pulse rounded"></div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-24 h-4 bg-neutral-600 animate-pulse rounded"></div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-16 h-4 bg-neutral-600 animate-pulse rounded"></div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="w-20 h-4 bg-neutral-600 animate-pulse rounded"></div>
-                  </TableCell>
-                </TableRow>
-              ))
-            : paginatedRows.map((playerRow) => (
-                <TableRow
-                  key={playerRow.playerId}
-                  className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
-                  onClick={() => handleRowClick(playerRow.playerId)}
-                >
-                  <TableCell>
-                    <p className="text-lg">{playerRow.placement}</p>
-                  </TableCell>
-                  <TableCell>
-                    <p className="text-lg">{playerRow.username}</p>
-                  </TableCell>
-                  <TableCell>
-                    <p className="text-lg">{playerRow.soloRank}</p>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-x-4">
-                      <RankImage rank={playerRow.soloRank} />
-                      <p className="text-lg mt-0.5">{playerRow.rating}</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+          {loading ? (
+            Array.from({ length: ENTRIES_PER_PAGE }).map((_, index) => (
+              <TableRow
+                key={index}
+                className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
+              >
+                <TableCell>
+                  <div className="w-8 h-4 bg-neutral-600 animate-pulse rounded"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="w-24 h-4 bg-neutral-600 animate-pulse rounded"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="w-16 h-4 bg-neutral-600 animate-pulse rounded"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="w-20 h-4 bg-neutral-600 animate-pulse rounded"></div>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            paginatedRows.map((playerRow) => (
+              <TableRow
+                key={playerRow.playerId}
+                className="cursor-pointer h-14 hover:bg-muted/25 border-secondary odd:bg-secondary even:bg-primary text-secondary-foreground"
+                onClick={() => handleRowClick(playerRow.playerId)}
+              >
+                <TableCell>
+                  <p className="text-lg">{playerRow.placement}</p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-lg">{playerRow.username}</p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-lg">{playerRow.soloRank}</p>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-x-4">
+                    <RankImage rank={playerRow.soloRank} />
+                    <p className="text-lg mt-0.5">{playerRow.rating}</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </>
