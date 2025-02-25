@@ -50,6 +50,82 @@ export default function PlayerProfile() {
     fetchData();
   }, [playerId]);
 
+
+  interface dumpStatus {
+    success: boolean;
+    is_priority: boolean;
+    queue_position: number | null;
+    initially_dumped: boolean;
+    in_progress: boolean;
+    last_updated: number | null;
+}
+
+  async function isRefreshAllowed() {
+    try {
+      const response = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`);
+      if (!response.ok) throw new Error('Failed to fetch dump status');
+      const dumpStatus = await response.json() as dumpStatus;
+      return dumpStatus.initially_dumped;
+    } catch (error) {
+      console.error('Error checking dump status:', error);
+      return false; // If there's an error, we'll disallow refresh to be safe
+    }
+  }
+
+  async function refreshMatches() {
+    if (!(await isRefreshAllowed())) {
+      console.log("Refresh not allowed: Player has not been initially dumped");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Check dump status
+      const dumpStatusResponse = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`);
+      if (!dumpStatusResponse.ok) throw new Error("Failed to fetch dump status");
+      const dumpStatus = await dumpStatusResponse.json() as dumpStatus;
+
+      const currentTime = new Date().getTime();
+      const lastRefreshTime = localStorage.getItem(`lastRefresh_${playerProfile?.id}`);
+      const lastDumpTime = dumpStatus.initially_dumped ? (dumpStatus.last_updated ?? localStorage.getItem(`lastDump_${playerProfile?.id}`) ? Number.parseInt(localStorage.getItem(`lastDump_${playerProfile?.id}`) ?? "0") : 0) : null;
+
+      // Determine if we should refresh or dump
+      const shouldDump = !lastDumpTime || currentTime - lastDumpTime > 900000; // 15 minutes
+      const shouldRefresh = !lastRefreshTime || currentTime - Number.parseInt(lastRefreshTime) > 300000; // 5 minutes
+
+      if (shouldDump) {
+        // Initiate a new dump
+        const dumpResponse = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump`);
+        if (!dumpResponse.ok) throw new Error("Failed to initiate dump");
+        localStorage.setItem(`lastDump_${playerProfile?.id}`, currentTime.toString());
+        // You might want to handle the response here, e.g., show a message that dump is in progress
+      } else if (shouldRefresh) {
+        // Fetch full profile
+        const response = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/full_profile`);
+        if (!response.ok) throw new Error("Failed to fetch matches");
+        setPlayerProfile(await response.json());
+        // reactiveMatches = playerProfile?.matches.map((match) => ({
+        //   ...match,
+        //   expanded: false,
+        //   result:
+        //     match.winner === -1
+        //       ? "Draw"
+        //       : match.winner === match.player_team?.team_index
+        //         ? "Victory"
+        //         : "Defeat",
+        // }));
+        localStorage.setItem(`lastRefresh_${playerProfile?.id}`, currentTime.toString());
+      } else {
+        console.log("No refresh or dump needed at this time");
+      }
+    } catch (error) {
+      console.error("Error refreshing matches:", error);
+      // You might want to set an error state here to display to the user
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main>
       <BackgroundImage image={BackgroundImageData} />
@@ -59,11 +135,11 @@ export default function PlayerProfile() {
         <>
           <AddMatchModal open={ModalOpen} setOpen={setModalOpen} />
           <div className="w-full -mt-4 h-48 relative">
-            {/* <Image
-              className="-z-50 absolute top-0 size-full object-cover"
+            <img
+              className="-z-10 absolute top-0 size-[200%] object-cover blur-3xl opacity-70 brightness-75"
               alt="Banner"
-              src={BannerImageData}
-            /> */}
+              src={playerProfile.steam_profile?.avatar?.large}
+            />
             <div className="size-full absolute top-0 -z-50 bg-input" />
             <Constrict className="h-full flex px-1">
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
@@ -82,11 +158,14 @@ export default function PlayerProfile() {
                 )}
               </div>
               <div className="flex justify-end items-end mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
-                <RefreshMatchButton playerFullProfile={playerProfile} />
-                <div
+              <div onClick={refreshMatches} className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
+                  <RefreshCcw className="size-5" />
+                  <p className="leading-none mt-0.5">Refresh Matches</p>
+              </div>
+                <div 
                   className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
                   onClick={() => setModalOpen(true)}
-                >
+                  >
                   <Plus className="size-5" />
                   <p className="leading-none mt-0.5">Add Match</p>
                 </div>
