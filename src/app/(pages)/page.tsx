@@ -13,7 +13,10 @@ import SpectreLogoImage from "../assets/images/brand/spectre-logo.png";
 import { SponsorImage } from "../components/cosmetic/SponsorImageFromString";
 import NoticeBanner from "../components/information/NoticeBanner";
 
-import { PlayerSteamProfile } from "../utils/types/wavescan.types";
+import {
+  PlayerSteamProfile,
+  GlobalSponsorStats,
+} from "../utils/types/wavescan.types";
 import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 
 import Extrusion, { CornerLocation } from "../components/cosmetic/Extrusion";
@@ -71,15 +74,26 @@ export default function Home() {
     loadImages();
   }, [leaderboard]);
 
-  const sponsors = [
-    "Morrgen United",
-    "Pinnacle International",
-    "Ryker Industries",
-    "Bloom Technologies",
-    "Ghostlink Collective",
-  ];
+  const [globalSponsorStats, setGlobalSponsorStats] =
+    useState<GlobalSponsorStats | null>(null);
 
-  const getRandomStat = () => (Math.random() * 100).toFixed(2);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const response = await noStoreFetch(
+          "https://wavescan-production.up.railway.app/api/v1/sponsor/stats"
+        );
+        if (!response.ok) throw new Error("Failed to fetch dump status");
+        const data = (await response.json()) as GlobalSponsorStats;
+        setGlobalSponsorStats(data);
+      } catch (error) {
+        console.error("Error checking dump status:", error);
+        return false;
+      }
+    }
+
+    loadData();
+  }, []);
 
   return (
     <main className="h-full flex flex-col">
@@ -166,11 +180,9 @@ export default function Home() {
         </div>
         <Constrict className="px-4 py-16">
           <div className="flex w-full space-x-6">
-            <p className="mx-auto">Data coming soon.</p>
-
-            {/* <HomeStatTable title="Sponsors" buttonHidden>
+            <HomeStatTable title="Sponsors" buttonHidden>
               <>
-                {sponsors.map((sponsor, index) => {
+                {globalSponsorStats?.stats.sponsors.map((sponsor, index) => {
                   return (
                     <div
                       key={index}
@@ -179,24 +191,42 @@ export default function Home() {
                       <div className="w-5/12 shrink-0 flex items-center justify-start overflow-x-scroll scrollbar-hide">
                         <SponsorImage
                           className="w-8 !h-auto mr-2 shrink-0"
-                          sponsor={sponsor.split(" ")[0]}
+                          sponsor={sponsor.sponsor_name.split(" ")[0]}
                         />
-                        <p className="text-nowrap">{sponsor}</p>
+                        <p className="text-nowrap">{sponsor.sponsor_name}</p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}%</p>
+                        <p>
+                          {(
+                            (sponsor.total_wins * 100) /
+                            (sponsor.total_wins +
+                              sponsor.total_losses +
+                              sponsor.total_draws)
+                          ).toFixed(2)}
+                          %
+                        </p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}%</p>
+                        <p>
+                          {(
+                            (sponsor.picks * 100) /
+                            globalSponsorStats?.stats.total_players
+                          ).toFixed(2)}
+                          %
+                        </p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}</p>
+                        <p>
+                          {(sponsor.total_kills / sponsor.total_deaths).toFixed(
+                            2
+                          )}
+                        </p>
                       </div>
                     </div>
                   );
                 })}
               </>
-            </HomeStatTable> */}
+            </HomeStatTable>
             {/* <HomeStatTable title="Team Comps">
               <>
                 {sponsors.map((sponsor, index) => {
