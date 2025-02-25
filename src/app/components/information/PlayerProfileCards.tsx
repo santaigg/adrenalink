@@ -586,7 +586,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
         {matchEntries.map(([key, match]) => (
-          <div key={key} className="">
+          <div key={key} onClick={() => toggleOpen(key)} className="hover:cursor-pointer">
             <div className="flex h-28 w-full gap-x-1">
               <div
                 className={`h-full w-2 ${
@@ -739,8 +739,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
                   </div>
                 </div>
                 <div
-                  className="w-10 h-full border-l border-l-secondary flex items-end justify-center cursor-pointer"
-                  onClick={() => toggleOpen(key)}
+                  className="w-10 h-full border-l border-l-secondary flex items-end justify-center"
                 >
                   <ChevronDown
                     className={`w-5 h-5 stroke-primary-foreground transition-all ${

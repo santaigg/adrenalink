@@ -133,7 +133,7 @@ export default function PlayerProfile() {
         <>
           <div className="w-full -mt-4 h-48 relative">
             <img
-              className="-z-10 absolute top-0 size-full object-cover blur-2xl"
+              className="-z-10 absolute top-0 size-[200%] object-cover blur-3xl opacity-70 brightness-75"
               alt="Banner"
               src={playerProfile.steam_profile?.avatar?.large}
             />
