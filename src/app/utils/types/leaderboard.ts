@@ -25,7 +25,7 @@ export const leaderboards = {
 
     fetchData: async () => {
       const res = await noStoreFetch(
-        "https://wavescan-production.up.railway.app/api/v1/leaderboard/solo_ranked"
+        "https://wavescan-production.up.railway.app/api/v1/leaderboard/solo_ranked?season=0"
       );
       const data = (await res.json()) as {
         leaderboard: {
