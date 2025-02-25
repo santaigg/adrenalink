@@ -111,7 +111,7 @@ export default function Home() {
               return (
                 <div
                   key={index}
-                  className="group w-36 h-60 bg-secondary/70 border border-primary-foreground/5 cursor-pointer flex flex-col rounded-primary corner-clip-sm"
+                  className="w-36 h-60 bg-secondary/70 hover:bg-secondary/95 transition-all border border-primary-foreground/5 cursor-pointer flex flex-col rounded-primary corner-clip-sm"
                   onClick={() => router.push(`/p/${player.playerId}`)}
                 >
                   <div className="px-4 pt-4 flex flex-col items-center justify-center">
@@ -131,7 +131,13 @@ export default function Home() {
                       {player.rating} <span className="text-base">RR</span>
                     </p>
                   </div>
-                  <div className="mt-auto w-full py-1 shrink-0 flex items-center text-sm justify-center px-4 transition-all bg-secondary-foreground/[0.01] group-hover:bg-secondary-foreground/5">
+                  <div
+                    className="mt-auto w-full pb-1 pt-1.5 shrink-0 flex items-center text-sm justify-center px-4 transition-all bg-secondary-foreground/[0.01] hover:bg-secondary-foreground/5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push("/leaderboard");
+                    }}
+                  >
                     Leaderboard
                   </div>
                 </div>

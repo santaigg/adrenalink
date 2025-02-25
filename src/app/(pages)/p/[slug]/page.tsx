@@ -39,27 +39,41 @@ export default function PlayerProfile() {
   );
   const [loading, setLoading] = useState<boolean>(true);
 
+  const MAX_RETRIES = 3;
+
   useEffect(() => {
     if (!playerId) return;
-
+  
+    let retries = 0;
+  
     const fetchData = async () => {
       setLoading(true);
       try {
         const data = await fetchPlayerProfile(playerId);
-
+  
         if (data?.error) {
           console.error("Database timeout error:", data.error);
-          router.refresh()
+  
+          if (retries < MAX_RETRIES) {
+            retries++;
+            const delay = Math.pow(2, retries) * 500;
+            console.log(`Retrying in ${delay}ms...`);
+            setTimeout(fetchData, delay);
+            return;
+          }
+  
+          console.log("Max retries reached. Refreshing the page...");
+          router.refresh(); // Server-side refresh only if all retries fail
           return;
         }
-
+  
         setPlayerProfile(data);
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch player profile:", error);
       }
     };
-
+  
     fetchData();
   }, [playerId]);
 
