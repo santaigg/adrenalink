@@ -6,7 +6,6 @@ import Image from "next/image";
 // LEADERBOARD
 import PlayerLeaderboardTable from "../../components/tables/PlayerLeaderboardTable";
 import { fetchLeaderboard } from "../../utils/fetch/fetchLeaderboard";
-import type { LeaderboardId } from "../../utils/types/leaderboard";
 // STYLING
 import Extrusion, { CornerLocation } from "../../components/cosmetic/Extrusion";
 import { cn } from "../../utils/cn";
@@ -21,19 +20,27 @@ import Constrict from "@/app/components/layout/Constrict";
 // Need to rework the pagination so that it only pulls needed entries, to reduce load time.
 // Need to check it doesnt break on mobile view, though it looks fine on my phone.
 
+const DEFAULT_SEASON_VALUE = "season0";
+
 export default function Leaderboard() {
-  const DEFAULT_SEASON_VALUE = "season0";
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
+
   const [season, setSeason] = useState<string>(DEFAULT_SEASON_VALUE);
   const [totalRows, setTotalRows] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState([]);
 
+  function formatSeasonLeaderboardKey(season: string) {
+    return Number(season.slice(-1));
+  }
+
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       setLoading(true);
-      const data = await fetchLeaderboard(season as LeaderboardId);
+      const data = await fetchLeaderboard(
+        formatSeasonLeaderboardKey(season) as number
+      );
       setLeaderboard(data);
       setLoading(false);
     };

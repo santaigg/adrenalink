@@ -28,6 +28,15 @@ import {
 
 import { useRouter } from "next/navigation";
 
+interface dumpStatus {
+  success: boolean;
+  is_priority: boolean;
+  queue_position: number | null;
+  initially_dumped: boolean;
+  in_progress: boolean;
+  last_updated: number | null;
+}
+
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
   const router = useRouter();
@@ -38,22 +47,23 @@ export default function PlayerProfile() {
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [dumpData, setDumpData] = useState<dumpStatus | null>(null);
 
   const MAX_RETRIES = 3;
 
   useEffect(() => {
     if (!playerId) return;
-  
+
     let retries = 0;
-  
+
     const fetchData = async () => {
       setLoading(true);
       try {
         const data = await fetchPlayerProfile(playerId);
-  
+
         if (data?.error) {
           console.error("Database timeout error:", data.error);
-  
+
           if (retries < MAX_RETRIES) {
             retries++;
             const delay = Math.pow(2, retries) * 500;
@@ -61,30 +71,39 @@ export default function PlayerProfile() {
             setTimeout(fetchData, delay);
             return;
           }
-  
+
           console.log("Max retries reached. Refreshing the page...");
           router.refresh(); // Server-side refresh only if all retries fail
           return;
         }
-  
+
         setPlayerProfile(data);
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch player profile:", error);
       }
     };
-  
+
     fetchData();
   }, [playerId]);
 
-  interface dumpStatus {
-    success: boolean;
-    is_priority: boolean;
-    queue_position: number | null;
-    initially_dumped: boolean;
-    in_progress: boolean;
-    last_updated: number | null;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerId}/dump_status`
+        );
+        if (!response.ok) throw new Error("Failed to fetch dump status");
+        const dumpStatus = (await response.json()) as dumpStatus;
+        setDumpData(dumpStatus);
+      } catch (error) {
+        console.error("Error checking dump status:", error);
+        return false;
+      }
+    };
+
+    fetchData();
+  }, [playerId]);
 
   async function isRefreshAllowed() {
     try {
@@ -208,7 +227,13 @@ export default function PlayerProfile() {
                   />
                 )}
               </div>
-              <div className="flex justify-end items-end mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
+              <div className="flex justify-end items-center mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
+                {dumpData?.in_progress && (
+                  <div className="h-9 flex items-center text-accent">
+                    Processing matches soon... Queue Position:{" "}
+                    {dumpData.queue_position}
+                  </div>
+                )}
                 <div
                   onClick={refreshMatches}
                   className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
