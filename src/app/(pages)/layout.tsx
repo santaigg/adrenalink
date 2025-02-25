@@ -24,8 +24,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={"antialiased h-svh font-sans bg-primary text-primary-foreground ${defaultFont.variable}"}>
         <Navbar />
-        <div className="flex flex-col justify-between z-40 h-[92svh]">
-          <div>{children}</div>
+        <div className="flex flex-col justify-between z-40 min-h-[92svh]">
+          <div className="h-full">{children}</div>
           <Footer />
         </div>
       </body>

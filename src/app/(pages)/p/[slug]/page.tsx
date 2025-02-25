@@ -21,35 +21,37 @@ import {
   MatchCard,
   SkeletonLoader,
 } from "@/app/components/information/PlayerProfileCards";
+import {
+  AddMatchModal,
+  RefreshMatchButton,
+} from "@/app/components/input/AddMatchModal";
 
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
   const playerId = params.slug;
 
+  const [ModalOpen, setModalOpen] = useState<boolean>(false);
   const [playerProfile, setPlayerProfile] = useState<PlayerFullProfile | null>(
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [status, setStatus] = useState<string>("");
 
   useEffect(() => {
     if (!playerId) return;
 
     const fetchData = async () => {
       setLoading(true);
-      setStatus("Fetching...");
       const data = await fetchPlayerProfile(playerId);
-      setStatus("Writing...");
       setPlayerProfile(data);
-      setStatus("Done!");
+      console.log("data: ", data);
       setLoading(false);
-      setStatus("");
     };
 
     fetchData();
   }, [playerId]);
 
-  type dumpStatus = {
+
+  interface dumpStatus {
     success: boolean;
     is_priority: boolean;
     queue_position: number | null;
@@ -131,6 +133,7 @@ export default function PlayerProfile() {
         <SkeletonLoader />
       ) : playerProfile ? (
         <>
+          <AddMatchModal open={ModalOpen} setOpen={setModalOpen} />
           <div className="w-full -mt-4 h-48 relative">
             <img
               className="-z-10 absolute top-0 size-[200%] object-cover blur-3xl opacity-70 brightness-75"
@@ -159,7 +162,10 @@ export default function PlayerProfile() {
                   <RefreshCcw className="size-5" />
                   <p className="leading-none mt-0.5">Refresh Matches</p>
               </div>
-                <div className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
+                <div 
+                  className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
+                  onClick={() => setModalOpen(true)}
+                  >
                   <Plus className="size-5" />
                   <p className="leading-none mt-0.5">Add Match</p>
                 </div>
@@ -174,7 +180,7 @@ export default function PlayerProfile() {
               <div className="gap-y-4 flex-col flex w-full">
                 {/* Current Rank */}
                 <CurrentRankCard
-                  stats={playerProfile.stats}
+                  stats={playerProfile.stats!}
                   seasonStats={playerProfile.extended_stats?.season_stats!}
                 />
                 {/* Sponsors */}

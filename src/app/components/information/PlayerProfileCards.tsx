@@ -17,7 +17,7 @@ const getPeakStats = (seasons: Record<string, SeasonStats>) => {
   for (var key in seasons) {
     const season = seasons[key];
     if (peakRankRating === 0 && firstPass) {
-      // Updates values if top_rank_rating is 0, to prevent 'Unkown Season' from displaying on the peak rank card 
+      // Updates values if top_rank_rating is 0, to prevent 'Unkown Season' from displaying on the peak rank card
       setPeakRankRating(season.top_rank_rating);
       setPeakRankID(season.top_rank_id);
       setPeakSeason(season.season);
@@ -64,7 +64,7 @@ const CurrentRankCard = React.forwardRef<HTMLDivElement, CurrentRankCardProps>(
         }
       }
     };
-
+    
     return (
       <div ref={ref} className="">
         <Extrusion
@@ -346,7 +346,7 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
     };
 
     const seasonStatsSelected = seasonStats[formatSeasonKey(season)];
-
+    console.log(seasonStatsSelected.top_rank_id);
     return (
       <div className="" ref={ref}>
         <Extrusion
@@ -359,7 +359,7 @@ const OverviewCard = React.forwardRef<HTMLDivElement, OverviewCardProps>(
               <h2>{formatSeasonTitle(season)} Overview</h2>
               <SeasonSelector
                 defaultValue={DEFAULT_SEASON_VALUE}
-                showBeta={true}
+                showBeta={false}
                 setSeason={setSeason}
               />
             </div>
@@ -582,7 +582,7 @@ const MatchCard = React.forwardRef<HTMLDivElement, MatchCardProps>(
         [key]: !prev[key],
       }));
     };
-    
+
     return (
       <div ref={ref} className="flex flex-col gap-y-2">
         {matchEntries.map(([key, match]) => (
@@ -781,6 +781,7 @@ export {
 
 import Constrict from "../layout/Constrict";
 import { MatchDetailsCard } from "./MatchDetailsCard";
+import { stat } from "fs";
 
 const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
   return (
@@ -858,7 +859,9 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
             {/* Maps */}
             <div>
               <Extrusion
-                className={cn("min-w-36 border-secondary rounded-tr-primary ml-auto")}
+                className={cn(
+                  "min-w-36 border-secondary rounded-tr-primary ml-auto"
+                )}
                 cornerLocation={CornerLocation.TopLeft}
               />
               <Card className="rounded-tr-none">
@@ -887,7 +890,9 @@ const SkeletonLoader = React.forwardRef<HTMLDivElement>(({}, ref) => {
             {/* Overview */}
             <div>
               <Extrusion
-                className={cn("min-w-36 ml-auto border-secondary rounded-tr-primary")}
+                className={cn(
+                  "min-w-36 ml-auto border-secondary rounded-tr-primary"
+                )}
                 cornerLocation={CornerLocation.TopLeft}
               />
               <Card className="rounded-tr-none p-0">

@@ -1,6 +1,8 @@
-export default function fetchData(
+export default async function fetchData(
   url: string,
   options?: Omit<RequestInit, "cache">
 ) {
-  return fetch(url, { ...options, cache: "no-store" });
+  const data = await fetch(url, { ...options, cache: "no-store" });
+  console.log('nosf', data)
+  return data
 }

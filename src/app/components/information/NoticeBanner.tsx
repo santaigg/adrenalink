@@ -37,7 +37,7 @@ export default function NoticeBanner({
     );
   } else {
     return (
-      <Constrict className="my-8 px-0 max-w-none">
+      <div className="my-8">
         <div className={cn("flex-col", className)}>
           <div className="flex h-14">
             <div
@@ -60,7 +60,7 @@ export default function NoticeBanner({
             />
           </div>
         </div>
-      </Constrict>
+      </div>
     );
   }
 }

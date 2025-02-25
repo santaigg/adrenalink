@@ -12,10 +12,10 @@ export default function Footer() {
   return (
     <footer>
       <Extrusion
-        className="min-w-[20%] shrink-0 border-primary"
+        className="min-w-[20%] shrink-0 border-secondary"
         cornerLocation={CornerLocation.TopRight}
       />
-      <div className="p-8 bg-primary">
+      <div className="p-8 bg-primary border-t-2 border-secondary">
         <Constrict className="flex flex-col sm:flex-row justify-between">
           <div className="flex flex-col flex-1 items-center sm:items-start">
             <Logo />
