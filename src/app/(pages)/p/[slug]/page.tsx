@@ -21,7 +21,10 @@ import {
   MatchCard,
   SkeletonLoader,
 } from "@/app/components/information/PlayerProfileCards";
-import { AddMatchModal } from "@/app/components/input/AddMatchModal";
+import {
+  AddMatchModal,
+  RefreshMatchButton,
+} from "@/app/components/input/AddMatchModal";
 
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
@@ -79,10 +82,7 @@ export default function PlayerProfile() {
                 )}
               </div>
               <div className="flex justify-end items-end mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
-                <div className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
-                  <RefreshCcw className="size-5" />
-                  <p className="leading-none mt-0.5">Refresh Matches</p>
-                </div>
+                <RefreshMatchButton playerFullProfile={playerProfile} />
                 <div
                   className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
                   onClick={() => setModalOpen(true)}

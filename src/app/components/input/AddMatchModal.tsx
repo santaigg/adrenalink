@@ -3,6 +3,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
 import { Coins, Loader2 } from "lucide-react";
+import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
 
 const AddMatchModal = ({
   open,
@@ -31,7 +32,6 @@ const AddMatchModal = ({
     try {
       const formattedMatchId = matchId.toLowerCase().trim().replace(/\s/g, "");
 
-      // Validate match ID
       const checkResponse = await fetch(
         `https://wavescan-production.up.railway.app/api/v1/match/${formattedMatchId}/check`
       );
@@ -41,13 +41,12 @@ const AddMatchModal = ({
         throw new Error(checkResponseJson.error);
       }
 
-      // Add the match if valid
       const addResponse = await fetch(
         `https://wavescan-production.up.railway.app/api/v1/match/${formattedMatchId}/add`
       );
       if (!addResponse.ok) throw new Error("Failed to add match");
 
-      setOpen(false); // Close modal after successful addition
+      setOpen(false);
     } catch (error) {
       console.error("Error adding match:", error);
       setAddMatchError(
@@ -137,4 +136,119 @@ const AddMatchModal = ({
   );
 };
 
-export { AddMatchModal };
+import { RefreshCcw } from "lucide-react";
+interface dumpStatus {
+  success: boolean;
+  is_priority: boolean;
+  queue_position: number | null;
+  initially_dumped: boolean;
+  in_progress: boolean;
+  last_updated: number | null;
+}
+
+const RefreshMatchButton = ({
+  playerFullProfile,
+}: {
+  playerFullProfile: PlayerFullProfile;
+}) => {
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  async function isRefreshAllowed() {
+    try {
+      const response = await fetch(
+        `https://wavescan-production.up.railway.app/api/v1/player/${playerFullProfile.id}/dump_status`
+      );
+      if (!response.ok) throw new Error("Failed to fetch dump status");
+      const dumpStatus = (await response.json()) as dumpStatus;
+      return dumpStatus.initially_dumped;
+    } catch (error) {
+      console.error("Error checking dump status:", error);
+      return false;
+    }
+  }
+
+  async function refreshMatches() {
+    if (!(await isRefreshAllowed())) {
+      console.log("Refresh not allowed: Player has not been initially dumped");
+      return;
+    }
+
+    setIsRefreshing(true);
+
+    try {
+      const dumpStatusResponse = await fetch(
+        `https://wavescan-production.up.railway.app/api/v1/player/${playerFullProfile.id}/dump_status`
+      );
+      if (!dumpStatusResponse.ok)
+        throw new Error("Failed to fetch dump status");
+      const dumpStatus = (await dumpStatusResponse.json()) as dumpStatus;
+
+      const currentTime = new Date().getTime();
+      const lastRefreshTime = localStorage.getItem(
+        `lastRefresh_${playerFullProfile.id}`
+      );
+      const lastDumpTime = dumpStatus.initially_dumped
+        ? dumpStatus.last_updated ??
+          localStorage.getItem(`lastDump_${playerFullProfile.id}`)
+          ? Number.parseInt(
+              localStorage.getItem(`lastDump_${playerFullProfile.id}`) ?? "0"
+            )
+          : 0
+        : null;
+
+      const shouldDump = !lastDumpTime || currentTime - lastDumpTime > 900000;
+      const shouldRefresh =
+        !lastRefreshTime ||
+        currentTime - Number.parseInt(lastRefreshTime) > 300000;
+
+      if (shouldDump) {
+        const dumpResponse = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerFullProfile.id}/dump`
+        );
+        if (!dumpResponse.ok) throw new Error("Failed to initiate dump");
+        localStorage.setItem(
+          `lastDump_${playerFullProfile.id}`,
+          currentTime.toString()
+        );
+      } else if (shouldRefresh) {
+        const response = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerFullProfile.id}/full_profile`
+        );
+        if (!response.ok) throw new Error("Failed to fetch matches");
+        playerFullProfile = await response.json();
+        const reactiveMatches = playerFullProfile.matches.map((match) => ({
+          ...match,
+          expanded: false,
+          result:
+            match.winner === -1
+              ? "Draw"
+              : match.winner === match.player_team?.team_index
+              ? "Victory"
+              : "Defeat",
+        }));
+        localStorage.setItem(
+          `lastRefresh_${playerFullProfile.id}`,
+          currentTime.toString()
+        );
+      } else {
+        console.log("No refresh or dump needed at this time");
+      }
+    } catch (error) {
+      console.error("Error refreshing matches:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
+
+  return (
+    <div
+      className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
+      onClick={() => refreshMatches()}
+    >
+      <RefreshCcw className="size-5" />
+      <p className="leading-none mt-0.5">Refresh Matches</p>
+    </div>
+  );
+};
+
+export { AddMatchModal, RefreshMatchButton };
