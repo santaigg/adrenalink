@@ -180,7 +180,7 @@ import Image from "next/image";
 
 function getMapName(
   map: string
-): "Commons" | "Metro" | "Mill" | "Skyway" | "Unknown" {
+): "Commons" | "Metro" | "Mill" | "Skyway" | "Canal" | "Unknown" {
   switch (map.toLowerCase()) {
     case "commons_p":
       return "Commons";
@@ -189,7 +189,9 @@ function getMapName(
     case "greenbelt_p":
       return "Mill";
     case "junction_p":
-      return "Skyway";
+      return "Skyway";  
+    case "canal_p": 
+      return "Canal";
     default:
       return "Unknown";
   }
@@ -235,7 +237,7 @@ const MapsCard = React.forwardRef<HTMLDivElement, MapsCardProps>(
                   <Image
                     src={mapImage}
                     alt={`Image of ${mapName}`}
-                    className="w-12 h-12 rounded-md"
+                    className="w-12 h-12 rounded-md !object-cover"
                   />
                 )}
 
