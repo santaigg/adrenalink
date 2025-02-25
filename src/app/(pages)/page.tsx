@@ -99,7 +99,7 @@ export default function Home() {
               >
                 {/* whole thing */}
                 <div
-                  className={`hover:-translate-y-2 transition-all w-full ${
+                  className={`hover:translate-x-2 transition-all w-full ${
                     index === 0 ? "" : ""
                   }`}
                 >
