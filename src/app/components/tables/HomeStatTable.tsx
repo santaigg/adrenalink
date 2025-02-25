@@ -1,10 +1,12 @@
-import Extrusion, {CornerLocation} from "@/app/components/cosmetic/Extrusion";
+import Extrusion, { CornerLocation } from "@/app/components/cosmetic/Extrusion";
 
 export default function HomeStatTable({
   title,
+  buttonHidden,
   children,
 }: {
   title: string;
+  buttonHidden: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -32,9 +34,11 @@ export default function HomeStatTable({
           </div>
         </div>
         {children}
-        <div className="w-full bg-secondary/50 h-10 flex items-center justify-center cursor-pointer hover:bg-secondary transition-all">
-          View {title}
-        </div>
+        {!buttonHidden && (
+          <div className="w-full bg-secondary/50 h-10 flex items-center justify-center cursor-pointer hover:bg-secondary transition-all">
+            View {title}
+          </div>
+        )}
       </div>
     </div>
   );

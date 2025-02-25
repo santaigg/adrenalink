@@ -153,7 +153,7 @@ export default function Home() {
         </div>
         <Constrict className="px-4 py-16">
           <div className="flex w-full space-x-6">
-            <HomeStatTable title="Sponsors">
+            <HomeStatTable title="Sponsors" buttonHidden>
               <>
                 {sponsors.map((sponsor, index) => {
                   return (
@@ -182,7 +182,7 @@ export default function Home() {
                 })}
               </>
             </HomeStatTable>
-            <HomeStatTable title="Team Comps">
+            {/* <HomeStatTable title="Team Comps">
               <>
                 {sponsors.map((sponsor, index) => {
                   return (
@@ -212,7 +212,7 @@ export default function Home() {
                   );
                 })}
               </>
-            </HomeStatTable>
+            </HomeStatTable> */}
           </div>
         </Constrict>
       </div>
