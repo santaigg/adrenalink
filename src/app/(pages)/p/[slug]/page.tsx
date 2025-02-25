@@ -132,11 +132,11 @@ export default function PlayerProfile() {
       ) : playerProfile ? (
         <>
           <div className="w-full -mt-4 h-48 relative">
-            {/* <Image
-              className="-z-50 absolute top-0 size-full object-cover"
+            <img
+              className="-z-10 absolute top-0 size-full object-cover blur-2xl"
               alt="Banner"
-              src={BannerImageData}
-            /> */}
+              src={playerProfile.steam_profile?.avatar?.large}
+            />
             <div className="size-full absolute top-0 -z-50 bg-input" />
             <Constrict className="h-full flex px-1">
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
