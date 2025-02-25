@@ -53,7 +53,9 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
             }`}
             onClick={(e) => {
               e.preventDefault();
-              onChange(p);
+              if (typeof p === 'number') {
+                onChange(p);
+              }
             }}
           >
             {p}
@@ -108,7 +110,9 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
             }`}
             onClick={(e) => {
               e.preventDefault();
-              onChange(p);
+              if (typeof p === 'number') {
+                onChange(p);
+              }
             }}
           >
             {p}
