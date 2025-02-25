@@ -44,7 +44,6 @@ const Searchbox = React.forwardRef<
 
     try {
       if (isSteam64Id(query)) {
-        // If it's a Steam64 ID, use the steam endpoint
         const response = await fetch(
           `https://wavescan-production.up.railway.app/api/v1/player/steam/${encodeURIComponent(
             query
@@ -58,7 +57,6 @@ const Searchbox = React.forwardRef<
         };
 
         if (!data.success) {
-          // If the player is not found, return an empty array
           setSearchResults([]);
           return;
         }
@@ -73,7 +71,6 @@ const Searchbox = React.forwardRef<
         setSearchResults(fpd);
         setShowDropdown(fpd.length > 0);
       } else {
-        // Otherwise, use the player search endpoint
         const response = await fetch(
           `https://wavescan-production.up.railway.app/api/v1/search/player/${encodeURIComponent(
             query
@@ -82,13 +79,11 @@ const Searchbox = React.forwardRef<
         if (!response.ok) throw new Error("Failed to fetch search results");
         const { data } = (await response.json()) as { data: any[] };
 
-        // Map the data to match the SearchResult type
         const mappedResults: SearchResult[] = data.map((item) => ({
           id: item.id,
           display_name: item.display_name,
         }));
 
-        // Update the state with the mapped results
         setSearchResults(mappedResults);
         setShowDropdown(mappedResults.length > 0);
       }
@@ -148,10 +143,8 @@ const Searchbox = React.forwardRef<
             onFocus={toggleFocus}
             onBlur={toggleFocus}
             className={cn(
-              searchValue.length > 0
-                ? "border-accent"
-                : "border-secondary",
-              "h-9 w-full bg-input rounded-primary rounded-br-none px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
+              searchValue.length > 0 ? "border-accent" : "border-secondary",
+              "h-9 w-full bg-primary rounded-primary rounded-br-none px-3 py-1 outline-none placeholder:text-input-foreground border focus-visible:border-accent disabled:cursor-not-allowed disabled:opacity-50",
               className
             )}
             ref={ref}
@@ -180,7 +173,7 @@ const Searchbox = React.forwardRef<
       </div>
       <div
         ref={dropdownRef}
-        className={`w-full max-h-60 rounded-primary bg-input border border-accent absolute top-12 left-0 overflow-y-scroll scrollbar-hide ${
+        className={`w-full max-h-60 rounded-primary bg-primary border border-accent absolute top-12 left-0 overflow-y-scroll scrollbar-hide ${
           showDropdown ? "" : "hidden"
         }`}
       >

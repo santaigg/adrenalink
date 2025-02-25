@@ -8,13 +8,20 @@ interface RankImageProps extends Omit<ImageProps, "src" | "alt"> {
   solo_rank?: boolean;
 }
 
-const RankImage: React.FC<RankImageProps> = ({ rank, solo_rank = true, className, ...props }) => {
+const RankImage: React.FC<RankImageProps> = ({
+  rank,
+  solo_rank = true,
+  className,
+  ...props
+}) => {
   const [rankImage, setRankImage] = useState<string | null>(null);
-  const queue_name = solo_rank ? "solo_ranks" : "team_ranks"
+  const queue_name = solo_rank ? "solo_ranks" : "team_ranks";
 
   useEffect(() => {
     const loadImage = async () => {
-      const image = await import(`@/app/assets/images/ranks/${queue_name}/${rank}.png`);
+      const image = await import(
+        `@/app/assets/images/ranks/${queue_name}/${rank}.png`
+      );
       setRankImage(image.default);
     };
     loadImage();
@@ -23,13 +30,13 @@ const RankImage: React.FC<RankImageProps> = ({ rank, solo_rank = true, className
   if (!rankImage) {
     return null;
   }
-  
+
   return (
     <div>
       <Image
         src={rankImage}
         alt={`${rank} rank`}
-        className={cn('h-8 w-8 shrink-0 min-w-8 min-h-8', className)}
+        className={cn("h-8 w-8 shrink-0 min-w-8 min-h-8", className)}
         {...props}
       />
     </div>
