@@ -205,7 +205,7 @@ const MatchDetailsCard = React.forwardRef<HTMLDivElement, MatchDetailsProps>(
                                 : getSoloRankFromNumber(Number(player.rank_id))
                             }
                           />
-                          <p className="text-nowrap overflow-x-scroll">
+                          <p className="text-nowrap overflow-x-scroll scrollbar-hide">
                             {player.name}
                           </p>
                         </div>

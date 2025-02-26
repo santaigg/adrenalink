@@ -1,8 +1,14 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+  useState,
+} from "react";
 import Extrusion, { CornerLocation } from "../cosmetic/Extrusion";
-import { Coins, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
 
 const AddMatchModal = ({
@@ -16,6 +22,7 @@ const AddMatchModal = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [addMatchError, setAddMatchError] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleType = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -67,13 +74,37 @@ const AddMatchModal = ({
     }
   }
 
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("overflow-y-hidden");
+    } else {
+      document.body.classList.remove("overflow-y-hidden");
+    }
+  }, [open]);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen bg-black/75 z-50 flex justify-center items-center transition-all ${
         open ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="flex flex-col w-[30rem]">
+      <div ref={modalRef} className="flex flex-col w-[30rem]">
         <Extrusion
           className="border-secondary rounded-tl-primary min-w-[30%]"
           cornerLocation={CornerLocation.TopRight}
