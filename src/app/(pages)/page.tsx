@@ -13,11 +13,16 @@ import SpectreLogoImage from "../assets/images/brand/spectre-logo.png";
 import { SponsorImage } from "../components/cosmetic/SponsorImageFromString";
 import NoticeBanner from "../components/information/NoticeBanner";
 
-import { PlayerSteamProfile } from "../utils/types/wavescan.types";
+import {
+  PlayerSteamProfile,
+  GlobalSponsorStats,
+} from "../utils/types/wavescan.types";
 import noStoreFetch from "@/app/utils/fetch/noStoreFetch";
 
 import Extrusion, { CornerLocation } from "../components/cosmetic/Extrusion";
 import HomeStatTable from "../components/tables/HomeStatTable";
+
+const DEFAULT_SEASON_VALUE = "season0";
 
 interface PlayerRow {
   username: string;
@@ -29,19 +34,24 @@ interface PlayerRow {
 
 export default function Home() {
   const router = useRouter();
-  const season = "season0";
   const [leaderboard, setLeaderboard] = useState<PlayerRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  function formatSeasonLeaderboardKey(season: string) {
+    return Number(season.slice(-1));
+  }
+
   useEffect(() => {
     const fetchLeaderboardData = async () => {
-      const data = await fetchLeaderboard(season as LeaderboardId);
+      const data = await fetchLeaderboard(
+        formatSeasonLeaderboardKey(DEFAULT_SEASON_VALUE) as LeaderboardId
+      );
       setLeaderboard(data.slice(0, 3));
       setLoading(false);
     };
 
     fetchLeaderboardData();
-  }, [season]);
+  }, [DEFAULT_SEASON_VALUE]);
 
   const [profileImages, setProfileImages] = useState<Record<string, string>>(
     {}
@@ -64,15 +74,26 @@ export default function Home() {
     loadImages();
   }, [leaderboard]);
 
-  const sponsors = [
-    "Morrgen United",
-    "Pinnacle International",
-    "Ryker Industries",
-    "Bloom Technologies",
-    "Ghostlink Collective",
-  ];
+  const [globalSponsorStats, setGlobalSponsorStats] =
+    useState<GlobalSponsorStats | null>(null);
 
-  const getRandomStat = () => (Math.random() * 100).toFixed(2);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const response = await noStoreFetch(
+          "https://wavescan-production.up.railway.app/api/v1/sponsor/stats"
+        );
+        if (!response.ok) throw new Error("Failed to fetch dump status");
+        const data = (await response.json()) as GlobalSponsorStats;
+        setGlobalSponsorStats(data);
+      } catch (error) {
+        console.error("Error checking dump status:", error);
+        return false;
+      }
+    }
+
+    loadData();
+  }, []);
 
   return (
     <main className="h-full flex flex-col">
@@ -111,7 +132,7 @@ export default function Home() {
               return (
                 <div
                   key={index}
-                  className="group w-36 h-60 bg-secondary/70 border border-primary-foreground/5 cursor-pointer flex flex-col rounded-primary corner-clip-sm"
+                  className="w-36 h-60 bg-secondary/70 hover:bg-secondary/95 transition-all border border-primary-foreground/5 cursor-pointer flex flex-col rounded-primary corner-clip-sm"
                   onClick={() => router.push(`/p/${player.playerId}`)}
                 >
                   <div className="px-4 pt-4 flex flex-col items-center justify-center">
@@ -131,7 +152,13 @@ export default function Home() {
                       {player.rating} <span className="text-base">RR</span>
                     </p>
                   </div>
-                  <div className="mt-auto w-full py-1 shrink-0 flex items-center text-sm justify-center px-4 transition-all bg-secondary-foreground/[0.01] group-hover:bg-secondary-foreground/5">
+                  <div
+                    className="mt-auto w-full pb-1 pt-1.5 shrink-0 flex items-center text-sm justify-center px-4 transition-all bg-secondary-foreground/[0.01] hover:bg-secondary-foreground/5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push("/leaderboard");
+                    }}
+                  >
                     Leaderboard
                   </div>
                 </div>
@@ -155,7 +182,7 @@ export default function Home() {
           <div className="flex w-full space-x-6">
             <HomeStatTable title="Sponsors" buttonHidden>
               <>
-                {sponsors.map((sponsor, index) => {
+                {globalSponsorStats?.stats.sponsors.map((sponsor, index) => {
                   return (
                     <div
                       key={index}
@@ -164,18 +191,36 @@ export default function Home() {
                       <div className="w-5/12 shrink-0 flex items-center justify-start overflow-x-scroll scrollbar-hide">
                         <SponsorImage
                           className="w-8 !h-auto mr-2 shrink-0"
-                          sponsor={sponsor.split(" ")[0]}
+                          sponsor={sponsor.sponsor_name.split(" ")[0]}
                         />
-                        <p className="text-nowrap">{sponsor}</p>
+                        <p className="text-nowrap">{sponsor.sponsor_name}</p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}%</p>
+                        <p>
+                          {(
+                            (sponsor.total_wins * 100) /
+                            (sponsor.total_wins +
+                              sponsor.total_losses +
+                              sponsor.total_draws)
+                          ).toFixed(2)}
+                          %
+                        </p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}%</p>
+                        <p>
+                          {(
+                            (sponsor.picks * 100) /
+                            globalSponsorStats?.stats.total_players
+                          ).toFixed(2)}
+                          %
+                        </p>
                       </div>
                       <div className="w-full flex items-center justify-center">
-                        <p>{getRandomStat()}</p>
+                        <p>
+                          {(sponsor.total_kills / sponsor.total_deaths).toFixed(
+                            2
+                          )}
+                        </p>
                       </div>
                     </div>
                   );

@@ -150,15 +150,21 @@ export interface PlayerSteamProfile {
 }
 
 export interface GlobalSponsorStats {
-  total_players: number; // Players in scope
-  sponsor: {
-    sponsor_id: string;
-    sponsor_name: string;
-    picks: number; // Total times sponsor was most used for that player
-    total_wins: number; // Total (or average, whichever works easiest) wins for that sponsor across all players
-    total_draws: number; // Total (or average, whichever works easiest) draws for that sponsor across all players
-    total_losses: number; // Total (or average, whichever works easiest) losses for that sponsor across all players
-    total_kills: number; // Total (or average, whichever works easiest) kills for that sponsor across all players
-    total_deaths: number; // Total (or average, whichever works easiest) deaths for that sponsor across all players
-  }[];
+  success: boolean;
+  stats: {
+    total_players: number;
+    sponsors: [
+      {
+        sponsor_id: string;
+        sponsor_name: string;
+        picks: number;
+        total_wins: number;
+        total_losses: number;
+        total_draws: number;
+        total_kills: number;
+        total_deaths: number;
+        total_assists: number;
+      }
+    ];
+  };
 }

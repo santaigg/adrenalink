@@ -8,7 +8,7 @@ import DefaultAvatar from "@/app/assets/images/avatars/default.png";
 import Constrict from "@/app/components/layout/Constrict";
 
 import { fetchPlayerProfile } from "@/app/utils/fetch/fetchPlayerProfile";
-import { PlayerFullProfile } from "@/app/utils/types/wavescan.types";
+import { PlayerFullProfile, MapStats } from "@/app/utils/types/wavescan.types";
 import { Plus, RefreshCcw } from "lucide-react";
 import Image from "next/image";
 
@@ -26,8 +26,20 @@ import {
   RefreshMatchButton,
 } from "@/app/components/input/AddMatchModal";
 
+import { useRouter } from "next/navigation";
+
+interface dumpStatus {
+  success: boolean;
+  is_priority: boolean;
+  queue_position: number | null;
+  initially_dumped: boolean;
+  in_progress: boolean;
+  last_updated: number | null;
+}
+
 export default function PlayerProfile() {
   const params = useParams<{ tag: string; slug: string }>();
+  const router = useRouter();
   const playerId = params.slug;
 
   const [ModalOpen, setModalOpen] = useState<boolean>(false);
@@ -35,73 +47,128 @@ export default function PlayerProfile() {
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [dumpData, setDumpData] = useState<dumpStatus | null>(null);
+
+  const MAX_RETRIES = 3;
 
   useEffect(() => {
     if (!playerId) return;
 
+    let retries = 0;
+
     const fetchData = async () => {
       setLoading(true);
-      const data = await fetchPlayerProfile(playerId);
-      setPlayerProfile(data);
-      console.log("data: ", data);
-      setLoading(false);
+      try {
+        const data = await fetchPlayerProfile(playerId);
+
+        if (data?.error) {
+          console.error("Database timeout error:", data.error);
+
+          if (retries < MAX_RETRIES) {
+            retries++;
+            const delay = Math.pow(2, retries) * 500;
+            console.log(`Retrying in ${delay}ms...`);
+            setTimeout(fetchData, delay);
+            return;
+          }
+
+          console.log("Max retries reached. Refreshing the page...");
+          router.refresh(); // Server-side refresh only if all retries fail
+          return;
+        }
+
+        setPlayerProfile(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch player profile:", error);
+      }
     };
 
     fetchData();
   }, [playerId]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerId}/dump_status`
+        );
+        if (!response.ok) throw new Error("Failed to fetch dump status");
+        const dumpStatus = (await response.json()) as dumpStatus;
+        setDumpData(dumpStatus);
+      } catch (error) {
+        console.error("Error checking dump status:", error);
+        return false;
+      }
+    };
 
-  interface dumpStatus {
-    success: boolean;
-    is_priority: boolean;
-    queue_position: number | null;
-    initially_dumped: boolean;
-    in_progress: boolean;
-    last_updated: number | null;
-}
+    fetchData();
+  }, [playerId]);
 
   async function isRefreshAllowed() {
     try {
-      const response = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`);
-      if (!response.ok) throw new Error('Failed to fetch dump status');
-      const dumpStatus = await response.json() as dumpStatus;
+      const response = await fetch(
+        `https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`
+      );
+      if (!response.ok) throw new Error("Failed to fetch dump status");
+      const dumpStatus = (await response.json()) as dumpStatus;
       return dumpStatus.initially_dumped;
     } catch (error) {
-      console.error('Error checking dump status:', error);
+      console.error("Error checking dump status:", error);
       return false; // If there's an error, we'll disallow refresh to be safe
     }
   }
 
   async function refreshMatches() {
     if (!(await isRefreshAllowed())) {
-      console.log("Refresh not allowed: Player has not been initially dumped");
       return;
     }
 
     setLoading(true);
     try {
       // Check dump status
-      const dumpStatusResponse = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`);
-      if (!dumpStatusResponse.ok) throw new Error("Failed to fetch dump status");
-      const dumpStatus = await dumpStatusResponse.json() as dumpStatus;
+      const dumpStatusResponse = await fetch(
+        `https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump_status`
+      );
+      if (!dumpStatusResponse.ok)
+        throw new Error("Failed to fetch dump status");
+      const dumpStatus = (await dumpStatusResponse.json()) as dumpStatus;
 
       const currentTime = new Date().getTime();
-      const lastRefreshTime = localStorage.getItem(`lastRefresh_${playerProfile?.id}`);
-      const lastDumpTime = dumpStatus.initially_dumped ? (dumpStatus.last_updated ?? localStorage.getItem(`lastDump_${playerProfile?.id}`) ? Number.parseInt(localStorage.getItem(`lastDump_${playerProfile?.id}`) ?? "0") : 0) : null;
+      const lastRefreshTime = localStorage.getItem(
+        `lastRefresh_${playerProfile?.id}`
+      );
+      const lastDumpTime = dumpStatus.initially_dumped
+        ? dumpStatus.last_updated ??
+          localStorage.getItem(`lastDump_${playerProfile?.id}`)
+          ? Number.parseInt(
+              localStorage.getItem(`lastDump_${playerProfile?.id}`) ?? "0"
+            )
+          : 0
+        : null;
 
       // Determine if we should refresh or dump
       const shouldDump = !lastDumpTime || currentTime - lastDumpTime > 900000; // 15 minutes
-      const shouldRefresh = !lastRefreshTime || currentTime - Number.parseInt(lastRefreshTime) > 300000; // 5 minutes
+      const shouldRefresh =
+        !lastRefreshTime ||
+        currentTime - Number.parseInt(lastRefreshTime) > 300000; // 5 minutes
 
       if (shouldDump) {
         // Initiate a new dump
-        const dumpResponse = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump`);
+        const dumpResponse = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/dump`
+        );
         if (!dumpResponse.ok) throw new Error("Failed to initiate dump");
-        localStorage.setItem(`lastDump_${playerProfile?.id}`, currentTime.toString());
+        localStorage.setItem(
+          `lastDump_${playerProfile?.id}`,
+          currentTime.toString()
+        );
         // You might want to handle the response here, e.g., show a message that dump is in progress
       } else if (shouldRefresh) {
         // Fetch full profile
-        const response = await fetch(`https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/full_profile`);
+        const response = await fetch(
+          `https://wavescan-production.up.railway.app/api/v1/player/${playerProfile?.id}/full_profile`
+        );
         if (!response.ok) throw new Error("Failed to fetch matches");
         setPlayerProfile(await response.json());
         // reactiveMatches = playerProfile?.matches.map((match) => ({
@@ -114,9 +181,10 @@ export default function PlayerProfile() {
         //         ? "Victory"
         //         : "Defeat",
         // }));
-        localStorage.setItem(`lastRefresh_${playerProfile?.id}`, currentTime.toString());
-      } else {
-        console.log("No refresh or dump needed at this time");
+        localStorage.setItem(
+          `lastRefresh_${playerProfile?.id}`,
+          currentTime.toString()
+        );
       }
     } catch (error) {
       console.error("Error refreshing matches:", error);
@@ -135,11 +203,13 @@ export default function PlayerProfile() {
         <>
           <AddMatchModal open={ModalOpen} setOpen={setModalOpen} />
           <div className="w-full -mt-4 h-48 relative">
-            <img
-              className="-z-10 absolute top-0 size-[200%] object-cover blur-3xl opacity-70 brightness-75"
-              alt="Banner"
-              src={playerProfile.steam_profile?.avatar?.large}
-            />
+            <div className="w-full h-full absolute top-0 -z-10 overflow-hidden">
+              <img
+                className="-z-10 absolute top-0 size-[200%] object-cover blur-3xl opacity-70 brightness-75"
+                alt="Banner"
+                src={playerProfile.steam_profile?.avatar?.large}
+              />
+            </div>
             <div className="size-full absolute top-0 -z-50 bg-input" />
             <Constrict className="h-full flex px-1">
               <div className="bg-secondary flex justify-center items-center absolute bottom-0 translate-y-1/2 corner-clip">
@@ -157,15 +227,24 @@ export default function PlayerProfile() {
                   />
                 )}
               </div>
-              <div className="flex justify-end items-end mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
-              <div onClick={refreshMatches} className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black">
+              <div className="flex justify-end items-center mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
+                {dumpData?.in_progress && (
+                  <div className="h-9 flex items-center text-accent">
+                    Processing matches soon... Queue Position:{" "}
+                    {dumpData.queue_position}
+                  </div>
+                )}
+                <div
+                  onClick={refreshMatches}
+                  className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
+                >
                   <RefreshCcw className="size-5" />
                   <p className="leading-none mt-0.5">Refresh Matches</p>
-              </div>
-                <div 
+                </div>
+                <div
                   className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
                   onClick={() => setModalOpen(true)}
-                  >
+                >
                   <Plus className="size-5" />
                   <p className="leading-none mt-0.5">Add Match</p>
                 </div>
@@ -190,7 +269,17 @@ export default function PlayerProfile() {
                   }
                 />
                 {/* Maps */}
-                <MapsCard mapStats={playerProfile.extended_stats?.map_stats!} />
+                <MapsCard 
+                  mapStats={
+                    Object.entries(playerProfile.extended_stats?.map_stats || {}).reduce(
+                      (acc, [mapName, stats]) => ({
+                        ...acc,
+                        [mapName]: { ...stats, map: mapName }
+                      }), 
+                      {}
+                    ) as Record<string, MapStats>
+                  } 
+                />
               </div>
               <div className="md:col-span-3 flex flex-col gap-y-4">
                 {/* Overview */}
@@ -204,7 +293,7 @@ export default function PlayerProfile() {
                   }
                 />
                 <MatchCard
-                  matches={playerProfile.matches}
+                  matches={playerProfile.matches as any}
                   playerId={playerProfile.id}
                 />
               </div>
