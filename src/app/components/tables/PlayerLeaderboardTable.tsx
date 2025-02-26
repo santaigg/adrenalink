@@ -79,7 +79,7 @@ const PlayerLeaderboardTable: React.FC<PlayerLeaderboardTableProps> = ({
               <h1 className="text-xl">Rank</h1>
             </TableHead>
             <TableHead>
-              <h1 className="text-xl">Rank Rating</h1>
+              <h1 className="text-xl text-nowrap">Rank Rating</h1>
             </TableHead>
           </TableRow>
         </TableHeader>

@@ -64,7 +64,7 @@ const StatisticRow = React.forwardRef<HTMLDivElement, StatisticRowProps>(
         className="h-12 w-full flex items-center even:bg-primary justify-center"
       >
         <div
-          className={`w-1/3 flex items-center justify-center ${
+          className={`w-1/3 flex items-center justify-center text-center ${
             matchPositive ? "text-green-400" : "text-primary-foreground"
           }`}
         >
@@ -75,7 +75,7 @@ const StatisticRow = React.forwardRef<HTMLDivElement, StatisticRowProps>(
             className={`text-green-400 ${matchPositive ? "" : "opacity-0"}`}
             size={16}
           />
-          <p>{stat}</p>
+          <p className="text-center">{stat}</p>
           <ChevronRight
             className={`text-yellow-400 ${matchPositive ? "opacity-0" : ""}`}
             size={16}
@@ -130,6 +130,9 @@ const MatchDetailsCard = React.forwardRef<HTMLDivElement, MatchDetailsProps>(
         className={`flex items-start justify-start transition-[height] ${
           open ? "" : "h-0 hidden"
         }`}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         <div className="w-full rounded bg-input border border-secondary p-2 flex flex-col space-y-2">
           <div className="flex rounded border-secondary border w-full">
@@ -191,7 +194,7 @@ const MatchDetailsCard = React.forwardRef<HTMLDivElement, MatchDetailsProps>(
                       >
                         <div className="w-1/3 flex items-center gap-x-2">
                           <SponsorImage
-                            className="w-8 h-auto"
+                            className="w-8 h-auto shrink-0"
                             sponsor={player.sponsor_name}
                           />
                           <RankImage
@@ -202,7 +205,9 @@ const MatchDetailsCard = React.forwardRef<HTMLDivElement, MatchDetailsProps>(
                                 : getSoloRankFromNumber(Number(player.rank_id))
                             }
                           />
-                          <p className="">{player.name}</p>
+                          <p className="text-nowrap overflow-x-scroll">
+                            {player.name}
+                          </p>
                         </div>
                         <div className="w-2/3 flex items-center text-center">
                           <div

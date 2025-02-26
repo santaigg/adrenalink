@@ -15,13 +15,9 @@ export interface PlayerLeaderboardPaginationProps {
   keyPrefix: string;
 }
 
-const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = ({
-  totalCount,
-  pageSize,
-  page,
-  onChange,
-  keyPrefix,
-}) => {
+const PlayerLeaderboardPagination: React.FC<
+  PlayerLeaderboardPaginationProps
+> = ({ totalCount, pageSize, page, onChange, keyPrefix }) => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleNext = () => {
@@ -53,7 +49,7 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
             }`}
             onClick={(e) => {
               e.preventDefault();
-              if (typeof p === 'number') {
+              if (typeof p === "number") {
                 onChange(p);
               }
             }}
@@ -68,21 +64,18 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
     const endPage = Math.min(totalPages, page + 1);
 
     if (page <= 4) {
-
       for (let i = 1; i <= 5; i++) {
         pages.push(i);
       }
       pages.push("ellipsis");
       pages.push(totalPages);
     } else if (page >= totalPages - 3) {
-
       pages.push(1);
       pages.push("ellipsis");
       for (let i = totalPages - 4; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-
       pages.push(1);
       pages.push("ellipsis");
       for (let i = startPage; i <= endPage; i++) {
@@ -105,12 +98,12 @@ const PlayerLeaderboardPagination: React.FC<PlayerLeaderboardPaginationProps> = 
         <PaginationItem key={`${keyPrefix}-page-${p}`}>
           <PaginationLink
             href="#"
-            className={`rounded-primary aspect-square h-9 ${
+            className={`rounded-primary aspect-square w-9 h-9 ${
               p === page ? "bg-accent text-primary font-extrabold" : ""
             }`}
             onClick={(e) => {
               e.preventDefault();
-              if (typeof p === 'number') {
+              if (typeof p === "number") {
                 onChange(p);
               }
             }}

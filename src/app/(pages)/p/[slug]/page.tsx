@@ -198,7 +198,9 @@ export default function PlayerProfile() {
     <main>
       <BackgroundImage image={BackgroundImageData} />
       {loading ? (
-        <SkeletonLoader />
+        <div className="px-1">
+          <SkeletonLoader />
+        </div>
       ) : playerProfile ? (
         <>
           <AddMatchModal open={ModalOpen} setOpen={setModalOpen} />
@@ -227,26 +229,28 @@ export default function PlayerProfile() {
                   />
                 )}
               </div>
-              <div className="flex justify-end items-center mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
+              <div className="flex flex-col-reverse sm:flex-row justify-end items-center mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
                 {dumpData?.in_progress && (
                   <div className="h-9 flex items-center text-accent">
                     Processing matches soon... Queue Position:{" "}
                     {dumpData.queue_position}
                   </div>
                 )}
-                <div
-                  onClick={refreshMatches}
-                  className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
-                >
-                  <RefreshCcw className="size-5" />
-                  <p className="leading-none mt-0.5">Refresh Matches</p>
-                </div>
-                <div
-                  className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
-                  onClick={() => setModalOpen(true)}
-                >
-                  <Plus className="size-5" />
-                  <p className="leading-none mt-0.5">Add Match</p>
+                <div className="flex items-center justify-end space-x-4">
+                  <div
+                    onClick={refreshMatches}
+                    className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
+                  >
+                    <RefreshCcw className="size-5" />
+                    <p className="leading-none mt-0.5">Refresh Matches</p>
+                  </div>
+                  <div
+                    className="py-1.5 h-9 px-4 gap-x-1 flex items-center justify-center transition-all border border-secondary bg-primary rounded-primary cursor-pointer hover:bg-accent hover:border-accent hover:text-black"
+                    onClick={() => setModalOpen(true)}
+                  >
+                    <Plus className="size-5" />
+                    <p className="leading-none mt-0.5">Add Match</p>
+                  </div>
                 </div>
               </div>
             </Constrict>
@@ -269,16 +273,18 @@ export default function PlayerProfile() {
                   }
                 />
                 {/* Maps */}
-                <MapsCard 
+                <MapsCard
                   mapStats={
-                    Object.entries(playerProfile.extended_stats?.map_stats || {}).reduce(
+                    Object.entries(
+                      playerProfile.extended_stats?.map_stats || {}
+                    ).reduce(
                       (acc, [mapName, stats]) => ({
                         ...acc,
-                        [mapName]: { ...stats, map: mapName }
-                      }), 
+                        [mapName]: { ...stats, map: mapName },
+                      }),
                       {}
                     ) as Record<string, MapStats>
-                  } 
+                  }
                 />
               </div>
               <div className="md:col-span-3 flex flex-col gap-y-4">
