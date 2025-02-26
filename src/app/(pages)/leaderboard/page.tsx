@@ -55,7 +55,7 @@ export default function Leaderboard() {
   }, [leaderboard]);
 
   return (
-    <main className="bg-input -mt-4 min-h-[82svh] px-1 -z-10 py-8">
+    <main className="bg-input -mt-4 -mb-2 pb-10 min-h-[82svh] px-1 -z-10 pt-8">
       {/* <BackgroundImage image={BackgroundImageData} /> */}
 
       <Constrict className="flex flex-col">
