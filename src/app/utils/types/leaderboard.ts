@@ -51,8 +51,8 @@ export const leaderboards: Record<number, Leaderboard> = {
   1: {
     enabled: true,
 
-    id: 0,
-    name: "Season 0",
+    id: 1,
+    name: "Season 1",
 
     fetchData: async () => {
       const res = await noStoreFetch(
@@ -80,4 +80,4 @@ export const leaderboards: Record<number, Leaderboard> = {
       return playerStats as unknown as PlayerStats[];
     },
   },
-} satisfies Record<string, Leaderboard>;
+} satisfies Record<number, Leaderboard>;

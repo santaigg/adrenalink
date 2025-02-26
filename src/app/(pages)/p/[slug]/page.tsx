@@ -61,8 +61,8 @@ export default function PlayerProfile() {
       try {
         const data = await fetchPlayerProfile(playerId);
 
-        if (data?.error) {
-          console.error("Database timeout error:", data.error);
+        if ((data as any)?.error) {
+          console.error("Database timeout error:", (data as any).error);
 
           if (retries < MAX_RETRIES) {
             retries++;

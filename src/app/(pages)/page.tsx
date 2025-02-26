@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { fetchLeaderboard } from "../utils/fetch/fetchLeaderboard";
-import type { LeaderboardId } from "../utils/types/leaderboard";
 
 import BackgroundImage from "../components/cosmetic/BackgroundImage";
 import BackgroundImageData from "../assets/images/background/background-spectators.png";
@@ -44,7 +43,7 @@ export default function Home() {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       const data = await fetchLeaderboard(
-        formatSeasonLeaderboardKey(DEFAULT_SEASON_VALUE) as LeaderboardId
+        formatSeasonLeaderboardKey(DEFAULT_SEASON_VALUE)
       );
       setLeaderboard(data.slice(0, 3));
       setLoading(false);
