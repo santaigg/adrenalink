@@ -181,57 +181,68 @@ const MatchDetailsCard = React.forwardRef<HTMLDivElement, MatchDetailsProps>(
                       </div>
                     </div>
                   </div>
-                  {team?.players.map((player) => {
-                    return (
-                      <div
-                        key={player.id}
-                        onClick={() => handleRowClick(player.id)}
-                        className={`p-2 flex w-full items-center hover:bg-muted/25 odd:bg-secondary even:bg-primary cursor-pointer ${
-                          player.id === playerId
-                            ? "bg-gradient-to-r from-amber-700/10"
-                            : ""
-                        }`}
-                      >
-                        <div className="w-1/3 flex items-center gap-x-2">
-                          <SponsorImage
-                            className="w-8 h-auto shrink-0"
-                            sponsor={player.sponsor_name}
-                          />
-                          <RankImage
-                            solo_rank={!team.used_team_rank}
-                            rank={
-                              team.used_team_rank
-                                ? getTeamRankFromNumber(Number(player.rank_id))
-                                : getSoloRankFromNumber(Number(player.rank_id))
-                            }
-                          />
-                          <p className="text-nowrap overflow-x-scroll scrollbar-hide">
-                            {player.name}
-                          </p>
-                        </div>
-                        <div className="w-2/3 flex items-center text-center">
-                          <div
-                            className={`w-1/4 text-xs sm:text-sm text-${getScoreColor(
-                              Math.round(player.damage_dealt / match.rounds)
-                            )}`}
-                          >
-                            <p>
-                              {Math.round(player.damage_dealt / match.rounds)}
+                  {team?.players
+                    .slice()
+                    .sort(
+                      (a, b) =>
+                        b.damage_dealt / match.rounds -
+                        a.damage_dealt / match.rounds
+                    )
+                    .map((player) => {
+                      return (
+                        <div
+                          key={player.id}
+                          onClick={() => handleRowClick(player.id)}
+                          className={`p-2 flex w-full items-center hover:bg-muted/25 odd:bg-secondary even:bg-primary cursor-pointer ${
+                            player.id === playerId
+                              ? "bg-gradient-to-r from-amber-700/10"
+                              : ""
+                          }`}
+                        >
+                          <div className="w-1/3 flex items-center gap-x-2">
+                            <SponsorImage
+                              className="w-8 h-auto shrink-0"
+                              sponsor={player.sponsor_name}
+                            />
+                            <RankImage
+                              solo_rank={!team.used_team_rank}
+                              rank={
+                                team.used_team_rank
+                                  ? getTeamRankFromNumber(
+                                      Number(player.rank_id)
+                                    )
+                                  : getSoloRankFromNumber(
+                                      Number(player.rank_id)
+                                    )
+                              }
+                            />
+                            <p className="text-nowrap overflow-x-scroll scrollbar-hide">
+                              {player.name}
                             </p>
                           </div>
-                          <div className="w-1/4 text-xs sm:text-sm">
-                            <p>{`${player.kills} / ${player.deaths} / ${player.assists}`}</p>
-                          </div>
-                          <div className="w-1/4 text-xs sm:text-sm">
-                            <p>{player.damage_dealt}</p>
-                          </div>
-                          <div className="w-1/4 text-xs sm:text-sm">
-                            <p>{(player.kills / match.rounds).toFixed(2)}</p>
+                          <div className="w-2/3 flex items-center text-center">
+                            <div
+                              className={`w-1/4 text-xs sm:text-sm text-${getScoreColor(
+                                Math.round(player.damage_dealt / match.rounds)
+                              )}`}
+                            >
+                              <p>
+                                {Math.round(player.damage_dealt / match.rounds)}
+                              </p>
+                            </div>
+                            <div className="w-1/4 text-xs sm:text-sm">
+                              <p>{`${player.kills} / ${player.deaths} / ${player.assists}`}</p>
+                            </div>
+                            <div className="w-1/4 text-xs sm:text-sm">
+                              <p>{player.damage_dealt}</p>
+                            </div>
+                            <div className="w-1/4 text-xs sm:text-sm">
+                              <p>{(player.kills / match.rounds).toFixed(2)}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               ))}
             </div>
