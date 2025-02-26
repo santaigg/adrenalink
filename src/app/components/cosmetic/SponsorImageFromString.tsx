@@ -12,11 +12,12 @@ const SponsorImage: React.FC<SponsorImageProps> = ({
   ...props
 }) => {
   const [sponsorImage, setSponsorImage] = useState<string | null>(null);
+  const parsedSponsor = sponsor[0].toUpperCase() + sponsor.slice(1);
 
   useEffect(() => {
     const loadImage = async () => {
       const image = await import(
-        `@/app/assets/images/sponsors-logos/${sponsor}.png`
+        `@/app/assets/images/sponsors-logos/${parsedSponsor}.png`
       );
       setSponsorImage(image.default);
     };
