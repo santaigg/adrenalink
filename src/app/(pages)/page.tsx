@@ -104,10 +104,10 @@ export default function Home() {
           noticeBottomText="Brand new website, polished experience."
           ver={2}
         />
-        <Constrict className="h-full px-4 flex flex-col sm:flex-row items-start justify-start sm:space-x-8 mt-24">
+        <Constrict className="h-full px-4 flex flex-col sm:flex-row items-start justify-start sm:space-x-8 sm:mt-24">
           <div
             className={`h-60 group flex justify-center flex-col mx-auto pb-8 ${
-              loading ? "w-1/2" : "w-full"
+              loading ? "w-full sm:w-1/2" : "w-full"
             }`}
           >
             <div className="flex flex-row">
