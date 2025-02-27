@@ -162,9 +162,9 @@ export default function TournamentPage() {
     <main className="h-full flex flex-col">
       <div className="relative -mt-4 w-full border-b border-secondary pb-8">
         <BackgroundImage image={BackgroundImageData} />
-        
+        <Constrict className="p-4 opacity-75">This page is currently in beta.</Constrict>
         {/* Tournament Header - Compact for more stream space */}
-        <Constrict className={`px-4 mt-8 ${isMaximized ? 'max-w-none !w-full' : ''}`}>
+        <Constrict className={`px-4 ${isMaximized ? 'max-w-none !w-full' : ''}`}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="bg-black/40 p-2 rounded-primary corner-clip-sm">
