@@ -929,7 +929,7 @@ export default function TournamentPage() {
               </div>
 
               <div className="bg-secondary/70 border border-primary-foreground/5 rounded-primary corner-clip-sm p-3">
-                <h3 className="text-base font-bold mb-3">Top Performers</h3>
+                <h3 className="text-base font-bold mb-3">Top Performers {currentMatch?.round}</h3>
                 <div className="space-y-2">
                   {sortedPlayers.slice(0, 3).map((player, index) => (
                     <div
