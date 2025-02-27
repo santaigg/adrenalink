@@ -832,7 +832,7 @@ export default function TournamentPage() {
                           >
                             <td className="py-2 px-2">{index + 1}</td>
                             <td className="py-2 px-2">
-                              <div className="flex items-center">
+                              <div className="flex items-center" onClick={() => openSocialMedia(player.socialLink)}>
                                 {player.avatarUrl && (
                                   <img
                                     src={player.avatarUrl}
