@@ -15,16 +15,26 @@ const SponsorImage: React.FC<SponsorImageProps> = ({
 
   useEffect(() => {
     const loadImage = async () => {
-      const image = await import(
-        `@/app/assets/images/sponsors-logos/${sponsor}.png`
-      );
-      setSponsorImage(image.default);
+      try {
+        // Ensure the first letter is capitalized for the file name
+        const formattedSponsor = sponsor === 'tbd' ? 'tbd' : 
+          sponsor.charAt(0).toUpperCase() + sponsor.slice(1);
+        
+        const image = await import(
+          `@/app/assets/images/sponsors-logos/${formattedSponsor}.png`
+        );
+        setSponsorImage(image.default);
+      } catch (error) {
+        console.error(`Failed to load sponsor image for ${sponsor}:`, error);
+        setSponsorImage(null);
+      }
     };
     loadImage();
   }, [sponsor]);
 
   if (!sponsorImage) {
-    return null;
+    // Return a placeholder or nothing when image can't be loaded
+    return <div className={cn("h-10 w-auto bg-secondary/20 rounded-sm", className)} />;
   }
 
   return (

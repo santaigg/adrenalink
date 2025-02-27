@@ -11,6 +11,7 @@ import Image from "next/image";
 import SpectreLogoImage from "../assets/images/brand/spectre-logo.png";
 import { SponsorImage } from "../components/cosmetic/SponsorImageFromString";
 import NoticeBanner from "../components/information/NoticeBanner";
+import OpticGamingLogo from "../components/cosmetic/OpticGamingLogo";
 
 import {
   PlayerSteamProfile,
@@ -99,11 +100,41 @@ export default function Home() {
       <div className="relative -mt-4 w-full border-b border-secondary pb-20">
         <BackgroundImage image={BackgroundImageData} />
         <NoticeBanner
-          className="text-center hidden"
-          noticeTitle="Santai.GG \\ Flashpoint"
-          noticeBottomText="Brand new website, polished experience."
+          className="text-center"
+          noticeTitle="OpTic Gaming \\ Spectre Divide"
+          noticeBottomText="Live now - Watch the action unfold"
           ver={2}
         />
+        
+        {/* Tournament Banner */}
+        <Constrict className="px-4 mt-6">
+          <div 
+            className="w-full bg-secondary/80 border border-accent/30 rounded-primary corner-clip-sm p-4 cursor-pointer hover:bg-secondary/95 transition-all"
+            onClick={() => router.push('/tournament')}
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="bg-black/40 p-2 rounded-primary corner-clip-sm">
+                  <OpticGamingLogo size="md" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-accent">OpTic 3v3 Tournament</h3>
+                  <p className="text-sm text-primary-foreground/80">Tournament live now</p>
+                </div>
+              </div>
+              <div className="flex items-center mt-4 sm:mt-0">
+                <div className="flex items-center space-x-2 bg-accent/10 px-3 py-1.5 rounded-sm">
+                  <span className="animate-pulse text-accent">●</span>
+                  <span className="text-accent font-medium">LIVE</span>
+                </div>
+                <button className="ml-4 px-4 py-1.5 bg-primary text-primary-foreground rounded-primary corner-clip-sm text-sm font-medium">
+                  Watch Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </Constrict>
+        
         <Constrict className="h-full px-4 flex flex-col sm:flex-row items-start justify-start sm:space-x-8 sm:mt-24">
           <div
             className={`h-60 group flex justify-center flex-col mx-auto pb-8 ${
