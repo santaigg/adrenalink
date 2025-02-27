@@ -213,9 +213,9 @@ export default function TournamentPage() {
                   {tournamentData.name}
                 </h1>
                 <div className="flex items-center space-x-2">
-                  <span className="animate-pulse text-accent text-xs">●</span>
+                  <span className="text-accent text-xs">●</span>
                   <span className="text-accent text-xs font-medium">
-                    LIVE NOW
+                    Completed
                   </span>
                 </div>
               </div>

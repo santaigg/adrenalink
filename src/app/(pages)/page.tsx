@@ -102,7 +102,7 @@ export default function Home() {
         <NoticeBanner
           className="text-center"
           noticeTitle="OpTic Gaming \\ Spectre Divide"
-          noticeBottomText="Live now - Watch the action unfold"
+          noticeBottomText="Tournament Complete! Check out the results"
           ver={2}
         />
         
@@ -119,16 +119,16 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-accent">OpTic 3v3 Tournament</h3>
-                  <p className="text-sm text-primary-foreground/80">Tournament live now</p>
+                  <p className="text-sm text-primary-foreground/80">Tournament completed</p>
                 </div>
               </div>
               <div className="flex items-center mt-4 sm:mt-0">
                 <div className="flex items-center space-x-2 bg-accent/10 px-3 py-1.5 rounded-sm">
                   <span className="animate-pulse text-accent">●</span>
-                  <span className="text-accent font-medium">LIVE</span>
+                  <span className="text-accent font-medium">Completed</span>
                 </div>
                 <button className="ml-4 px-4 py-1.5 bg-primary text-primary-foreground rounded-primary corner-clip-sm text-sm font-medium">
-                  Watch Now
+                  Check Results
                 </button>
               </div>
             </div>
