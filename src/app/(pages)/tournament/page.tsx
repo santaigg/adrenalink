@@ -37,6 +37,8 @@ export default function TournamentPage() {
   const [error, setError] = useState<string | null>(null);
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
   const [mapImages, setMapImages] = useState<{ [key: string]: string }>({});
+  const [overallPlayerStats, setOverallPlayerStats] = useState<PlayerStats[]>([]);
+  const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
 
   // Function to load tournament data
   const loadTournamentData = async (isRefresh: boolean = false) => {
@@ -82,6 +84,148 @@ export default function TournamentPage() {
       setRefreshing(false);
     }
   };
+
+  // Calculate overall player stats and determine tournament winner
+  useEffect(() => {
+    if (tournamentData && tournamentData.matches) {
+      // Create a map to track player stats across all matches
+      const playerStatsMap = new Map<string, PlayerStats & { 
+        matchesPlayed: number; 
+        totalRounds: number;
+        matchIds: Set<string>; // Track unique match IDs to prevent double-counting
+      }>();
+      
+      // Process all completed matches
+      const completedMatches = tournamentData.matches.filter(match => match.status === "completed");
+      
+      // Track team wins to determine tournament winner
+      const teamWins = new Map<string, number>();
+      
+      completedMatches.forEach(match => {
+        // Count team wins
+        if (match.team1.score > match.team2.score) {
+          teamWins.set(match.team1.name, (teamWins.get(match.team1.name) || 0) + 1);
+        } else if (match.team2.score > match.team1.score) {
+          teamWins.set(match.team2.name, (teamWins.get(match.team2.name) || 0) + 1);
+        }
+        
+        // Calculate total rounds in this match
+        const totalRounds = match.team1.score + match.team2.score;
+        
+        // Process team 1 players
+        match.team1.players.forEach(player => {
+          // Use player name as the key, fallback to handle if name is missing
+          // normalize to lowercase for case-insensitive matching
+          const playerName = player.name || player.handle;
+          const playerKey = playerName ? playerName.toLowerCase().trim() : `player-${player.id}`;
+          
+          if (!playerStatsMap.has(playerKey)) {
+            playerStatsMap.set(playerKey, {
+              ...player,
+              // Ensure name is set (use handle if name is missing)
+              name: playerName,
+              team: match.team1.name,
+              kills: 0,
+              deaths: 0,
+              assists: 0,
+              kd: 0,
+              matchesPlayed: 0,
+              totalRounds: 0,
+              matchIds: new Set<string>() // Initialize empty set to track match IDs
+            });
+          }
+          
+          const existingStats = playerStatsMap.get(playerKey)!;
+          
+          // Only count this match if we haven't seen it before for this player
+          if (!existingStats.matchIds.has(match.id)) {
+            existingStats.matchIds.add(match.id);
+            existingStats.matchesPlayed = existingStats.matchIds.size; // Update count based on set size
+            existingStats.totalRounds += totalRounds;
+          }
+          
+          existingStats.kills += player.kills;
+          existingStats.deaths += player.deaths;
+          existingStats.assists += player.assists;
+          existingStats.kd = existingStats.deaths > 0 
+            ? parseFloat((existingStats.kills / existingStats.deaths).toFixed(2)) 
+            : existingStats.kills;
+          
+          playerStatsMap.set(playerKey, existingStats);
+        });
+        
+        // Process team 2 players
+        match.team2.players.forEach(player => {
+          // Use player name as the key, fallback to handle if name is missing
+          // normalize to lowercase for case-insensitive matching
+          const playerName = player.name || player.handle;
+          const playerKey = playerName ? playerName.toLowerCase().trim() : `player-${player.id}`;
+          
+          if (!playerStatsMap.has(playerKey)) {
+            playerStatsMap.set(playerKey, {
+              ...player,
+              // Ensure name is set (use handle if name is missing)
+              name: playerName,
+              team: match.team2.name,
+              kills: 0,
+              deaths: 0,
+              assists: 0,
+              kd: 0,
+              matchesPlayed: 0,
+              totalRounds: 0,
+              matchIds: new Set<string>() // Initialize empty set to track match IDs
+            });
+          }
+          
+          const existingStats = playerStatsMap.get(playerKey)!;
+          
+          // Only count this match if we haven't seen it before for this player
+          if (!existingStats.matchIds.has(match.id)) {
+            existingStats.matchIds.add(match.id);
+            existingStats.matchesPlayed = existingStats.matchIds.size; // Update count based on set size
+            existingStats.totalRounds += totalRounds;
+          }
+          
+          existingStats.kills += player.kills;
+          existingStats.deaths += player.deaths;
+          existingStats.assists += player.assists;
+          existingStats.kd = existingStats.deaths > 0 
+            ? parseFloat((existingStats.kills / existingStats.deaths).toFixed(2)) 
+            : existingStats.kills;
+          
+          playerStatsMap.set(playerKey, existingStats);
+        });
+      });
+      
+      // Debug: Log player match counts
+      console.log("Player match counts:");
+      playerStatsMap.forEach((stats, key) => {
+        console.log(`${stats.name || stats.handle} (${key}): ${stats.matchesPlayed} matches, IDs: ${Array.from(stats.matchIds).join(', ')}`);
+      });
+      
+      // Convert map to array, filter for players with at least 3 matches, and sort by kills
+      const overallStats = Array.from(playerStatsMap.values())
+        .filter(player => player.matchesPlayed >= 3)
+        .sort((a, b) => b.kills - a.kills || b.kd - a.kd);
+      
+      setOverallPlayerStats(overallStats);
+      
+      // Determine tournament winner (team with most wins)
+      if (teamWins.size > 0) {
+        let maxWins = 0;
+        let winner = null;
+        
+        teamWins.forEach((wins, team) => {
+          if (wins > maxWins) {
+            maxWins = wins;
+            winner = team;
+          }
+        });
+        
+        setTournamentWinner(winner);
+      }
+    }
+  }, [tournamentData]);
 
   // Initial load
   useEffect(() => {
@@ -642,6 +786,90 @@ export default function TournamentPage() {
             isMaximized ? "!max-w-none !w-full" : ""
           }`}
         >
+          {/* Tournament Results Section */}
+          <div className="mb-8">
+            <div className="bg-secondary/70 border border-primary-foreground/5 rounded-primary corner-clip-sm p-4 mb-4">
+              <h2 className="text-xl font-bold mb-4 text-center">Tournament Results</h2>
+              
+              {tournamentWinner && (
+                <div className="flex flex-col items-center mb-6">
+                  <div className="text-accent text-sm mb-2">TOURNAMENT CHAMPION</div>
+                  <div className="text-2xl font-bold mb-2">{tournamentWinner}</div>
+                  <div className="bg-accent/20 px-4 py-2 rounded-primary corner-clip-sm text-accent-foreground">
+                    SANTAI CHAMPION
+                  </div>
+                </div>
+              )}
+              
+              <div className="mt-6">
+                <h3 className="text-lg font-bold mb-3">Overall Player Leaderboard</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-secondary">
+                        <th className="text-left py-2 px-2">Rank</th>
+                        <th className="text-left py-2 px-2">Player</th>
+                        <th className="text-left py-2 px-2">Team</th>
+                        <th className="text-right py-2 px-2">Matches</th>
+                        <th className="text-right py-2 px-2">K</th>
+                        <th className="text-right py-2 px-2">D</th>
+                        <th className="text-right py-2 px-2">A</th>
+                        <th className="text-right py-2 px-2">K/D</th>
+                        <th className="text-right py-2 px-2">AKR</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {overallPlayerStats.map((player, index) => {
+                        // Calculate AKR (Average Kills per Round)
+                        const akr = player.totalRounds && player.totalRounds > 0 
+                          ? parseFloat((player.kills / player.totalRounds).toFixed(2)) 
+                          : 0;
+                          
+                        return (
+                          <tr
+                            key={`${player.name}-${player.team}-${index}`}
+                            className="border-b border-secondary/30 hover:bg-secondary/30"
+                          >
+                            <td className="py-2 px-2">{index + 1}</td>
+                            <td className="py-2 px-2">
+                              <div className="flex items-center">
+                                {player.avatarUrl && (
+                                  <img
+                                    src={player.avatarUrl}
+                                    alt={player.handle}
+                                    className="w-6 h-6 rounded-primary corner-clip-sm object-cover mr-2"
+                                  />
+                                )}
+                                <span className="text-primary-foreground">
+                                  @{player.handle}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="py-2 px-2">{player.team}</td>
+                            <td className="py-2 px-2 text-right">{player.matchesPlayed}</td>
+                            <td className="py-2 px-2 text-right">{player.kills}</td>
+                            <td className="py-2 px-2 text-right">
+                              {player.deaths}
+                            </td>
+                            <td className="py-2 px-2 text-right">
+                              {player.assists}
+                            </td>
+                            <td className="py-2 px-2 text-right text-accent font-medium">
+                              {player.kd.toFixed(2)}
+                            </td>
+                            <td className="py-2 px-2 text-right text-accent font-medium">
+                              {akr.toFixed(2)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {activeTab === "overview" ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-secondary/70 border border-primary-foreground/5 rounded-primary corner-clip-sm p-3">

@@ -9,6 +9,9 @@ export interface PlayerStats {
   deaths: number;
   assists: number;
   kd: number;
+  team?: string;
+  matchesPlayed?: number;
+  totalRounds?: number;
   avatarUrl?: string;
   socialLink?: string;
 }

@@ -102,7 +102,7 @@ export default function Home() {
         <NoticeBanner
           className="text-center"
           noticeTitle="OpTic Gaming \\ Spectre Divide"
-          noticeBottomText="Tournament Complete! Check out the results"
+          noticeBottomText="Tournament Complete! Check out the results!"
           ver={2}
         />
         
