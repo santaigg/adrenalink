@@ -958,7 +958,7 @@ export default function TournamentPage() {
           ) : (
             <div className="bg-secondary/70 border border-primary-foreground/5 rounded-primary corner-clip-sm p-4">
               <h3 className="text-lg font-bold mb-4">
-                Detailed Player Statistics
+                Detailed Player Statistics For {currentMatch?.round}
               </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
