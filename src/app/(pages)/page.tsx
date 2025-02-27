@@ -210,7 +210,7 @@ export default function Home() {
         </div>
         <Constrict className="px-4 py-16">
           <div className="flex w-full space-x-6">
-            <HomeStatTable title="Sponsors (WIP*)" buttonHidden>
+            <HomeStatTable title="Sponsors (WIP*) " buttonHidden>
               <>
                 {globalSponsorStats?.stats.sponsors.map((sponsor, index) => {
                   return (
