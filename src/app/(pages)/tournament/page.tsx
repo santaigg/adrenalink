@@ -199,7 +199,9 @@ export default function TournamentPage() {
         </Constrict>
         {/* Tournament Header - Compact for more stream space */}
         <Constrict
-          className={`px-4 ${isMaximized ? "max-w-none !w-full" : ""}`}
+          className={`px-4 ${
+            isMaximized ? "!max-w-none !w-full" : ""
+          }`}
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
@@ -636,7 +638,9 @@ export default function TournamentPage() {
         </div>
 
         <Constrict
-          className={`px-4 py-8 ${isMaximized ? "max-w-none !w-full" : ""}`}
+          className={`px-4 py-8 ${
+            isMaximized ? "!max-w-none !w-full" : ""
+          }`}
         >
           {activeTab === "overview" ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

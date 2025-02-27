@@ -56,8 +56,51 @@ export default function TournamentAdminPage() {
   const [password, setPassword] = useState<string>("");
   const [selectedMatch, setSelectedMatch] = useState<string>("");
   const [editedMatch, setEditedMatch] = useState<MatchStats | null>(null);
+  const [isFieldFocused, setIsFieldFocused] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"matches" | "stream" | "players">("matches");
   const [mapImages, setMapImages] = useState<{ [key: string]: string }>({});
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [willAutoRefresh, setWillAutoRefresh] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingUpdates, setPendingUpdates] = useState<TournamentData | null>(null);
+  const [pendingUpdateCount, setPendingUpdateCount] = useState<number>(0);
+  const [editedFields, setEditedFields] = useState<Set<string>>(new Set());
+
+  // Function to load tournament data
+  const loadTournamentData = async (isRefresh: boolean = false) => {
+    try {
+      if (isRefresh) {
+        setRefreshing(true);
+      }
+
+      const data = await fetchTournament("optic-invitational");
+
+      // Validate the data structure
+      if (!data || !Array.isArray(data.matches)) {
+        throw new Error("Invalid tournament data format");
+      }
+
+      setTournamentData(data);
+      // Reset pending updates when loading new data
+      setPendingUpdates(null);
+      setPendingUpdateCount(0);
+
+      // Only set the selected match if it's not a refresh or if the currently selected match doesn't exist anymore
+      if (!isRefresh || !data.matches.find((match) => match.id === selectedMatch)) {
+        if (data.matches.length > 0) {
+          setSelectedMatch(data.matches[0].id);
+        }
+      }
+
+      setError(null);
+    } catch (error) {
+      console.error("Failed to load tournament data:", error);
+      setError("Failed to load tournament data. Please try again later.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   // Function to update tournament data
   const updateTournamentData = async (newData: TournamentData) => {
@@ -93,26 +136,137 @@ export default function TournamentAdminPage() {
   // Load tournament data if authorized
   useEffect(() => {
     if (authorized) {
-      const loadTournamentData = async () => {
-        try {
-          const data = await fetchTournament("optic-invitational");
-          setTournamentData(data);
-          
-          // Set the default selected match if matches exist
-          if (data.matches && data.matches.length > 0) {
-            setSelectedMatch(data.matches[0].id);
-          }
-          
-          setLoading(false);
-        } catch (error) {
-          console.error("Failed to load tournament data:", error);
-          setLoading(false);
-        }
-      };
-
       loadTournamentData();
     }
   }, [authorized]);
+
+  // Function to check for updates without overwriting the form
+  const checkForUpdates = async () => {
+    try {
+      setWillAutoRefresh(true);
+      
+      const data = await fetchTournament("optic-invitational");
+      
+      // Validate the data structure
+      if (!data || !Array.isArray(data.matches)) {
+        throw new Error("Invalid tournament data format");
+      }
+      
+      // If we're not editing, just update the data immediately
+      if (!isFieldFocused && !editedMatch) {
+        // Check if there are actual changes before updating
+        if (tournamentData && JSON.stringify(data) !== JSON.stringify(tournamentData)) {
+          console.log("Auto-applying updates since no fields are being edited");
+          setTournamentData(data);
+          setPendingUpdates(null);
+          setPendingUpdateCount(0);
+        }
+        return;
+      }
+      
+      // Otherwise, check if there are differences
+      if (tournamentData) {
+        // Compare the new data with current data
+        const hasChanges = JSON.stringify(data) !== JSON.stringify(tournamentData);
+        
+        if (hasChanges) {
+          // Count the actual number of differences
+          let changeCount = 0;
+          
+          // Compare matches
+          if (data.matches.length !== tournamentData.matches.length) {
+            // If match count changed, count each added/removed match as a change
+            changeCount += Math.abs(data.matches.length - tournamentData.matches.length);
+          }
+          
+          // Compare each match
+          const maxMatchLength = Math.max(data.matches.length, tournamentData.matches.length);
+          for (let i = 0; i < maxMatchLength; i++) {
+            const newMatch = data.matches[i];
+            const oldMatch = tournamentData.matches[i];
+            
+            // Skip if we're currently editing this match
+            if (editedMatch && oldMatch && oldMatch.id === editedMatch.id) {
+              continue;
+            }
+            
+            // If one exists and the other doesn't, we already counted it above
+            if (!newMatch || !oldMatch) continue;
+            
+            // Compare match data
+            if (JSON.stringify(newMatch) !== JSON.stringify(oldMatch)) {
+              changeCount++;
+            }
+          }
+          
+          // Compare other tournament properties
+          if (data.name !== tournamentData.name) changeCount++;
+          if (data.streamUrl !== tournamentData.streamUrl) changeCount++;
+          
+          // Only update if there are actual changes
+          if (changeCount > 0) {
+            setPendingUpdates(data);
+            setPendingUpdateCount(changeCount);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to check for updates:", error);
+    } finally {
+      setWillAutoRefresh(false);
+    }
+  };
+
+  // Set up automatic update check every 5 seconds
+  useEffect(() => {
+    if (!authorized) return; // Only auto-refresh if authorized
+    
+    console.log("Setting up auto-refresh interval");
+    
+    const intervalId = setInterval(() => {
+      checkForUpdates();
+    }, 5000);
+    
+    // Cleanup interval on component unmount
+    return () => {
+      console.log("Cleaning up auto-refresh interval");
+      clearInterval(intervalId);
+      setWillAutoRefresh(false);
+    };
+  }, [authorized, tournamentData, isFieldFocused, editedMatch, pendingUpdateCount, pendingUpdates]);
+
+  // Function to apply pending updates while preserving edited fields
+  const applyPendingUpdates = () => {
+    if (!pendingUpdates || !tournamentData) return;
+    
+    // Create a new tournament data object with updates
+    const updatedData = { ...pendingUpdates };
+    
+    // If we're editing a match, preserve our edited match
+    if (editedMatch) {
+      // Find the match we're editing in the pending updates
+      const matchIndex = updatedData.matches.findIndex(m => m.id === editedMatch.id);
+      
+      if (matchIndex !== -1) {
+        // Replace it with our edited version
+        updatedData.matches[matchIndex] = editedMatch;
+      }
+    }
+    
+    // Update the tournament data
+    setTournamentData(updatedData);
+    setPendingUpdates(null);
+    setPendingUpdateCount(0);
+  };
+
+  // Handle manual refresh
+  const handleRefresh = () => {
+    if (isFieldFocused) {
+      // Don't refresh if any field is focused
+      return;
+    }
+    loadTournamentData(true);
+  };
 
   // Handle login
   const handleLogin = async () => {
@@ -142,18 +296,38 @@ export default function TournamentAdminPage() {
     }
   };
 
+  // Handle field focus
+  const handleFieldFocus = () => {
+    setIsFieldFocused(true);
+  };
+
+  // Handle field blur
+  const handleFieldBlur = () => {
+    // Use setTimeout to prevent flickering when moving between fields
+    setTimeout(() => {
+      // Check if any element with the 'form-field' class is focused
+      const focusedElement = document.querySelector('.form-field:focus');
+      if (!focusedElement) {
+        setIsFieldFocused(false);
+      }
+    }, 100);
+  };
+
   // Update match data
   const handleMatchUpdate = async (matchId: string) => {
     if (!tournamentData || !editedMatch) return;
     
     try {
+      // Use pendingUpdates as the base if available, otherwise use current tournamentData
+      const baseData = pendingUpdates || tournamentData;
+      
       // Update the match in the tournament data
-      const updatedMatches = tournamentData.matches.map(match => 
+      const updatedMatches = baseData.matches.map(match => 
         match.id === matchId ? editedMatch : match
       );
       
       const updatedData = {
-        ...tournamentData,
+        ...baseData,
         matches: updatedMatches
       };
       
@@ -161,6 +335,8 @@ export default function TournamentAdminPage() {
       const result = await updateTournamentData(updatedData);
       setTournamentData(result);
       setEditedMatch(null);
+      setPendingUpdates(null);
+      setPendingUpdateCount(0);
       alert("Match updated successfully!");
     } catch (error) {
       console.error("Failed to update match:", error);
@@ -183,9 +359,21 @@ export default function TournamentAdminPage() {
     if (!tournamentData) return;
     
     try {
+      // Use pendingUpdates as the base if available, otherwise use current tournamentData
+      const baseData = pendingUpdates || tournamentData;
+      
+      // Create updated data with current stream settings
+      const updatedData = {
+        ...baseData,
+        name: tournamentData.name,
+        streamUrl: tournamentData.streamUrl
+      };
+      
       // Send the updated tournament data to the backend
-      const result = await updateTournamentData(tournamentData);
+      const result = await updateTournamentData(updatedData);
       setTournamentData(result);
+      setPendingUpdates(null);
+      setPendingUpdateCount(0);
       alert("Stream settings updated successfully!");
     } catch (error) {
       console.error("Failed to update stream settings:", error);
@@ -203,10 +391,13 @@ export default function TournamentAdminPage() {
       id: `match_${Date.now()}` // Generate a unique ID
     };
     
+    // Use pendingUpdates as the base if available, otherwise use current tournamentData
+    const baseData = pendingUpdates || tournamentData;
+    
     // Update tournament data with the new match
     const updatedData = {
-      ...tournamentData,
-      matches: [...tournamentData.matches, newMatch]
+      ...baseData,
+      matches: [...baseData.matches, newMatch]
     };
     
     // Update the backend
@@ -215,6 +406,8 @@ export default function TournamentAdminPage() {
         setTournamentData(result);
         setSelectedMatch(newMatch.id);
         setEditedMatch(newMatch);
+        setPendingUpdates(null);
+        setPendingUpdateCount(0);
         alert("New match added successfully!");
       })
       .catch((error) => {
@@ -251,6 +444,27 @@ export default function TournamentAdminPage() {
 
     loadMapImages();
   }, []);
+
+  // Function to add focus/blur handlers to all input fields
+  const addFocusHandlersToInputs = () => {
+    // Add focus/blur handlers to all input fields
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (!input.classList.contains('form-field')) {
+        input.classList.add('form-field');
+        input.addEventListener('focus', handleFieldFocus);
+        input.addEventListener('blur', handleFieldBlur);
+      }
+    });
+  };
+
+  // Add focus/blur handlers to all input fields when the component mounts or editedMatch changes
+  useEffect(() => {
+    if (editedMatch) {
+      // Use setTimeout to ensure the DOM has been updated
+      setTimeout(addFocusHandlersToInputs, 100);
+    }
+  }, [editedMatch, activeTab]);
 
   // If not authorized, show login form
   if (!authorized) {
@@ -353,13 +567,69 @@ export default function TournamentAdminPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <button 
+              {pendingUpdateCount > 0 && (
+                <button
+                  onClick={applyPendingUpdates}
+                  className="text-xs px-3 py-1 bg-accent/80 hover:bg-accent text-accent-foreground rounded-primary corner-clip-sm flex items-center space-x-1"
+                >
+                  <svg
+                    className="w-3 h-3 mr-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  <span>Apply {pendingUpdateCount} Update{pendingUpdateCount > 1 ? 's' : ''}</span>
+                </button>
+              )}
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing || isFieldFocused}
+                className={`text-xs px-3 py-1 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-primary corner-clip-sm flex items-center space-x-1 ${
+                  refreshing || isFieldFocused ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                title={isFieldFocused ? "Auto-refresh paused while editing" : ""}
+              >
+                <svg
+                  className={`w-3 h-3 ${
+                    refreshing || willAutoRefresh ? "animate-spin" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                <span>
+                  {refreshing
+                    ? "Refreshing..."
+                    : isFieldFocused
+                    ? "Paused"
+                    : willAutoRefresh
+                    ? "Auto-refreshing..."
+                    : pendingUpdateCount > 0
+                    ? `Updates Available (${pendingUpdateCount})`
+                    : "Refresh"}
+                </span>
+              </button>
+              <button
                 onClick={() => router.push('/tournament')}
                 className="text-xs px-3 py-1 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-primary corner-clip-sm"
               >
                 View Tournament
               </button>
-              <button 
+              <button
                 onClick={handleLogout}
                 className="text-xs px-3 py-1 bg-accent/80 hover:bg-accent text-accent-foreground rounded-primary corner-clip-sm"
               >
@@ -451,7 +721,27 @@ export default function TournamentAdminPage() {
                   <div className="md:col-span-3">
                     {editedMatch && (
                       <div className="bg-secondary/50 p-3 rounded-primary corner-clip-sm">
-                        <h3 className="text-base font-medium mb-3">Edit Match: {editedMatch.round}</h3>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-base font-medium">Edit Match: {editedMatch.round}</h3>
+                          <div className="flex items-center space-x-2">
+                            {isFieldFocused && (
+                              <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-sm flex items-center">
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Auto-refresh paused while editing
+                              </div>
+                            )}
+                            {pendingUpdateCount > 0 && (
+                              <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-sm flex items-center">
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                {pendingUpdateCount} update{pendingUpdateCount > 1 ? 's' : ''} available
+                              </div>
+                            )}
+                          </div>
+                        </div>
                         
                         <div className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -466,7 +756,9 @@ export default function TournamentAdminPage() {
                                   ...editedMatch,
                                   status: e.target.value as "upcoming" | "live" | "completed"
                                 })}
-                                className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground"
+                                className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground form-field"
+                                onFocus={handleFieldFocus}
+                                onBlur={handleFieldBlur}
                               >
                                 <option value="upcoming">Upcoming</option>
                                 <option value="live">Live</option>
@@ -486,7 +778,9 @@ export default function TournamentAdminPage() {
                                   ...editedMatch,
                                   round: e.target.value
                                 })}
-                                className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground"
+                                className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground form-field"
+                                onFocus={handleFieldFocus}
+                                onBlur={handleFieldBlur}
                               />
                             </div>
                           </div>
@@ -504,7 +798,10 @@ export default function TournamentAdminPage() {
                                     ...editedMatch,
                                     map: mapName
                                   })}
-                                  className={`relative aspect-square rounded-primary corner-clip-sm overflow-hidden cursor-pointer border-2 ${
+                                  onFocus={handleFieldFocus}
+                                  onBlur={handleFieldBlur}
+                                  tabIndex={0}
+                                  className={`relative aspect-square rounded-primary corner-clip-sm overflow-hidden cursor-pointer border-2 form-field ${
                                     editedMatch.map === mapName 
                                       ? 'border-accent' 
                                       : 'border-transparent hover:border-primary-foreground/20'
@@ -554,7 +851,9 @@ export default function TournamentAdminPage() {
                                         name: e.target.value
                                       }
                                     })}
-                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm"
+                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm form-field"
+                                    onFocus={handleFieldFocus}
+                                    onBlur={handleFieldBlur}
                                   />
                                 </div>
                                 
@@ -572,7 +871,9 @@ export default function TournamentAdminPage() {
                                         score: parseInt(e.target.value) || 0
                                       }
                                     })}
-                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm"
+                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm form-field"
+                                    onFocus={handleFieldFocus}
+                                    onBlur={handleFieldBlur}
                                   />
                                 </div>
                               </div>
@@ -601,7 +902,9 @@ export default function TournamentAdminPage() {
                                         name: e.target.value
                                       }
                                     })}
-                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm"
+                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm form-field"
+                                    onFocus={handleFieldFocus}
+                                    onBlur={handleFieldBlur}
                                   />
                                 </div>
                                 
@@ -619,7 +922,9 @@ export default function TournamentAdminPage() {
                                         score: parseInt(e.target.value) || 0
                                       }
                                     })}
-                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm"
+                                    className="w-full p-1.5 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground text-sm form-field"
+                                    onFocus={handleFieldFocus}
+                                    onBlur={handleFieldBlur}
                                   />
                                 </div>
                               </div>
@@ -664,7 +969,10 @@ export default function TournamentAdminPage() {
                           ...tournamentData,
                           streamUrl: e.target.value
                         })}
-                        className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground"
+                        className="w-full p-2 bg-primary/10 border border-secondary rounded-primary corner-clip-sm text-primary-foreground form-field"
+                        onFocus={handleFieldFocus}
+                        onBlur={handleFieldBlur}
+                        placeholder="https://www.youtube.com/embed/..."
                       />
                       <p className="text-xs text-secondary-foreground mt-1">
                         Enter the YouTube embed URL for the tournament stream.
@@ -721,6 +1029,22 @@ export default function TournamentAdminPage() {
                       <div className="flex justify-between items-center">
                         <h4 className="text-sm font-medium">Editing Players for: {editedMatch.round}</h4>
                         <div className="flex space-x-2">
+                          {isFieldFocused && (
+                            <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-sm flex items-center">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              Auto-refresh paused
+                            </div>
+                          )}
+                          {pendingUpdateCount > 0 && (
+                            <div className="bg-primary/20 text-primary-foreground text-xs px-2 py-1 rounded-sm flex items-center">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                              {pendingUpdateCount} update{pendingUpdateCount > 1 ? 's' : ''} available
+                            </div>
+                          )}
                           <select
                             value={selectedMatch}
                             onChange={(e) => setSelectedMatch(e.target.value)}
