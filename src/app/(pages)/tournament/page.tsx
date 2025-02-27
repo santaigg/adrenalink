@@ -35,7 +35,7 @@ export default function TournamentPage() {
     "overview"
   );
   const [error, setError] = useState<string | null>(null);
-  const [isMaximized, setIsMaximized] = useState<boolean>(true);
+  const [isMaximized, setIsMaximized] = useState<boolean>(false);
   const [mapImages, setMapImages] = useState<{ [key: string]: string }>({});
 
   // Function to load tournament data
