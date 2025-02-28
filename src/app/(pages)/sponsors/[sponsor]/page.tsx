@@ -315,7 +315,7 @@ export default function SponsorPage() {
   const sponsorName = params.sponsor as SponsorKey;
   const sponsorInfo = sponsorsInfo[sponsorName] ?? null;
 
-  const [activeTab, setActiveTab] = useState<string>("Stats");
+  const [activeTab, setActiveTab] = useState<string>("Abilities");
   const [activeAbility, setActiveAbility] = useState<string>(
     sponsorInfo.abilities.q.ability
   );
