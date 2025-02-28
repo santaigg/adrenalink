@@ -185,7 +185,8 @@ export default function Home() {
                   return (
                     <div
                       key={index}
-                      className="w-full even:bg-seconday/50 border-y border-secondary px-4 h-14 flex items-center justify-start"
+                      className="w-full cursor-pointer transition-all hover:bg-secondary/50 border-y border-secondary px-4 h-14 flex items-center justify-start"
+                      onClick={() => router.push(`/sponsors/${sponsor.sponsor_name.toLowerCase()}`)}
                     >
                       <div className="w-5/12 shrink-0 flex items-center justify-start overflow-x-scroll scrollbar-hide">
                         <SponsorImage

@@ -370,7 +370,7 @@ export default function SponsorPage() {
             <h2>Information</h2>
             <div className="w-full flex flex-col space-y-4 mt-2">
               <p>
-                We can put some lore for each sponsor here if we ever get some.
+                We can put some lore for each sponsor here if we ever get some, like about their district etc.
               </p>
             </div>
           </>
@@ -426,7 +426,7 @@ export default function SponsorPage() {
 
   return (
     <div className="flex flex-col">
-      <div className="w-full relative bg-input">
+      <div className="w-full relative bg-input -mt-4">
         <Constrict className="h-full flex flex-col justify-center">
           <div className="flex flex-col justify-center pt-12 pb-6">
             <div className="flex space-x-2">
