@@ -175,7 +175,7 @@ const sponsorsInfo: Record<SponsorKey, SponsorInfo> = {
     district: "Emerald",
     abilities: {
       q: {
-        ability: "Dual AMP",
+        ability: "Dual Amp",
         description:
           "Deploy a marker and gain an increased fire rate buff for a short amount of time. Reactivate to teleport your Spectre to the marker, giving it a fire rate buff. Kills reset the buff duration.",
         cost: 130,
