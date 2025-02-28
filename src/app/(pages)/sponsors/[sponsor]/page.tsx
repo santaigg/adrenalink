@@ -1,9 +1,9 @@
 "use client";
 import { useParams, useSearchParams } from "next/navigation";
 import Constrict from "@/app/components/layout/Constrict";
-import { SponsorImage } from "@/app/components/cosmetic/SponsorImageFromString";
+import { SponsorImage, AbilityImage } from "@/app/components/cosmetic/SponsorImageFromString";
 import Extrusion, { CornerLocation } from "@/app/components/cosmetic/Extrusion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function parseSponsorName(sponsor: string) {
   switch (sponsor) {
@@ -339,7 +339,12 @@ export default function SponsorPage() {
                     onClick={() => setActiveAbility(ability.ability)}
                   >
                     <div className="shrink-0">
-                      <div className="w-10 h-10 bg-red-500"></div>
+                      <div className="w-10 h-10 flex justify-center items-center">
+                        <AbilityImage
+                          sponsor={sponsorInfo.sponsor_id as SponsorKey}
+                          ability={key as "q" | "e" | "c"}
+                        />
+                      </div>
                     </div>
                     <div className="flex flex-col items-start justify-start space-y-2">
                       <div className="flex space-x-2 items-center">
@@ -445,7 +450,7 @@ export default function SponsorPage() {
                   key={index}
                   className={`px-2 py-2 hover:bg-secondary transition-all cursor-pointer ${
                     activeTab == tab.title
-                      ? "bg-gradient-to-t from-secondary-foreground/5 to-transparent"
+                      ? "bg-gradient-to-t from-primary to-transparent"
                       : ""
                   } `}
                   onClick={() => setActiveTab(tab.title)}
