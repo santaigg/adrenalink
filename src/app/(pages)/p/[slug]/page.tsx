@@ -25,7 +25,7 @@ import {
   AddMatchModal,
   RefreshMatchButton,
 } from "@/app/components/input/AddMatchModal";
-
+import StatusContainer from "@/app/components/information/StatusContainer";
 import { useRouter } from "next/navigation";
 
 interface dumpStatus {
@@ -62,19 +62,24 @@ export default function PlayerProfile() {
         const data = await fetchPlayerProfile(playerId);
 
         if ((data as any)?.error) {
-          console.error("Database timeout error:", (data as any).error);
+          if ((data as any)?.error == "Player not found") {
+            setPlayerProfile(null);
+            setLoading(false);
+          } else {
+            console.error("Database timeout error:", (data as any).error);
 
-          if (retries < MAX_RETRIES) {
-            retries++;
-            const delay = Math.pow(2, retries) * 500;
-            console.log(`Retrying in ${delay}ms...`);
-            setTimeout(fetchData, delay);
+            if (retries < MAX_RETRIES) {
+              retries++;
+              const delay = Math.pow(2, retries) * 500;
+              console.log(`Retrying in ${delay}ms...`);
+              setTimeout(fetchData, delay);
+              return;
+            }
+
+            console.log("Max retries reached. Refreshing the page...");
+            router.refresh(); // Server-side refresh only if all retries fail
             return;
           }
-
-          console.log("Max retries reached. Refreshing the page...");
-          router.refresh(); // Server-side refresh only if all retries fail
-          return;
         }
 
         setPlayerProfile(data);
@@ -201,7 +206,7 @@ export default function PlayerProfile() {
         <div className="px-1">
           <SkeletonLoader />
         </div>
-      ) : playerProfile ? (
+      ) : playerProfile && Object.keys(playerProfile).length > 1 ? (
         <>
           <AddMatchModal open={ModalOpen} setOpen={setModalOpen} />
           <div className="w-full -mt-4 h-48 relative">
@@ -230,12 +235,6 @@ export default function PlayerProfile() {
                 )}
               </div>
               <div className="flex flex-col-reverse sm:flex-row justify-end items-center mb-auto mt-6 sm:mt-auto ml-auto sm:mb-4 gap-x-4">
-                {dumpData?.in_progress && (
-                  <div className="h-9 flex items-center text-accent">
-                    Processing matches soon... Queue Position:{" "}
-                    {dumpData.queue_position}
-                  </div>
-                )}
                 <div className="flex items-center justify-end space-x-4">
                   <div
                     onClick={refreshMatches}
@@ -256,10 +255,13 @@ export default function PlayerProfile() {
             </Constrict>
           </div>
           <Constrict className="flex flex-col text-primary-foreground px-1">
-            <div className="ml-36">
+            <div className="ml-36 mb-4">
               <h1 className="font-medium">{playerProfile.name}</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 mt-8 gap-6">
+            <div className="my-4 w-full flex items-center justify-center">
+              <StatusContainer dumpData={dumpData!} playerId={playerId} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="gap-y-4 flex-col flex w-full">
                 {/* Current Rank */}
                 <CurrentRankCard
@@ -308,8 +310,10 @@ export default function PlayerProfile() {
           </Constrict>
         </>
       ) : (
-        <Constrict className="flex flex-col">
-          <p>Player profile not found.</p>
+        <Constrict className="flex flex-col px-4">
+          <div className="mt-4 w-full flex items-center justify-center">
+            <StatusContainer dumpData={dumpData!} playerId={playerId} />
+          </div>
         </Constrict>
       )}
     </main>
