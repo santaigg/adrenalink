@@ -1,6 +1,61 @@
 import React from "react";
 import Constrict from "@/app/components/layout/Constrict";
 import Extrusion, { CornerLocation } from "@/app/components/cosmetic/Extrusion";
+import Image from "next/image";
+import { WeaponImage } from "@/app/components/cosmetic/WeaponImageFromString";
+type WeaponKey =
+  | "knife"
+  | "m2-carbon"
+  | "shiv"
+  | "m10-brat"
+  | "duster-rx6"
+  | "m17-bouncer"
+  | "m25-hornet"
+  | "buzzsaw-rt40"
+  | "m49-fury"
+  | "tempest"
+  | "berserker-rb3"
+  | "blackout"
+  | "m67-reaver"
+  | "harpe"
+  | "trident"
+  | "whisper"
+  | "m18-drummer"
+  | "cyclone"
+  | "crusader"
+  | "prototype-op";
+
+type WeaponType =
+  | "Sniper"
+  | "SMG"
+  | "Shotgun"
+  | "Pistol"
+  | "LMG"
+  | "Melee"
+  | "AR";
+
+const weaponTypeMap: Record<WeaponKey, WeaponType> = {
+  knife: "Melee",
+  "m2-carbon": "Pistol",
+  "m10-brat": "Pistol",
+  shiv: "Pistol",
+  "duster-rx6": "Pistol",
+  "m17-bouncer": "Shotgun",
+  "m25-hornet": "SMG",
+  "buzzsaw-rt40": "SMG",
+  "m49-fury": "LMG",
+  tempest: "AR",
+  "berserker-rb3": "LMG",
+  blackout: "AR",
+  "m67-reaver": "AR",
+  harpe: "Sniper",
+  trident: "AR",
+  whisper: "SMG",
+  "m18-drummer": "Shotgun",
+  cyclone: "AR",
+  crusader: "AR",
+  "prototype-op": "Sniper",
+};
 
 function parseWeaponName(weapon: string) {
   return weapon
@@ -14,8 +69,17 @@ export default async function WeaponPage({
 }: {
   params: Promise<{ weapon: string }>;
 }) {
-  const weapon = (await params).weapon;
+  const weapon = (await params).weapon as WeaponKey;
 
+  if (!(weapon in weaponTypeMap)) {
+    return <p>Invalid weapon</p>;
+  }
+
+  const weaponType = weaponTypeMap[weapon];
+  // const imagePath = `@/app/assets/images/weapons/color/[${weaponType}] ${parseWeaponName(
+  //   weapon
+  // )}.png`;
+  // console.log(imagePath);
   return (
     <div className="flex flex-col">
       <div className="flex flex-col">
@@ -28,7 +92,7 @@ export default async function WeaponPage({
                 </h1>
               </div>
               <div className="flex justify-start items-start text-input-foreground divide-x divide-primary-foreground/25">
-                <p className="pr-3">Class // Sidearm</p>
+                <p className="pr-3">Class // {weaponType}</p>
                 <p className="pl-3">Penetration // Mid</p>
               </div>
             </div>
@@ -41,7 +105,11 @@ export default async function WeaponPage({
         <div className="w-full">
           <Constrict className="flex flex-col items-start justify-start px-2 sm:px-0 pb-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 py-8 w-full">
-              <div className="bg-red-500/15 rounded-primary aspect-square"></div>
+              <div className="rounded-primary aspect-square">
+                <WeaponImage
+                  weapon={`[${weaponType}] ${parseWeaponName(weapon)}`}
+                />
+              </div>
               <div className="flex flex-col w-full space-y-8">
                 <div className="w-full flex flex-col">
                   <Extrusion
