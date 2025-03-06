@@ -345,7 +345,6 @@ const weaponDataMap: Record<WeaponKey, WeaponStats> = {
   },
 };
 
-// Function to format weapon names
 const formatWeaponName = (key: string): string => {
   return key
     .split("-")
