@@ -2,8 +2,9 @@ import React from "react";
 import Constrict from "@/app/components/layout/Constrict";
 import TempBackgroundData from "@/app/assets/images/background/background-gun.png";
 import BackgroundImage from "@/app/components/cosmetic/BackgroundImage";
+import SpectrePointsIcon from "@/app/assets/images/brand/spectre-points.webp";
 import Extrusion, { CornerLocation } from "@/app/components/cosmetic/Extrusion";
-
+import Image from "next/image";
 type Rarity = "Masterpiece" | "Prestige" | "Elite" | "none";
 
 const RarityColor: Record<Rarity, string> = {
@@ -23,24 +24,38 @@ interface ShopItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const ShopItem = React.forwardRef<HTMLDivElement, ShopItemProps>(
   ({ colSpan, itemName, rarity, cost, discountedFrom }, ref) => {
+    const colSpanClasses: Record<number, string> = {
+      1: "sm:col-span-1",
+      2: "sm:col-span-2",
+      3: "sm:col-span-3",
+      4: "sm:col-span-4",
+      5: "sm:col-span-5",
+    };
+
     return (
       <div
         ref={ref}
-        style={{ gridColumn: `span ${colSpan}` }}
-        className="rounded-t-primary overflow-hidden flex flex-col"
+        className={`rounded-t-primary overflow-hidden flex flex-col col-span-2 ${colSpanClasses[colSpan]}`}
       >
         <div className="w-full relative h-96">
           <BackgroundImage
             image={TempBackgroundData}
-            className="blur-0 saturate-100 brightness-100 mix-blend-normal"
+            className="!blur-0 saturate-100 brightness-100 mix-blend-normal"
           />
-          <div className="absolute bg-black/45 top-8 right-0 h-8 flex items-center justify-start px-2">
+          <div className="absolute bg-black/45 top-8 right-0 h-7 flex items-center justify-start px-2">
             {discountedFrom && (
               <p className="line-through text-primary-foreground/75 mr-2">
                 {discountedFrom}
               </p>
             )}
-            <p className="text-lg mt-0.5 mr-6">{cost} SP</p>
+            <p className="text-lg mt-0.5">{cost}</p>
+            <Image
+              src={SpectrePointsIcon}
+              alt="SP"
+              className="ml-2 mr-4"
+              width={36}
+              height={36}
+            />
           </div>
         </div>
         <div className="w-full shrink-0 bg-secondary rounded-br-primary h-14 flex items-center justify-start px-4">
@@ -49,7 +64,7 @@ const ShopItem = React.forwardRef<HTMLDivElement, ShopItemProps>(
         </div>
         <Extrusion
           cornerLocation={CornerLocation.BottomRight}
-          className="min-w-[20%] border-secondary rounded-bl-primary"
+          className="min-w-[min(13rem,50%)] border-secondary rounded-bl-primary"
         />
       </div>
     );
@@ -87,7 +102,6 @@ const shopItemsData = [
     itemName: "Death Dealer Bundle",
     rarity: "Masterpiece",
     cost: 3000,
-    discountedFrom: 999,
   },
   {
     colSpan: 5,
@@ -197,9 +211,9 @@ const shopItemsData = [
 export default async function ShopPage() {
   return (
     <div className="min-h-screen mb-16">
-      <Constrict className="pt-8">
+      <Constrict className="pt-8 px-2">
         <h1>Spectre Divide Shop</h1>
-        <div className="w-full grid grid-cols-5 mt-4 gap-4">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-5 mt-4 gap-4">
           {shopItemsData.map((item, index) => (
             <ShopItem
               key={index}
